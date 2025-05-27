@@ -3,7 +3,9 @@
 <img src="logo.png" alt="logo ucens">
 
 ## ℹ️ Descrição
-Este projeto, feito em parceria com a UCENS, é um sistema para cadastro e gerenciamento dos associados da Associação que atua em Sorocaba, São Paulo. O sistema facilita o controle de membros, suas informações pessoais e sua vinculação às diferentes sedes e divisões culturais da associação, assim como facilita a cobrança da mensalidade dos mesmos para ambos os lados.
+Este projeto, feito em parceria com a UCENS, é um sistema para cadastro e gerenciamento dos associados da Associação que atua em Sorocaba, São Paulo. O sistema facilita o controle de membros, suas informações pessoais e sua vinculação às diferentes sedes e divisões culturais da associação, assim como facilita a cobrança da mensalidade dos mesmos para ambos os lados.  
+
+Vale ressaltar que este projeto foi feito por estudantes da FATEC como entrega do Projeto Integrador, do curso ADS de modalidade AMS.
 
 ## 🚀 Funcionalidades
 (lembrar de arrumar isso aqui)
@@ -27,22 +29,12 @@ Este projeto, feito em parceria com a UCENS, é um sistema para cadastro e geren
 ***colocar tecnologias aqui***
 
 
-## Colaboradores
-<table>
-  <tr>
-    <td>
-      <a href="github.com/MatheusAraujo121" title="matheus">
-        <b>Matheus Emídio Araújo</b>
-      </a>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <a href="github.com/Janmou" title="ian">
-        <b>Ian Moura</b>
-      </a>
-  </tr>
-</table>
+## 🤝 Colaboradores
+
+| Nome                |
+|---------------------|
+| [**Matheus Araújo**](https://github.com/MatheusAraujo121) |
+| [**Ian Moura**](https://github.com/Janmou)             |
 
 ## 📄 Licença
 Este projeto está sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.
