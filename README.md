@@ -1,5 +1,7 @@
 # Sistema de cadastro para a UCENS
 
+<img src="logo.png" alt="logo ucens">
+
 ## Descrição
 Este projeto é um sistema para cadastro e gerenciamento dos associados da Associação Cultural Japonesa, que atua em Sorocaba, São Paulo. O sistema facilita o controle dos membros, suas informações pessoais e sua vinculação às diferentes sedes e divisões culturais da associação, assim como facilita a cobrança da mensalidade dos mesmos para ambos os lados.
 
