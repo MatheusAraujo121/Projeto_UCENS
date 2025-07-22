@@ -1,0 +1,72 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white px-4 py-3">
+    <a class="navbar-brand d-flex align-items-center" href="#">
+        <img src="assets/img/logo-nippon.png" alt="Nippon Sorocaba" height="40">
+    </a>
+    <div class="collapse navbar-collapse">
+        <mat-toolbar color="transparent" class="app-toolbar">
+
+            <!-- Home -->
+    <button mat-button routerLink="">Home</button>
+
+    <!-- Institucional -->
+    <button
+      mat-button
+      #instBtn="matMenuTrigger"
+      [matMenuTriggerFor]="menuInstitucional"
+      class="menu-button"
+      [class.opened]="instBtn.menuOpen"
+    >
+      <span class="menu-label">Institucional</span>
+      <mat-icon class="menu-icon">expand_more</mat-icon>
+    </button>
+    <mat-menu #menuInstitucional="matMenu" class="app-menu">
+      <button mat-menu-item routerLink="story">História</button>
+      <button mat-menu-item>Estatuto</button>
+      <button mat-menu-item>Regulamento</button>
+      <button mat-menu-item>Diretoria</button>
+      <button mat-menu-item>Ex‑Presidentes</button>
+    </mat-menu>
+
+    <!-- Sedes -->
+    <button
+      mat-button
+      #sedBtn="matMenuTrigger"
+      [matMenuTriggerFor]="menuSedes"
+      class="menu-button"
+      [class.opened]="sedBtn.menuOpen"
+    >
+      <span class="menu-label">Sedes</span>
+      <mat-icon class="menu-icon">expand_more</mat-icon>
+    </button>
+    <mat-menu #menuSedes="matMenu" class="app-menu">
+      <button mat-menu-item>Sede Social</button>
+      <button mat-menu-item>Sede Campestre 1</button>
+      <button mat-menu-item>Sede Campestre 2</button>
+    </mat-menu>
+
+    <!-- Departamentos -->
+    <button
+      mat-button
+      #depBtn="matMenuTrigger"
+      [matMenuTriggerFor]="menuDeptos"
+      class="menu-button"
+      [class.opened]="depBtn.menuOpen"
+    >
+      <span class="menu-label">Departamentos</span>
+      <mat-icon class="menu-icon">expand_more</mat-icon>
+    </button>
+    <mat-menu #menuDeptos="matMenu" class="app-menu">
+      <button mat-menu-item class="hover_vermelho">Esportivos</button>
+      <button mat-menu-item class="hover_vermelho">Culturais</button>
+    </mat-menu>
+
+    <!-- Outros links -->
+    <button mat-button routerLink="/eventos">Eventos</button>
+    <button mat-button routerLink="/contato">Contato</button>
+
+  </mat-toolbar>
+
+        <button class="btn btn-outline-primary">Login</button>
+    </div>
+</nav>
+<hr class="header-divider" />

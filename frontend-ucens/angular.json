@@ -30,6 +30,9 @@
               "src/assets"
             ],
             "styles": [
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/bootstrap-icons/font/bootstrap-icons.css",
+              "node_modules/swiper/swiper-bundle.min.css",
               "src/styles.scss"
             ],
             "scripts": []
@@ -100,5 +103,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "85387a84-00b9-4cbd-8ea9-7ad47e25be8f"
   }
 }

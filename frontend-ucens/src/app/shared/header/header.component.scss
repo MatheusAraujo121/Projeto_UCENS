@@ -1,0 +1,67 @@
+.app-toolbar {
+    background: #fff;
+    box-shadow: none;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+
+    .logo-link {
+        padding: 0;
+        min-width: auto;
+    }
+
+    button.mat-button,
+    button.mat-stroked-button {
+        margin: 0 1.5rem;
+        text-transform: none;
+    }
+
+    button.mat-button:not(.menu-button) {
+        color: #555;
+        font-weight: 500;
+        transition: color 0.2s;
+
+        &:hover {
+            color: #e60012;
+        }
+    }
+
+    .menu-button {
+        display: inline-flex;
+        align-items: center;
+        color: #555;
+        font-weight: 500;
+        transition: color 0.2s;
+        padding: 0;
+
+        .menu-label {
+            margin-right: 4px;
+        }
+
+        .menu-icon {
+            margin-left: auto;
+            transition: transform 0.2s, color 0.2s;
+        }
+
+
+        &.opened {
+            color: #e60012 !important;
+
+            .menu-icon {
+                color: #e60012 !important;
+                transform: rotate(180deg) !important;
+            }
+        }
+    }
+
+    .login-button {
+        margin-left: 1rem;
+    }
+}
+
+.header-divider {
+    border: none;
+    height: 2px;
+    background-color: #000;
+    margin: 0;
+}

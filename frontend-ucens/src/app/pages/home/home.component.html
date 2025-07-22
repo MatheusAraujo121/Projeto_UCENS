@@ -1,0 +1,140 @@
+<!-- CARROSSEL PRINCIPAL -->
+<swiper [config]="config" class="main-swiper">
+  <ng-template swiperSlide>
+    <div class="banner banner-1 d-flex align-items-center justify-content-center">
+    </div>
+  </ng-template>
+
+  <ng-template swiperSlide>
+    <div class="banner banner-2 d-flex align-items-center justify-content-center">
+    </div>
+  </ng-template>
+
+  <div class="swiper-button-prev"></div>
+  <div class="swiper-button-next"></div>
+  <div class="swiper-pagination"></div>
+</swiper>
+
+<!-- SEÇÃO CONHEÇA A NIPPON -->
+<section class="conheca-nippon py-5">
+  <div class="container">
+    <h2 class="section-title mb-5">Conheça a Nippon</h2>
+    <div class="row align-items-start">
+      <!-- TEXTO COM CARPA AO FUNDO -->
+      <div class="col-lg-6 text-wrap position-relative">
+        <h3 class="display-title">
+          A Nippon é o maior<br>
+          centro cultural<br>
+          japonês de Sorocaba
+        </h3>
+        <p>
+          A Associação Nippon é um centro cultural dedicado à preservação e promoção das tradições e valores da cultura
+          japonesa. Nosso espaço é um ponto de encontro para pessoas de todas as idades que desejam conhecer, vivenciar
+          e celebrar a rica herança do Japão.
+        </p>
+        <p>
+          Oferecemos uma variedade de atividades com características típicas japonesas, como baseball, gateball, judô,
+          taiko, yoga, karaokê e aulas de língua japonesa. Tudo isso em um ambiente acolhedor, que valoriza o respeito,
+          a disciplina e o espírito de comunidade.
+        </p>
+        <p>
+          Além das atividades regulares, realizamos eventos culturais marcantes ao longo do ano, como o Shinnenkai
+          (encontro de Ano Novo), almoços e jantares japoneses, e outras celebrações que aproximam as pessoas por meio
+          da gastronomia, música e tradição.
+        </p>
+        <p class="highlight">
+          Seja você descendente japonês ou apenas apaixonado pela cultura nipônica, a Associação Nippon está de portas
+          abertas para receber você!
+        </p>
+      </div>
+
+      <!-- IMAGEM E RODAPÉ -->
+      <div class="col-lg-6">
+        <img src="assets/img/undokai.jpg" alt="Undokai 2025" class="img-fluid rounded">
+        <p class="caption mt-2">
+          Membros da nippon hasteando o Koinobori para o undokai 2025.<br>
+          O Undokai é uma festa tradicional nas colônias japonesas do Brasil e é um dia de gincanas com muitas formas de
+          corridas e brincadeiras para as crianças, jovens, adultos e pessoas de todas as idades.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- SEÇÃO DE LOCALIZAÇÃO -->
+<section class="localizacao py-5">
+  <div class="container">
+    <h2 class="section-title mb-4">Localização</h2>
+    <div class="row g-4 justify-content-center">
+      
+      <!-- Primeiro cartão -->
+      <div class="col-12 col-md-4 text-center">
+        <img src="assets/img/ucens.jpg" alt="UCENS Sorocaba" class="img-fluid loc-img">
+        <p class="loc-text mt-2">
+          <a href="https://www.google.com/maps?q=R.+Manoel+Leite+Magalhães,+55,+Sorocaba+SP" target="_blank" class="text-decoration-none text-dark">
+            R. Manoel Leite Magalhães, 55<br>
+            Centro, Sorocaba SP
+          </a>
+        </p>
+      </div>
+
+      <!-- Segundo cartão -->
+      <div class="col-12 col-md-4 text-center">
+        <img src="assets/img/jardim-luciana.jpg" alt="Jardim Luciana" class="img-fluid loc-img">
+        <p class="loc-text mt-2">
+          <a href="https://www.google.com/maps?q=R.+Kiyoshi+Minami,+722,+Sorocaba+SP" target="_blank" class="text-decoration-none text-dark">
+            R. Kiyoshi Minami, 722 - Jardim Luciana<br>
+            Sorocaba SP
+          </a>
+        </p>
+      </div>
+
+      <!-- Terceiro cartão -->
+      <div class="col-12 col-md-4 text-center">
+        <img src="assets/img/aracoiaba.jpg" alt="Araçoiaba da Serra" class="img-fluid loc-img">
+        <p class="loc-text mt-2">
+          <a href="https://www.google.com/maps?q=Estrada+da+Cooperativa,+211,+Araçoiaba+da+Serra+SP" target="_blank" class="text-decoration-none text-dark">
+            Estr. da Cooperativa, 211<br>
+            Recanto Al Deville, Araçoiaba da Serra SP
+          </a>
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- TÍTULO DO FORMULÁRIO -->
+<section class="contato-titulo py-4">
+  <div class="container text-center">
+    <h2>Entre em contato conosco</h2>
+  </div>
+</section>
+
+<!-- FORMULÁRIO DE CONTATO -->
+<section class="py-5">
+  <div class="container">
+    <form class="row g-2 justify-content-center">
+      <div class="col-sm-4">
+        <input type="email" class="form-control" placeholder="Email">
+      </div>
+      <div class="col-sm-4">
+        <input type="text" class="form-control" placeholder="Nome">
+      </div>
+      <div class="col-sm-2">
+        <button class="btn btn-dark w-100">enviar</button>
+      </div>
+      <div class="col-10">
+        <textarea class="form-control" rows="4" placeholder="Seu texto"></textarea>
+      </div>
+    </form>
+    <div class="text-center mt-4">
+      <p>Ou use o WhatsApp!</p>
+      <a href="https://wa.me/551532313015" target="_blank" rel="noopener" class="btn btn-success btn-lg">
+        <i class="bi bi-whatsapp"></i>
+        Contatar
+      </a>
+    </div>
+  </div>
+</section>
