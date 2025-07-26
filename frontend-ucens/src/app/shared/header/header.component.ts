@@ -7,8 +7,8 @@ import { MatMenuTrigger } from '@angular/material/menu';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent {
-  @ViewChild('institucionalBtn', { read: MatMenuTrigger }) instTrig!: MatMenuTrigger;
-  @ViewChild('sedesBtn', { read: MatMenuTrigger }) sedesTrig!: MatMenuTrigger;
+  @ViewChild('institutionalBtn', { read: MatMenuTrigger }) instTrig!: MatMenuTrigger;
+  @ViewChild('headquartersBtn', { read: MatMenuTrigger }) headquartersTrig!: MatMenuTrigger;
   @ViewChild('deptosBtn', { read: MatMenuTrigger }) deptosTrig!: MatMenuTrigger;
 }
 

@@ -8,18 +8,18 @@
             <!-- Home -->
     <button mat-button routerLink="">Home</button>
 
-    <!-- Institucional -->
+    <!-- Institutional -->
     <button
       mat-button
       #instBtn="matMenuTrigger"
-      [matMenuTriggerFor]="menuInstitucional"
+      [matMenuTriggerFor]="menuInstitutional"
       class="menu-button"
       [class.opened]="instBtn.menuOpen"
     >
-      <span class="menu-label">Institucional</span>
+      <span class="menu-label">Institutional</span>
       <mat-icon class="menu-icon">expand_more</mat-icon>
     </button>
-    <mat-menu #menuInstitucional="matMenu" class="app-menu">
+    <mat-menu #menuInstitutional="matMenu" class="app-menu">
       <button mat-menu-item routerLink="story">História</button>
       <button mat-menu-item>Estatuto</button>
       <button mat-menu-item>Regulamento</button>
@@ -56,13 +56,13 @@
       <mat-icon class="menu-icon">expand_more</mat-icon>
     </button>
     <mat-menu #menuDeptos="matMenu" class="app-menu">
-      <button mat-menu-item class="hover_vermelho">Esportivos</button>
+      <button mat-menu-item class="hover_vermelho">Sportys</button>
       <button mat-menu-item class="hover_vermelho">Culturais</button>
     </mat-menu>
 
     <!-- Outros links -->
-    <button mat-button routerLink="/eventos">Eventos</button>
-    <button mat-button routerLink="/contato">Contato</button>
+    <button mat-button routerLink="/eventss">Eventss</button>
+    <button mat-button routerLink="/contact">Contact</button>
 
   </mat-toolbar>
 

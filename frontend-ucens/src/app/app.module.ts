@@ -17,19 +17,22 @@ import { MatMenuModule }    from '@angular/material/menu';
 import { MatButtonModule }  from '@angular/material/button';
 import { MatIconModule }    from '@angular/material/icon';
 
-//Institucional
-import { StoryComponent } from './pages/institucional/story/story.component';
-import { StatuteComponent } from './pages/institucional/statute/statute.component';
-import { RegulationsComponent } from './pages/institucional/regulations/regulations.component';
-import { DirectorsComponent } from './pages/institucional/directors/directors.component';
-import { ExPresidentsComponent } from './pages/institucional/ex-presidents/ex-presidents.component';
-import { SedeSocialComponent } from './pages/sedes/sede-social/sede-social.component';
-import { SedeCampestreIComponent } from './pages/sedes/sede-campestre-i/sede-campestre-i.component';
-import { SedeCampestreIIComponent } from './pages/sedes/sede-campestre-ii/sede-campestre-ii.component';
-import { EsportivoComponent } from './pages/departamentos/esportivo/esportivo.component';
-import { CulturalComponent } from './pages/departamentos/cultural/cultural.component';
-import { ContatoComponent } from './pages/contato/contato.component';
-import { EventoComponent } from './pages/evento/evento.component';
+//Institutional
+import { StoryComponent } from './pages/institutional/story/story.component';
+import { StatuteComponent } from './pages/institutional/statute/statute.component';
+import { RegulationsComponent } from './pages/institutional/regulations/regulations.component';
+import { DirectorsComponent } from './pages/institutional/directors/directors.component';
+import { ExPresidentsComponent } from './pages/institutional/ex-presidents/ex-presidents.component';
+import { SocialHeadquarterComponent } from './pages/headquarters/social-headquarter/social-headquarter.component';
+import { CountryHeadquarterIComponent } from './pages/headquarters/country-headquarter-i/country-headquarter-i.component';
+import { CountryHeadquarterIIComponent } from './pages/headquarters/country-headquarter-ii/country-headquarter-ii.component';
+import { SportyComponent } from './pages/departments/sporty/sporty.component';
+import { CulturalComponent } from './pages/departments/cultural/cultural.component';
+import { ContactComponent } from './pages/contact/contact.component';
+import { EventsComponent } from './pages/events/events.component';
+import { LoginComponent } from './pages/system/admin/login/login.component';
+import { EditComponent } from './pages/system/admin/edit/edit.component';
+import { ViewComponent } from './pages/system/admin/view/view.component';
 
 @NgModule({
   declarations: [
@@ -42,13 +45,16 @@ import { EventoComponent } from './pages/evento/evento.component';
     RegulationsComponent,
     DirectorsComponent,
     ExPresidentsComponent,
-    SedeSocialComponent,
-    SedeCampestreIComponent,
-    SedeCampestreIIComponent,
-    EsportivoComponent,
+    SocialHeadquarterComponent,
+    CountryHeadquarterIComponent,
+    CountryHeadquarterIIComponent,
+    SportyComponent,
     CulturalComponent,
-    ContatoComponent,
-    EventoComponent
+    ContactComponent,
+    EventsComponent,
+    LoginComponent,
+    EditComponent,
+    ViewComponent
   ],
   imports: [
     BrowserModule,
