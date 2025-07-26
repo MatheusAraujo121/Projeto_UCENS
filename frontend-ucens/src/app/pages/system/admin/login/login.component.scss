@@ -1,0 +1,67 @@
+.login-page {
+  position: relative;
+  background: #fff;
+
+  /* 1) Carpa grande atrás do card */
+  .carp-bg {
+    content: "";
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-110%);
+    width: 500px;
+    height: 500px;
+    background: url('/assets/carp.svg') left/contain no-repeat;
+    opacity: 0.18;
+    z-index: 0;
+  }
+
+  /* 2) Card de login */
+  .login-card {
+    position: relative;
+    z-index: 1;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 1rem;
+    max-width: 400px;
+    width: 100%;
+  }
+
+  /* 3) Inputs */
+  .form-control-lg {
+    border-radius: 0.5rem;
+    border: 1px solid #aaa;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+  }
+
+  /* 4) Botão azul com hover preenchido */
+  .btn-login {
+    background-color: transparent;
+    border: 2px solid #0069d9;
+    color: #0069d9;
+    font-weight: 500;
+    transition: background-color 0.2s, color 0.2s;
+
+    &:hover,
+    &:focus {
+      background-color: #0069d9;
+      color: #fff;
+    }
+  }
+
+  /* 5) Links abaixo do form */
+  .login-links {
+    a {
+      color: #0069d9;
+      text-decoration: none;
+      margin-top: 0.5rem;
+      display: inline-block;
+      transition: text-decoration 0.2s;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}

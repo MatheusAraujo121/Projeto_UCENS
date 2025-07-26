@@ -1,1 +1,35 @@
-<p>login works!</p>
+<main class="login-page d-flex justify-content-center align-items-center py-5 carp-bg">
+  <!-- Carpa de fundo grande -->
+  <div class="carp-bg"></div>
+
+  <div class="card login-card p-4 position-relative">
+    <h2 class="text-center mb-4">Login</h2>
+
+    <form>
+      <div class="mb-3">
+        <label for="email" class="form-label visually-hidden">Email</label>
+        <input
+          type="email"
+          id="email"
+          class="form-control form-control-lg"
+          placeholder="Email"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label for="senha" class="form-label visually-hidden">Senha</label>
+        <input
+          type="password"
+          id="senha"
+          class="form-control form-control-lg"
+          placeholder="Senha"
+          required
+        />
+      </div>
+      <!-- Botão azul customizado -->
+      <button type="submit" class="btn btn-login btn-lg w-100">
+        Entrar
+      </button>
+    </form>
+  </div>
+</main>
