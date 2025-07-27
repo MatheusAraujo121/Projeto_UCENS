@@ -1,0 +1,110 @@
+<main class="cadastro-page">
+
+    <div class="cadastro-container">
+        <img src="assets/carp.svg" class="bg-carpa" alt="carpa" />
+        <h2>Cadastrar Associado</h2>
+
+        <form [formGroup]="form" (ngSubmit)="efetuarCadastro()">
+            <p class="section-label"><em>Dados Básicos</em></p>
+            <div class="form-grid">
+                <mat-form-field appearance="fill">
+                    <mat-label>Nome </mat-label>
+                    <input class="bord" matInput formControlName="nome" placeholder="Insira o nome" />
+                </mat-form-field>
+
+                <mat-form-field appearance="fill">
+                    <mat-label>Cognome</mat-label>
+                    <input matInput formControlName="cognome" placeholder="Insira o sobrenome" />
+                </mat-form-field>
+            </div>
+            <p class="section-label"><em>Identificação</em></p>
+            <div class="form-grid">
+                <mat-form-field appearance="fill">
+                    <mat-label>CPF </mat-label>
+                    <input matInput formControlName="cpf" placeholder="000.000.000-00" mask="000.000.000-00" />
+                </mat-form-field>
+
+                <mat-form-field appearance="fill">
+                    <mat-label>RG </mat-label>
+                    <input matInput formControlName="rg" placeholder="00.000.000-0" mask="00.000.000-0" />
+                </mat-form-field>
+            </div>
+            <p class="section-label"><em>Contato</em></p>
+            <div class="form-grid">
+                <mat-form-field appearance="fill">
+                    <mat-label>Celular </mat-label>
+                    <input matInput formControlName="telefone" placeholder="(00) 00000-0000" mask="(00) 00000-0000" />
+                </mat-form-field>
+
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>E‑mail </mat-label>
+                    <input matInput type="email" formControlName="email" placeholder="usuario@exemplo.com" />
+                </mat-form-field>
+            </div>
+            <p class="section-label"><em>Família</em></p>
+            <div class="form-grid">
+                <mat-form-field appearance="fill">
+                    <mat-label>Nome do Pai</mat-label>
+                    <input matInput formControlName="nomePai" />
+                </mat-form-field>
+
+                <mat-form-field appearance="fill">
+                    <mat-label>Nome da Mãe</mat-label>
+                    <input matInput formControlName="nomeMae" />
+                </mat-form-field>
+            </div>
+            <p class="section-label"><em>Outros Dados</em></p>
+            <div class="form-grid">
+                <mat-form-field appearance="fill">
+                    <mat-label>Data de Nascimento</mat-label>
+                    <input matInput formControlName="dataNascimento" type="date" />
+                </mat-form-field>
+
+                <mat-form-field appearance="fill">
+                    <mat-label>Sexo </mat-label>
+                    <mat-select formControlName="sexo">
+                        <mat-option value="Feminino">Feminino</mat-option>
+                        <mat-option value="Masculino">Masculino</mat-option>
+                        <mat-option value="Outro">Outro</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill">
+                    <mat-label>Estado Civil </mat-label>
+                    <input matInput formControlName="estadoCivil"/>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill">
+                    <mat-label>Local de Nascimento </mat-label>
+                    <input matInput formControlName="localNascimento" />
+                </mat-form-field>
+
+                <mat-form-field appearance="fill">
+                    <mat-label>Nacionalidade </mat-label>
+                    <input matInput formControlName="nacionalidade" />
+                </mat-form-field>
+
+                <mat-form-field appearance="fill">
+                    <mat-label>Grau de Instrução</mat-label>
+                    <input matInput formControlName="grauInstrucao" />
+                </mat-form-field>
+
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Profissão </mat-label>
+                    <input matInput formControlName="profissao" />
+                </mat-form-field>
+            </div>
+
+            <div class="btns-bottom">
+                <button mat-stroked-button class="btn-cancel" routerLink="/dashboard">
+                    <mat-icon>close</mat-icon>
+                    <span>Cancelar</span>
+                </button>
+                <button mat-stroked-button class="btn-submit" type="submit">
+                    <mat-icon>radio_button_unchecked</mat-icon>
+                    <span>Efetuar cadastro</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</main>

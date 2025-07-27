@@ -1,0 +1,60 @@
+<main class="list-page">
+    <div class="toolbar">
+        <h2>Lista de Associados</h2>
+        <p>Clique duas vezes em um associado para ver mais informações</p>
+
+        <div class="filters">
+            <mat-form-field appearance="outline">
+                <mat-label>Filtrar por nome</mat-label>
+                <input matInput [formControl]="filterNome" placeholder="Nome">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Situação do contrato</mat-label>
+                <mat-select [formControl]="filterSituacao" placeholder="Situação">
+                    <mat-option value="">Todos</mat-option>
+                    <mat-option value="Regular">Regular</mat-option>
+                    <mat-option value="Inadimplente">Inadimplente</mat-option>
+                    <mat-option value="Desligado">Desligado</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="flex-grow">
+                <mat-label>Pesquisar</mat-label>
+                <input matInput [formControl]="filterGlobal" placeholder="Buscar...">
+            </mat-form-field>
+        </div>
+        <button mat-raised-button color="primary" class="btn-light-blue" routerLink="/create-associates">
+            Cadastrar Associado
+        </button>
+    </div>
+
+    <div class="table-container">
+        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z1 styled-table">
+
+            <!-- Nome -->
+            <ng-container matColumnDef="nome">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
+                <td mat-cell *matCellDef="let row">{{ row.nome }}</td>
+            </ng-container>
+
+            <!-- Cognome -->
+            <ng-container matColumnDef="cognome">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Cognome</th>
+                <td mat-cell *matCellDef="let row">{{ row.cognome }}</td>
+            </ng-container>
+
+            <!-- Situação -->
+            <ng-container matColumnDef="situacao">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Situação</th>
+                <td mat-cell *matCellDef="let row">{{ row.situacao }}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+            aria-label="Itens por página"></mat-paginator>
+    </div>
+</main>

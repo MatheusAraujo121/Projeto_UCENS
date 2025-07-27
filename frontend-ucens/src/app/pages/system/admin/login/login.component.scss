@@ -2,7 +2,6 @@
   position: relative;
   background: #fff;
 
-  /* 1) Carpa grande atrás do card */
   .carp-bg {
     content: "";
     position: absolute;
@@ -16,7 +15,6 @@
     z-index: 0;
   }
 
-  /* 2) Card de login */
   .login-card {
     position: relative;
     z-index: 1;
@@ -27,7 +25,6 @@
     width: 100%;
   }
 
-  /* 3) Inputs */
   .form-control-lg {
     border-radius: 0.5rem;
     border: 1px solid #aaa;
@@ -35,7 +32,6 @@
     font-size: 1rem;
   }
 
-  /* 4) Botão azul com hover preenchido */
   .btn-login {
     background-color: transparent;
     border: 2px solid #0069d9;
@@ -50,7 +46,6 @@
     }
   }
 
-  /* 5) Links abaixo do form */
   .login-links {
     a {
       color: #0069d9;
