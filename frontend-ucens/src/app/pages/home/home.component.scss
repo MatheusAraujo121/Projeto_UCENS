@@ -180,3 +180,21 @@
   }
 }
 
+.wpp{
+    position: fixed;
+    bottom: 60px;
+    right: 20px;
+    background-color: #49c159;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 50%;
+    box-shadow: 0px 3px 3px 3px rgba(0, 0, 0, 0.2); /* Sombra para dar destaque */
+    
+    z-index: 1000; /* Garante que o ícone fique sobre outros elementos */
+}
+
+.wpp .wpp-ico{
+    height: 30px;
+    width: 30px;
+}
+
