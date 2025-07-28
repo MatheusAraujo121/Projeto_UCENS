@@ -11,12 +11,14 @@ import { ViewAssociatesComponent } from './pages/system/associates/view-associat
 import { ListDependentsComponent } from './pages/system/dependents/list-dependents/list-dependents.component';
 import { CreateDependentsComponent } from './pages/system/dependents/create-dependents/create-dependents.component';
 import { StatuteComponent } from './pages/institutional/statute/statute.component';
+import { RegulationsComponent } from './pages/institutional/regulations/regulations.component';
 
 const routes: Routes = [
   //Rotas site expositivo
   { path: '', component: HomeComponent },   
   { path: 'story', component: StoryComponent }, 
   { path: 'statute', component: StatuteComponent},
+  { path: 'regulations', component: RegulationsComponent},
 
   //Rotas Admin
   { path: 'login', component: LoginComponent },
