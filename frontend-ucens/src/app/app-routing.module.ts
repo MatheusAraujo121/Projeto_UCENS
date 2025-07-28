@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+
 import { HomeComponent } from './pages/home/home.component';
 import { StoryComponent } from './pages/institutional/story/story.component';
 import { LoginComponent } from './pages/system/admin/login/login.component';
@@ -9,11 +10,13 @@ import { CreateAssociatesComponent } from './pages/system/associates/create-asso
 import { ViewAssociatesComponent } from './pages/system/associates/view-associates/view-associates.component';
 import { ListDependentsComponent } from './pages/system/dependents/list-dependents/list-dependents.component';
 import { CreateDependentsComponent } from './pages/system/dependents/create-dependents/create-dependents.component';
+import { StatuteComponent } from './pages/institutional/statute/statute.component';
 
 const routes: Routes = [
   //Rotas site expositivo
   { path: '', component: HomeComponent },   
-  { path: 'story', component: StoryComponent },
+  { path: 'story', component: StoryComponent }, 
+  { path: 'statute', component: StatuteComponent},
 
   //Rotas Admin
   { path: 'login', component: LoginComponent },
