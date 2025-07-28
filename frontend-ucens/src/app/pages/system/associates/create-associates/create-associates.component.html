@@ -1,7 +1,7 @@
 <main class="cadastro-page">
 
     <div class="cadastro-container">
-        <img src="assets/carp.svg" class="bg-carpa" alt="carpa" />
+        <img src="assets/carp.jpg" class="bg-carpa" alt="carpa" />
         <h2>Cadastrar Associado</h2>
 
         <form [formGroup]="form" (ngSubmit)="efetuarCadastro()">
@@ -9,7 +9,7 @@
             <div class="form-grid">
                 <mat-form-field appearance="fill">
                     <mat-label>Nome </mat-label>
-                    <input class="bord" matInput formControlName="nome" placeholder="Insira o nome" />
+                    <input matInput formControlName="nome" placeholder="Insira o nome" />
                 </mat-form-field>
 
                 <mat-form-field appearance="fill">
@@ -71,7 +71,7 @@
 
                 <mat-form-field appearance="fill">
                     <mat-label>Estado Civil </mat-label>
-                    <input matInput formControlName="estadoCivil"/>
+                    <input matInput formControlName="estadoCivil" />
                 </mat-form-field>
 
                 <mat-form-field appearance="fill">

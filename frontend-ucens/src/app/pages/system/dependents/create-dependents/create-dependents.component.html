@@ -1,0 +1,132 @@
+<main class="cadastro-page">
+    <div class="cadastro-container">
+        <img src="assets/carp.jpg" class="bg-carpa" alt="carpa" />
+        <h2>Cadastrar Dependente</h2>
+
+        <form [formGroup]="form" (ngSubmit)="efetuarCadastro()">
+
+            <!-- Associação e Situação -->
+            <p class="section-label"><em>Vínculo</em></p>
+            <div class="form-grid">
+                <mat-form-field appearance="fill">
+                    <mat-label>ID do Associado</mat-label>
+                    <input matInput formControlName="idAssociado" placeholder="ID associado" />
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Situação </mat-label>
+                    <mat-select formControlName="situacao">
+                        <mat-option value="Regular">Regular</mat-option>
+                        <mat-option value="Inadimplente">Inadimplente</mat-option>
+                        <mat-option value="Desligado">Desligado</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Grau de Parentesco </mat-label>
+                    <input matInput formControlName="grauParentesco" placeholder="Ex: Filho, Cônjuge" />
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Data Limite </mat-label>
+                    <input matInput formControlName="dataLimite" type="date" />
+                </mat-form-field>
+            </div>
+
+            <!-- Carteirinha -->
+            <p class="section-label"><em>Carteirinha</em></p>
+            <div class="form-grid" [formGroupName]="'carteirinha'">
+                <mat-form-field appearance="fill">
+                    <mat-label>Nome na Carteirinha </mat-label>
+                    <input matInput formControlName="nome" placeholder="Nome" />
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Cognome </mat-label>
+                    <input matInput formControlName="cognome" placeholder="Sobrenome" />
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Número </mat-label>
+                    <input matInput formControlName="numero" placeholder="000000" />
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Categoria </mat-label>
+                    <input matInput formControlName="categoria" placeholder="Ex: Titular" />
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Validade </mat-label>
+                    <input matInput formControlName="validade" type="date" />
+                </mat-form-field>
+            </div>
+
+            <!-- Identificação Pessoal -->
+            <p class="section-label"><em>Identificação</em></p>
+            <div class="form-grid">
+                <mat-form-field appearance="fill">
+                    <mat-label>Sexo </mat-label>
+                    <mat-select formControlName="sexo">
+                        <mat-option value="Feminino">Feminino</mat-option>
+                        <mat-option value="Masculino">Masculino</mat-option>
+                        <mat-option value="Outro">Outro</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>CPF </mat-label>
+                    <input matInput formControlName="cpf" mask="000.000.000-00" placeholder="000.000.000-00" />
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>RG</mat-label>
+                    <input matInput formControlName="rg" mask="00.000.000-0" placeholder="00.000.000-0" />
+                </mat-form-field>
+            </div>
+
+            <!-- Dados Pessoais -->
+            <p class="section-label"><em>Dados Pessoais</em></p>
+            <div class="form-grid">
+                <mat-form-field appearance="fill">
+                    <mat-label>Data de Nascimento </mat-label>
+                    <input matInput formControlName="dataNascimento" type="date" />
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Local de Nascimento </mat-label>
+                    <input matInput formControlName="localNascimento" />
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Nacionalidade</mat-label>
+                    <input matInput formControlName="nacionalidade" />
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Estado Civil</mat-label>
+                    <input matInput formControlName="estadoCivil" />
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Grau de Instrução</mat-label>
+                    <input matInput formControlName="grauInstrucao" />
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Profissão</mat-label>
+                    <input matInput formControlName="profissao" />
+                </mat-form-field>
+            </div>
+
+            <!-- Atividades e Exames -->
+            <p class="section-label"><em>Extras</em></p>
+            <div class="form-grid">
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Exames</mat-label>
+                    <textarea matInput formControlName="exames"></textarea>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Atividades Proibidas</mat-label>
+                    <textarea matInput formControlName="atividadesProibidas"></textarea>
+                </mat-form-field>
+            </div>
+
+            <!-- Botões -->
+            <div class="btns-bottom">
+                <button mat-stroked-button class="btn-cancel" routerLink="/dashboard">
+                    <mat-icon>close</mat-icon> Cancelar
+                </button>
+                <button mat-stroked-button class="btn-submit" type="submit">
+                    <mat-icon>radio_button_unchecked</mat-icon> Efetuar cadastro
+                </button>
+            </div>
+        </form>
+    </div>
+</main>

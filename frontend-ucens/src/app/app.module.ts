@@ -64,6 +64,10 @@ import { CreateAssociatesComponent } from './pages/system/associates/create-asso
 
 //Mascara de input
 import { NgxMaskModule} from 'ngx-mask';
+import { ListDependentsComponent } from './pages/system/dependents/list-dependents/list-dependents.component';
+import { CreateDependentsComponent } from './pages/system/dependents/create-dependents/create-dependents.component';
+import { EditDependentsComponent } from './pages/system/dependents/edit-dependents/edit-dependents.component';
+import { ViewDependentsComponent } from './pages/system/dependents/view-dependents/view-dependents.component';
 
 @NgModule({
   declarations: [
@@ -90,7 +94,11 @@ import { NgxMaskModule} from 'ngx-mask';
     ListAssociatesComponent,
     EditAssociatesComponent,
     ViewAssociatesComponent,
-    CreateAssociatesComponent
+    CreateAssociatesComponent,
+    ListDependentsComponent,
+    CreateDependentsComponent,
+    EditDependentsComponent,
+    ViewDependentsComponent
   ],
   imports: [
     BrowserModule,

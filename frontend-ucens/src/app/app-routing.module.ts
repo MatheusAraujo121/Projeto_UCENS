@@ -7,6 +7,8 @@ import { DashboardComponent } from './pages/system/dashboard/dashboard.component
 import { ListAssociatesComponent } from './pages/system/associates/list-associates/list-associates.component';
 import { CreateAssociatesComponent } from './pages/system/associates/create-associates/create-associates.component';
 import { ViewAssociatesComponent } from './pages/system/associates/view-associates/view-associates.component';
+import { ListDependentsComponent } from './pages/system/dependents/list-dependents/list-dependents.component';
+import { CreateDependentsComponent } from './pages/system/dependents/create-dependents/create-dependents.component';
 
 const routes: Routes = [
   //Rotas site expositivo
@@ -20,8 +22,11 @@ const routes: Routes = [
   //Rotas Associados
   { path: 'list-associates', component: ListAssociatesComponent },
   { path: 'create-associates', component: CreateAssociatesComponent },
-  { path: 'view-associates', component: ViewAssociatesComponent }
-   
+  { path: 'view-associates', component: ViewAssociatesComponent },
+
+  //Rotas Dependentes
+  { path: 'list-dependents', component: ListDependentsComponent },
+  { path: 'create-dependents', component: CreateDependentsComponent }, 
 ];
 
 @NgModule({
