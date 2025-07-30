@@ -1,1 +1,122 @@
-<p>view-dependents works!</p>
+<main class="cadastro-page">
+
+    <div class="cadastro-container visualizar-associado">
+        <h6>Visualizar Dependente</h6>
+        <img src="assets/carp.jpg" class="bg-carpa" alt="carpa" />
+        <button mat-stroked-button color="warn" class="btn-voltar" (click)="voltarLista()">
+            <mat-icon>arrow_back</mat-icon>
+            <span>Voltar</span>
+        </button>
+
+        <div class="barra-divisoria"></div>
+        <div class="navegacao">
+            <button mat-stroked-button (click)="anterior()" [disabled]="dependentIndex === 0">
+                <mat-icon>arrow_back</mat-icon>
+                Ant. Dep.
+            </button>
+            <h2>{{dependent.carteirinha.nome}}</h2>
+            <button mat-stroked-button (click)="proximo()" [disabled]="dependentIndex === dependents.length - 1">
+                Próx. Dep.
+                <mat-icon>arrow_forward</mat-icon>
+            </button>
+        </div>
+        <div class="barra-divisoria"></div>
+
+        <form class="form-grid">
+            <p class="section-label"><em>Vínculo</em></p>
+            <mat-form-field appearance="fill">
+                <mat-label>ID do Associado</mat-label>
+                <input matInput [value]="dependent.idAssociado" disabled />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Situação</mat-label>
+                <input matInput [value]="dependent.situacao" disabled />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Grau de Parentesco</mat-label>
+                <input matInput [value]="dependent.grauParentesco" disabled />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Data Limite</mat-label>
+                <input matInput type="date" [value]="dependent.dataLimite" disabled />
+            </mat-form-field>
+
+            <p class="section-label"><em>Carteirinha</em></p>
+            <mat-form-field appearance="fill">
+                <mat-label>Nome na Carteirinha</mat-label>
+                <input matInput [value]="dependent.carteirinha.nome" disabled />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Cognome</mat-label>
+                <input matInput [value]="dependent.carteirinha.cognome" disabled />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Número</mat-label>
+                <input matInput [value]="dependent.carteirinha.numero" disabled />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Categoria</mat-label>
+                <input matInput [value]="dependent.carteirinha.categoria" disabled />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Validade</mat-label>
+                <input matInput type="date" [value]="dependent.carteirinha.validade" disabled />
+            </mat-form-field>
+
+            <p class="section-label"><em>Identificação</em></p>
+            <mat-form-field appearance="fill">
+                <mat-label>Sexo</mat-label>
+                <input matInput [value]="dependent.sexo" disabled />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>CPF</mat-label>
+                <input matInput [value]="dependent.cpf" disabled mask="000.000.000-00" />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>RG</mat-label>
+                <input matInput [value]="dependent.rg" disabled mask="00.000.000-0" />
+            </mat-form-field>
+
+            <p class="section-label"><em>Dados Pessoais</em></p>
+            <mat-form-field appearance="fill">
+                <mat-label>Data de Nascimento</mat-label>
+                <input matInput type="date" [value]="dependent.dataNascimento" disabled />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Local de Nascimento</mat-label>
+                <input matInput [value]="dependent.localNascimento" disabled />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Nacionalidade</mat-label>
+                <input matInput [value]="dependent.nacionalidade" disabled />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Estado Civil</mat-label>
+                <input matInput [value]="dependent.estadoCivil" disabled />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Grau de Instrução</mat-label>
+                <input matInput [value]="dependent.grauInstrucao" disabled />
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="full-width">
+                <mat-label>Profissão</mat-label>
+                <input matInput [value]="dependent.profissao" disabled />
+            </mat-form-field>
+
+            <p class="section-label"><em>Extras</em></p>
+            <mat-form-field appearance="fill" class="full-width">
+                <mat-label>Exames</mat-label>
+                <textarea matInput [value]="dependent.exames" disabled></textarea>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="full-width">
+                <mat-label>Atividades Proibidas</mat-label>
+                <textarea matInput [value]="dependent.atividadesProibidas" disabled></textarea>
+            </mat-form-field>
+
+            <button mat-stroked-button class="btn-submit" [routerLink]="['/edit-dependents', dependent.id]">
+                <mat-icon>edit</mat-icon>
+                <span>Editar</span>
+            </button>
+        </form>
+    </div>
+</main>

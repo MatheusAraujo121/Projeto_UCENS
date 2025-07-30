@@ -14,15 +14,18 @@ import { StatuteComponent } from './pages/institutional/statute/statute.componen
 import { RegulationsComponent } from './pages/institutional/regulations/regulations.component';
 import { DirectorsComponent } from './pages/institutional/directors/directors.component';
 import { EventsComponent } from './pages/events/events.component';
+import { EditAssociatesComponent } from './pages/system/associates/edit-associates/edit-associates.component';
+import { ViewDependentsComponent } from './pages/system/dependents/view-dependents/view-dependents.component';
+import { EditDependentsComponent } from './pages/system/dependents/edit-dependents/edit-dependents.component';
 
 const routes: Routes = [
   //Rotas site expositivo
-  { path: '', component: HomeComponent },   
-  { path: 'story', component: StoryComponent }, 
-  { path: 'statute', component: StatuteComponent},
-  { path: 'regulations', component: RegulationsComponent},
-  { path: 'directors', component: DirectorsComponent},
-  { path: 'events', component: EventsComponent},
+  { path: '', component: HomeComponent },
+  { path: 'story', component: StoryComponent },
+  { path: 'statute', component: StatuteComponent },
+  { path: 'regulations', component: RegulationsComponent },
+  { path: 'directors', component: DirectorsComponent },
+  { path: 'events', component: EventsComponent },
 
   //Rotas Admin
   { path: 'login', component: LoginComponent },
@@ -31,15 +34,18 @@ const routes: Routes = [
   //Rotas Associados
   { path: 'list-associates', component: ListAssociatesComponent },
   { path: 'create-associates', component: CreateAssociatesComponent },
-  { path: 'view-associates', component: ViewAssociatesComponent },
+  { path: 'view-associates/:id', component: ViewAssociatesComponent },
+  { path: 'edit-associates/:id', component: EditAssociatesComponent },
 
   //Rotas Dependentes
   { path: 'list-dependents', component: ListDependentsComponent },
-  { path: 'create-dependents', component: CreateDependentsComponent }, 
+  { path: 'create-dependents', component: CreateDependentsComponent },
+  { path: 'view-dependents/:id', component: ViewDependentsComponent },
+  { path: 'edit-dependents/:id', component: EditDependentsComponent },
 ];
 
 @NgModule({
-  imports: [ RouterModule.forRoot(routes, { scrollPositionRestoration: 'enabled' }) ],
-  exports: [ RouterModule ]
+  imports: [RouterModule.forRoot(routes, { scrollPositionRestoration: 'enabled' })],
+  exports: [RouterModule]
 })
 export class AppRoutingModule { }

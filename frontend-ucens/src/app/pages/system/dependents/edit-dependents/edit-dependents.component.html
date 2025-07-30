@@ -1,1 +1,127 @@
-<p>edit-dependents works!</p>
+<main class="cadastro-page">
+
+    <div class="cadastro-container">
+        <h2>Editar Dependente #{{ id }}</h2>
+        <img src="assets/carp.jpg" class="bg-carpa" alt="carpa" />
+        <form [formGroup]="form" (ngSubmit)="atualizar()">
+            <p class="section-label"><em>Vínculo</em></p>
+            <div class="form-grid">
+                <mat-form-field appearance="fill">
+                    <mat-label>ID do Associado</mat-label>
+                    <input matInput formControlName="idAssociado" />
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Situação</mat-label>
+                    <mat-select formControlName="situacao">
+                        <mat-option value="Regular">Regular</mat-option>
+                        <mat-option value="Inadimplente">Inadimplente</mat-option>
+                        <mat-option value="Desligado">Desligado</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Grau de Parentesco</mat-label>
+                    <input matInput formControlName="grauParentesco" />
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Data Limite</mat-label>
+                    <input matInput type="date" formControlName="dataLimite" />
+                </mat-form-field>
+            </div>
+
+            <p class="section-label"><em>Carteirinha</em></p>
+            <div class="form-grid" formGroupName="carteirinha">
+                <mat-form-field appearance="fill">
+                    <mat-label>Nome na Carteirinha</mat-label>
+                    <input matInput formControlName="nome" />
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Cognome</mat-label>
+                    <input matInput formControlName="cognome" />
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Número</mat-label>
+                    <input matInput formControlName="numero" />
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Categoria</mat-label>
+                    <input matInput formControlName="categoria" />
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Validade</mat-label>
+                    <input matInput type="date" formControlName="validade" />
+                </mat-form-field>
+            </div>
+
+            <p class="section-label"><em>Identificação</em></p>
+            <div class="form-grid">
+                <mat-form-field appearance="fill">
+                    <mat-label>Sexo</mat-label>
+                    <mat-select formControlName="sexo">
+                        <mat-option value="Feminino">Feminino</mat-option>
+                        <mat-option value="Masculino">Masculino</mat-option>
+                        <mat-option value="Outro">Outro</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>CPF</mat-label>
+                    <input matInput mask="000.000.000-00" formControlName="cpf" />
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>RG</mat-label>
+                    <input matInput mask="00.000.000-0" formControlName="rg" />
+                </mat-form-field>
+            </div>
+
+            <p class="section-label"><em>Dados Pessoais</em></p>
+            <div class="form-grid">
+                <mat-form-field appearance="fill">
+                    <mat-label>Data de Nascimento</mat-label>
+                    <input matInput type="date" formControlName="dataNascimento" />
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Local de Nascimento</mat-label>
+                    <input matInput formControlName="localNascimento" />
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Nacionalidade</mat-label>
+                    <input matInput formControlName="nacionalidade" />
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Estado Civil</mat-label>
+                    <input matInput formControlName="estadoCivil" />
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Grau de Instrução</mat-label>
+                    <input matInput formControlName="grauInstrucao" />
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Profissão</mat-label>
+                    <input matInput formControlName="profissao" />
+                </mat-form-field>
+            </div>
+
+            <p class="section-label"><em>Extras</em></p>
+            <div class="form-grid">
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Exames</mat-label>
+                    <textarea matInput formControlName="exames"></textarea>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Atividades Proibidas</mat-label>
+                    <textarea matInput formControlName="atividadesProibidas"></textarea>
+                </mat-form-field>
+            </div>
+
+            <div class="btns-bottom">
+                <button mat-stroked-button class="btn-cancel" routerLink="/view-dependents/{{ id }}">
+                    <mat-icon>close</mat-icon>
+                    <span>Cancelar</span>
+                </button>
+                <button mat-stroked-button class="btn-submit" type="submit">
+                    <mat-icon>radio_button_unchecked</mat-icon>
+                    <span>Atualizar</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</main>

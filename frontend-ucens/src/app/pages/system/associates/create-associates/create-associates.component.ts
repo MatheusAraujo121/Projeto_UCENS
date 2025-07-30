@@ -15,8 +15,8 @@ export class CreateAssociatesComponent implements OnInit {
     this.form = this.fb.group({
       nome: ['', Validators.required],
       cognome: ['', Validators.required],
-      cpf: ['', [Validators.required, Validators.minLength(14)]], // 14 chars com pontuação
-      rg: ['', [Validators.required, Validators.minLength(12)]], // ex: 12.345.678-9
+      cpf: ['', [Validators.required, Validators.minLength(14)]], 
+      rg: ['', [Validators.required, Validators.minLength(12)]], 
       dataNascimento: ['', Validators.required],
       sexo: ['', Validators.required],
       estadoCivil: ['', Validators.required],
@@ -26,7 +26,7 @@ export class CreateAssociatesComponent implements OnInit {
       nacionalidade: ['', Validators.required],
       grauInstrucao: ['', Validators.required],
       profissao: ['', Validators.required],
-      telefone: ['', [Validators.required, Validators.minLength(15)]], // (00) 00000-0000
+      telefone: ['', [Validators.required, Validators.minLength(15)]], 
       email: ['', [Validators.required, Validators.email]],
     });
   }
@@ -34,7 +34,6 @@ export class CreateAssociatesComponent implements OnInit {
   efetuarCadastro() {
     if (this.form.valid) {
       console.log(this.form.value);
-      // chamar serviço...
     } else {
       this.form.markAllAsTouched();
     }
