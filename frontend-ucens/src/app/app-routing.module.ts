@@ -12,6 +12,8 @@ import { ListDependentsComponent } from './pages/system/dependents/list-dependen
 import { CreateDependentsComponent } from './pages/system/dependents/create-dependents/create-dependents.component';
 import { StatuteComponent } from './pages/institutional/statute/statute.component';
 import { RegulationsComponent } from './pages/institutional/regulations/regulations.component';
+import { DirectorsComponent } from './pages/institutional/directors/directors.component';
+import { EventsComponent } from './pages/events/events.component';
 
 const routes: Routes = [
   //Rotas site expositivo
@@ -19,6 +21,8 @@ const routes: Routes = [
   { path: 'story', component: StoryComponent }, 
   { path: 'statute', component: StatuteComponent},
   { path: 'regulations', component: RegulationsComponent},
+  { path: 'directors', component: DirectorsComponent},
+  { path: 'events', component: EventsComponent},
 
   //Rotas Admin
   { path: 'login', component: LoginComponent },
