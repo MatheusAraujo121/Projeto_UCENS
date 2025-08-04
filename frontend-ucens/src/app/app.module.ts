@@ -17,6 +17,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
+import { MatRadioModule }     from '@angular/material/radio';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -68,6 +69,10 @@ import { ListDependentsComponent } from './pages/system/dependents/list-dependen
 import { CreateDependentsComponent } from './pages/system/dependents/create-dependents/create-dependents.component';
 import { EditDependentsComponent } from './pages/system/dependents/edit-dependents/edit-dependents.component';
 import { ViewDependentsComponent } from './pages/system/dependents/view-dependents/view-dependents.component';
+import { CreateActivityComponent } from './pages/system/activities/create-activity/create-activity.component';
+import { EditActivityComponent } from './pages/system/activities/edit-activity/edit-activity.component';
+import { ViewActivityComponent } from './pages/system/activities/view-activity/view-activity.component';
+import { ListActivitiesComponent } from './pages/system/activities/list-activities/list-activities.component';
 
 @NgModule({
   declarations: [
@@ -98,7 +103,11 @@ import { ViewDependentsComponent } from './pages/system/dependents/view-dependen
     ListDependentsComponent,
     CreateDependentsComponent,
     EditDependentsComponent,
-    ViewDependentsComponent
+    ViewDependentsComponent,
+    CreateActivityComponent,
+    EditActivityComponent,
+    ViewActivityComponent,
+    ListActivitiesComponent
   ],
   imports: [
     BrowserModule,
@@ -110,6 +119,7 @@ import { ViewDependentsComponent } from './pages/system/dependents/view-dependen
     MatToolbarModule,
     MatMenuModule,
     MatButtonModule,
+    MatRadioModule,   
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,

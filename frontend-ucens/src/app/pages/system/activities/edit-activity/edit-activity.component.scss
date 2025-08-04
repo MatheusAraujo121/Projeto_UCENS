@@ -83,3 +83,30 @@
     font-style: italic;
     color: #555;
 }
+
+.preview-container {
+    margin-bottom: 2%;
+
+    .image-preview {
+        background-color: transparent;
+        display: block;
+        max-height: 200px;
+        max-width: 200px;
+        margin-top: 0.5rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 5px 8px rgba(0, 0, 0, 0.2);
+    }
+
+}
+
+.upload-btn {
+    width: max-content;
+    border-color: #1976d2;
+    color: #1976d2;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    &:hover {
+        background: rgba(25, 118, 210, 0.1);
+    }
+}

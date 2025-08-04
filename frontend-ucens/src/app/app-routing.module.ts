@@ -17,6 +17,10 @@ import { EventsComponent } from './pages/events/events.component';
 import { EditAssociatesComponent } from './pages/system/associates/edit-associates/edit-associates.component';
 import { ViewDependentsComponent } from './pages/system/dependents/view-dependents/view-dependents.component';
 import { EditDependentsComponent } from './pages/system/dependents/edit-dependents/edit-dependents.component';
+import { ListActivitiesComponent } from './pages/system/activities/list-activities/list-activities.component';
+import { CreateActivityComponent } from './pages/system/activities/create-activity/create-activity.component';
+import { ViewActivityComponent } from './pages/system/activities/view-activity/view-activity.component';
+import { EditActivityComponent } from './pages/system/activities/edit-activity/edit-activity.component';
 
 const routes: Routes = [
   //Rotas site expositivo
@@ -42,6 +46,12 @@ const routes: Routes = [
   { path: 'create-dependents', component: CreateDependentsComponent },
   { path: 'view-dependents/:id', component: ViewDependentsComponent },
   { path: 'edit-dependents/:id', component: EditDependentsComponent },
+
+  //Rotas Atividades
+  { path: 'list-activities', component: ListActivitiesComponent },
+  { path: 'create-activity', component: CreateActivityComponent },
+  { path: 'view-activity/:id', component: ViewActivityComponent },
+  { path: 'edit-activity/:id', component: EditActivityComponent },
 ];
 
 @NgModule({
