@@ -4,12 +4,13 @@
   <div class="card login-card p-4 position-relative">
     <h2 class="text-center mb-4">Login</h2>
 
-    <form>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <div class="mb-3">
         <label for="email" class="form-label visually-hidden">Email</label>
         <input
           type="email"
           id="email"
+          formControlName="email"
           class="form-control form-control-lg"
           placeholder="Email"
           required
@@ -20,13 +21,20 @@
         <input
           type="password"
           id="senha"
+          formControlName="senha"
           class="form-control form-control-lg"
           placeholder="Senha"
           required
         />
       </div>
-      <button type="submit" class="btn btn-login btn-lg w-100" routerLink="/dashboard">
-        Entrar
+
+      <div *ngIf="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+      </div>
+
+      <button type="submit" class="btn btn-login btn-lg w-100" [disabled]="loading">
+        <span *ngIf="!loading">Entrar</span>
+        <span *ngIf="loading">Aguarde...</span>
       </button>
     </form>
   </div>
