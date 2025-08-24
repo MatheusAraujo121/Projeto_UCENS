@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Ian\\userApi\\userApi.csproj": {}
+    "C:\\Users\\Ian\\backend-ucens\\userApi.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Ian\\userApi\\userApi.csproj": {
+    "C:\\Users\\Ian\\backend-ucens\\userApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Ian\\userApi\\userApi.csproj",
+        "projectUniqueName": "C:\\Users\\Ian\\backend-ucens\\userApi.csproj",
         "projectName": "userApi",
-        "projectPath": "C:\\Users\\Ian\\userApi\\userApi.csproj",
+        "projectPath": "C:\\Users\\Ian\\backend-ucens\\userApi.csproj",
         "packagesPath": "C:\\Users\\Ian\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Ian\\userApi\\obj\\",
+        "outputPath": "C:\\Users\\Ian\\backend-ucens\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Ian\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -43,6 +43,10 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
             "Microsoft.AspNetCore.Identity": {
               "target": "Package",
               "version": "[2.3.1, )"
@@ -65,9 +69,17 @@
               "target": "Package",
               "version": "[9.0.7, )"
             },
+            "Microsoft.IdentityModel.Tokens": {
+              "target": "Package",
+              "version": "[8.13.0, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[9.0.3, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[8.13.0, )"
             }
           },
           "imports": [
@@ -89,7 +101,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.412/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.413/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

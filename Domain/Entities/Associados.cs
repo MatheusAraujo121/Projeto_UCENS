@@ -21,6 +21,7 @@ namespace userApi.Domain.Entities
         public string Nacionalidade { get; set; } = string.Empty;
         public string Profissao { get; set; } = string.Empty;
         public string StatusQuo { get; set; } = string.Empty;
+        public ICollection<Dependentes> Dependentes { get; set; } = new List<Dependentes>();
 
 
     }

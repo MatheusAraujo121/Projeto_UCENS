@@ -1,0 +1,22 @@
+# Build
+bin/
+obj/
+*.user
+*.suo
+
+# VS/VSCode
+.vs/
+.vscode/
+
+# Logs
+*.log
+
+# Sistema/OS
+.DS_Store
+Thumbs.db
+
+# EF / SQLite (mantenha Migrations, ignore o DB local)
+userapi.db
+
+# Publicações
+*.Publish.xml
