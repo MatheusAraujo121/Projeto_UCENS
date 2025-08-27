@@ -1,0 +1,259 @@
+.activities-page {
+    background: #ffffff;
+    padding-bottom: 3rem;
+
+    .bg-carpa {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 80%;
+        max-width: 800px;
+        opacity: 0.15;
+        transform: translate(-65%, 40%);
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .title-card-wrap {
+        display: flex;
+        justify-content: center;
+        margin-top: -10px;
+        padding: 0 1rem;
+        position: relative;
+        z-index: 20;
+    }
+
+    .title-card {
+        max-width: 1100px;
+        width: 100%;
+        background: #fff;
+        border-radius: 12px;
+        padding: 22px 28px;
+        margin-bottom: 14px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.10);
+        border: 1px solid rgb(0, 0, 0);
+        text-align: center;
+
+        h1 {
+            margin: 0 0 6px;
+            font-size: 2.0rem;
+            font-weight: 700;
+            color: #006409;
+        }
+
+        .lead {
+            margin: 0;
+            color: #4d4d4d;
+        }
+    }
+
+    .frame-wrap {
+        display: flex;
+        justify-content: center;
+        padding: 0 1rem 3rem;
+        margin-top: 0;
+    }
+
+    .frame {
+        width: 100%;
+        max-width: 1220px;
+        background-color: #007b0a;
+        background-image:
+            radial-gradient(circle at 24px 24px, #f6d365 0 5px, #a87f1a 8px 3px, transparent 11px),
+            radial-gradient(circle at calc(100% - 24px) 24px, #f6d365 0 5px, #a87f1a 8px 3px, transparent 11px),
+            radial-gradient(circle at 24px calc(100% - 24px), #f6d365 0 5px, #a87f1a 8px 3px, transparent 11px),
+            radial-gradient(circle at calc(100% - 24px) calc(100% - 24px), #f6d365 0 5px, #a87f1a 8px 3px, transparent 11px);
+        background-repeat: no-repeat;
+        border-radius: 14px;
+        padding: 28px;
+        box-shadow: 0px 8px 15px rgb(0, 0, 0);
+        border: 5px solid rgb(168, 142, 65);
+        position: relative;
+        z-index: 10;
+
+        .cards-grid {
+            display: grid;
+            gap: 22px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            align-items: start;
+        }
+
+        .activity-card {
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100%;
+            transition: transform .28s cubic-bezier(.2, .9, .2, 1), box-shadow .28s;
+            will-change: transform, box-shadow;
+            box-shadow: 0 6px 18px rgb(0, 0, 0);
+
+            .card-media {
+                height: 150px;
+                overflow: hidden;
+
+                img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    display: block;
+                    transition: transform .45s ease;
+                }
+            }
+
+            .card-body {
+                padding: 14px;
+                display: flex;
+                flex-direction: column;
+                flex: 1 1 auto;
+            }
+
+            .card-title {
+                margin: 0 0 8px;
+                font-size: 1.05rem;
+                font-weight: 700;
+                color: #222;
+                text-align: center;
+            }
+
+            .card-short {
+                margin: 0 0 14px;
+                color: #444;
+                line-height: 1.45;
+                font-size: 0.96rem;
+                text-align: center;
+                flex: 1 1 auto;
+            }
+
+            .card-actions {
+                display: flex;
+                justify-content: center;
+                padding-bottom: 8px;
+                padding-right: 8px;
+
+                .btn-know {
+                    text-transform: none;
+                    border-radius: 6px;
+                    font-weight: 600;
+                }
+            }
+
+            &:hover {
+                transform: translateY(-12px) scale(1.015);
+                box-shadow: 0 30px 60px rgba(0, 0, 0, 0.18);
+                z-index: 6;
+            }
+        }
+    }
+
+    .blue-frame {
+        background-color: #6377d7;
+        border: 5px solid rgb(144, 144, 144);
+        background-image:
+            radial-gradient(circle at 24px 24px, #a5a5a5 0 5px, #787878 8px 3px, transparent 11px),
+            radial-gradient(circle at calc(100% - 24px) 24px, #a5a5a5 0 5px, #787878 8px 3px, transparent 11px),
+            radial-gradient(circle at 24px calc(100% - 24px), #a5a5a5 0 5px, #787878 8px 3px, transparent 11px),
+            radial-gradient(circle at calc(100% - 24px) calc(100% - 24px), #a5a5a5 0 5px, #787878 8px 3px, transparent 11px);
+    }
+
+    .blue-title-card {
+        max-width: 1100px;
+        width: 100%;
+        background: #fff;
+        border-radius: 12px;
+        padding: 22px 28px;
+        margin-bottom: 14px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.10);
+        border: 1px solid rgb(0, 0, 0);
+        text-align: center;
+
+        h1 {
+            margin: 0 0 6px;
+            font-size: 2.0rem;
+            font-weight: 700;
+            color: #6377d7;
+        }
+
+        .lead {
+            margin: 0;
+            color: #4d4d4d;
+        }
+    }
+}
+
+@media (max-width: 1024px) {
+    .activities-page {
+        .frame {
+            padding: 20px;
+
+            .activity-card .card-media {
+                height: 140px;
+            }
+        }
+
+        .title-card {
+            padding: 18px;
+
+            h1 {
+                font-size: 1.6rem;
+            }
+        }
+
+        .blue-frame {
+            padding: 20px;
+
+            .activity-card .card-media {
+                height: 140px;
+            }
+        }
+
+        .blue-title-card {
+            padding: 18px;
+
+            h1 {
+                font-size: 1.6rem;
+            }
+        }
+    }
+}
+
+@media (max-width: 600px) {
+    .activities-page {
+        .activities-hero {
+            padding: 18px 12px 0;
+        }
+
+        .frame {
+            padding: 14px;
+
+            .activity-card .card-media {
+                height: 120px;
+            }
+        }
+
+        .title-card {
+            padding: 12px;
+
+            h1 {
+                font-size: 1.2rem;
+            }
+        }
+
+        .blue-frame {
+            padding: 14px;
+
+            .activity-card .card-media {
+                height: 120px;
+            }
+        }
+
+        .blue-title-card {
+            padding: 12px;
+
+            h1 {
+                font-size: 1.2rem;
+            }
+        }
+    }
+}

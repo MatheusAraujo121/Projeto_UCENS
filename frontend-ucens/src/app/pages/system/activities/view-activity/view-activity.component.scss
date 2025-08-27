@@ -1,0 +1,48 @@
+.activity-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    "block1 block2"
+    "block3 block4"
+    "block5 block5"
+    "block6 block6"
+    "block7 block7";
+  grid-gap: 16px;
+}
+
+/* Estilo comum para todos os blocos */
+.card {
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+/* Definição das áreas do grid para cada bloco */
+.block1 { grid-area: block1; }
+.block2 { grid-area: block2; }
+.block3 { grid-area: block3; }
+.block4 { grid-area: block4; }
+.block5 { grid-area: block5; }
+.block6 {
+  grid-area: block6;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.block7 { grid-area: block7; }
+
+/* Responsivo: para telas pequenas em uma coluna */
+@media (max-width: 768px) {
+  .activity-container {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "block1"
+      "block2"
+      "block3"
+      "block4"
+      "block5"
+      "block6"
+      "block7";
+  }
+}

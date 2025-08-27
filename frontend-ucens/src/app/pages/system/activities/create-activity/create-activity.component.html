@@ -4,7 +4,6 @@
     <h2>Cadastrar Atividade</h2>
 
     <form [formGroup]="form" (ngSubmit)="efetuarCadastro()">
-      <!-- Preview da Imagem -->
       <p class="section-label"><em>Imagem da Atividade</em></p>
       <div class="form-grid full-width preview-container">
         <div class="frame">
@@ -17,7 +16,6 @@
         </div>
       </div>
 
-      <!-- Botão de Upload -->
       <div class="form-grid full-width">
         <button mat-stroked-button type="button" class="upload-btn" (click)="fileInput.click()">
           <mat-icon>upload</mat-icon>

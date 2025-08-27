@@ -13,6 +13,7 @@ import { CreateDependentsComponent } from './pages/system/dependents/create-depe
 import { StatuteComponent } from './pages/institutional/statute/statute.component';
 import { RegulationsComponent } from './pages/institutional/regulations/regulations.component';
 import { DirectorsComponent } from './pages/institutional/directors/directors.component';
+import { CulturalComponent } from './pages/departments/cultural/cultural.component';
 import { EventsComponent } from './pages/events/events.component';
 import { EditAssociatesComponent } from './pages/system/associates/edit-associates/edit-associates.component';
 import { ViewDependentsComponent } from './pages/system/dependents/view-dependents/view-dependents.component';
@@ -21,6 +22,7 @@ import { ListActivitiesComponent } from './pages/system/activities/list-activiti
 import { CreateActivityComponent } from './pages/system/activities/create-activity/create-activity.component';
 import { ViewActivityComponent } from './pages/system/activities/view-activity/view-activity.component';
 import { EditActivityComponent } from './pages/system/activities/edit-activity/edit-activity.component';
+import { SportyComponent } from './pages/departments/sporty/sporty.component';
 
 const routes: Routes = [
   //Rotas site expositivo
@@ -29,6 +31,8 @@ const routes: Routes = [
   { path: 'statute', component: StatuteComponent },
   { path: 'regulations', component: RegulationsComponent },
   { path: 'directors', component: DirectorsComponent },
+  { path: 'departments/sporty', component: SportyComponent },
+  { path: 'departments/cultural', component: CulturalComponent },
   { path: 'events', component: EventsComponent },
 
   //Rotas Admin
