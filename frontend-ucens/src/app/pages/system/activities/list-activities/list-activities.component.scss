@@ -136,6 +136,22 @@
                     text-transform: none;
                     border-radius: 6px;
                     font-weight: 600;
+
+                    &:hover {
+                        background: #d7d7d7;
+                    }
+                }
+
+                .btn-submit {
+                    border: 2px solid #1976d2;
+                    color: #1976d2;
+                    margin-left: 12px;
+                    background: transparent;
+                    width: 25%;
+
+                    &:hover {
+                        background: rgba(46, 133, 220, 0.2);
+                    }
                 }
             }
 
@@ -182,6 +198,65 @@
     }
 }
 
+.add-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: none !important;
+    background: #ffffff00 !important;
+    min-height: 240px;
+    border-radius: 10px;
+    padding: 18px;
+    box-sizing: border-box;
+    border: 4px dashed rgba(0, 0, 0, 0.50);
+    transition: transform .28s cubic-bezier(.2, .9, .2, 1), box-shadow .28s, background .2s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+
+    .add-inner {
+        width: 110px;
+        height: 110px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 14px;
+        border: 4px dashed rgba(0, 0, 0, 0.50);
+        background: rgba(255, 255, 255, 0.02);
+    }
+
+    .add-icon {
+        font-size: 100px;
+        color: rgba(0, 0, 0, 0.50);
+    }
+
+    .add-body {
+        padding: 0;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .add-label {
+        font-size: 1.02rem;
+        color: rgba(0, 0, 0, 0.50);
+        font-weight: 600;
+        text-align: center;
+    }
+
+    &:hover,
+    &:focus {
+        transform: translateY(-8px) scale(1.02);
+        background: rgba(255, 255, 255, 0.02);
+        outline: none;
+    }
+}
+
 @media (max-width: 1024px) {
     .activities-page {
         .frame {
@@ -219,6 +294,19 @@
 }
 
 @media (max-width: 600px) {
+    .add-inner {
+        width: 86px;
+        height: 86px;
+    }
+
+    .add-icon {
+        font-size: 44px;
+    }
+
+    .add-label {
+        font-size: 0.95rem;
+    }
+
     .activities-page {
         .activities-hero {
             padding: 18px 12px 0;
@@ -256,4 +344,11 @@
             }
         }
     }
+}
+
+.btn-voltar {
+    margin-bottom: 1rem;
+    border-color: #d32f2f;
+    width: 7.5%;
+    margin-left: 1.5%;
 }

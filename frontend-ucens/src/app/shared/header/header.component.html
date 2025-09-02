@@ -30,15 +30,22 @@
           <button mat-menu-item>Sede Campestre 2</button>
         </mat-menu>
 
-        <button mat-button [matMenuTriggerFor]="menuDeptos">
-          <span class="menu-label">Departamentos</span>
-          <mat-icon>expand_more</mat-icon>
-        </button>
-        <mat-menu #menuDeptos="matMenu">
-          <button mat-menu-item>Esportivos</button>
-          <button mat-menu-item>Culturais</button>
-        </mat-menu>
 
+    <!-- Departamentos -->
+    <button
+      mat-button
+      #depBtn="matMenuTrigger"
+      [matMenuTriggerFor]="menuDeptos"
+      class="menu-button"
+      [class.opened]="depBtn.menuOpen"
+    >
+      <span class="menu-label">Departamentos</span>
+      <mat-icon class="menu-icon">expand_more</mat-icon>
+    </button>
+    <mat-menu #menuDeptos="matMenu" class="app-menu">
+      <button mat-menu-item routerLink="departments/sporty">Esportivos</button>
+      <button mat-menu-item routerLink="departments/cultural">Culturais</button>
+    </mat-menu>
         <button mat-button routerLink="events">Eventos</button>
         <button mat-button routerLink="/contact">Contato</button>
       </ng-container>

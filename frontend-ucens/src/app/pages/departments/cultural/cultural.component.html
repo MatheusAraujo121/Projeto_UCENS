@@ -1,1 +1,36 @@
-<p>cultural works!</p>
+<main>
+    <section class="activities-page">
+        <img src="assets/carp.jpg" class="bg-carpa" alt="carpa" />
+        <div class="title-card-wrap">
+            <div class="blue-title-card">
+                <h1>Atividades — Culturais</h1>
+                <p class="lead">Confira abaixo e saiba mais sobre as atividades culturais que oferecemos nas nossas
+                    sedes.</p>
+            </div>
+        </div>
+
+        <div class="frame-wrap">
+            <div class="frame blue-frame">
+                <div class="cards-grid">
+                    <article class="activity-card" *ngFor="let a of activities">
+                        <div class="card-media">
+                            <img [src]="a.image" [alt]="a.title" />
+                        </div>
+
+                        <div class="card-body">
+                            <h3 class="card-title">{{ a.title }}</h3>
+                            <p class="card-short">{{ a.short }}</p>
+
+                            <div class="card-actions">
+                                <button mat-stroked-button class="btn-know"
+                                    [routerLink]="a.link || ['/activities', a.id]">
+                                    Saiba mais
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>

@@ -1,0 +1,98 @@
+<main>
+    <section class="activities-page">
+        <img src="assets/carp.jpg" class="bg-carpa" alt="carpa" />
+        <button mat-stroked-button color="warn" class="btn-voltar" routerLink="/dashboard">
+            <mat-icon>arrow_back</mat-icon>
+            <span>Voltar</span>
+        </button>
+        <br>
+        <div class="title-card-wrap">
+            <div class="title-card">
+                <h1>Atividades — Esportivas</h1>
+                <p class="lead">Confira abaixo e saiba mais sobre as atividades eportivas que oferecemos nas nossas
+                    sedes.</p>
+            </div>
+        </div>
+
+        <div class="frame-wrap">
+            <div class="frame">
+                <div class="cards-grid">
+                    <a class="activity-card add-card" routerLink="/create-activity" aria-label="Adicionar atividade">
+                        <div class="add-inner">
+                            <div class="add-icon">+</div>
+                        </div>
+
+                        <div class="card-body add-body">
+                            <div class="add-label">Nova Atividade</div>
+                        </div>
+                    </a>
+                    <article class="activity-card" *ngFor="let a of activities">
+                        <div class="card-media">
+                            <img [src]="a.image" [alt]="a.title" />
+                        </div>
+
+                        <div class="card-body">
+                            <h3 class="card-title">{{ a.title }}</h3>
+                            <p class="card-short">{{ a.short }}</p>
+
+                            <div class="card-actions">
+                                <button mat-stroked-button class="btn-know"
+                                    [routerLink]="a.link || ['/view-activity', a.id]">
+                                    Saiba mais
+                                </button>
+                                <button mat-stroked-button color="primary" class="btn-submit"
+                                    [routerLink]="a.link || ['/edit-activity', a.id]">
+                                    Editar
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="title-card-wrap">
+            <div class="blue-title-card">
+                <h1>Atividades — Culturais</h1>
+                <p class="lead">Confira abaixo e saiba mais sobre as atividades culturais que oferecemos nas nossas
+                    sedes.</p>
+            </div>
+        </div>
+
+        <div class="frame-wrap">
+            <div class="frame blue-frame">
+                <div class="cards-grid">
+                    <a class="activity-card add-card" routerLink="/create-activity" aria-label="Adicionar atividade">
+                        <div class="add-inner">
+                            <div class="add-icon">+</div>
+                        </div>
+                        <div class="card-body add-body">
+                            <div class="add-label">Nova Atividade</div>
+                        </div>
+                    </a>
+                    <article class="activity-card" *ngFor="let a of activities">
+                        <div class="card-media">
+                            <img [src]="a.image" [alt]="a.title" />
+                        </div>
+
+                        <div class="card-body">
+                            <h3 class="card-title">{{ a.title }}</h3>
+                            <p class="card-short">{{ a.short }}</p>
+
+                            <div class="card-actions">
+                                <button mat-stroked-button class="btn-know"
+                                    [routerLink]="a.link || ['/view-activity', a.id]">
+                                    Saiba mais
+                                </button>
+                                <button mat-stroked-button color="primary" class="btn-submit"
+                                    [routerLink]="a.link || ['/edit-activity', a.id]">
+                                    Editar
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>

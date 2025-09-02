@@ -101,14 +101,33 @@
     margin: 0 16px;
     vertical-align: middle;
 }
-
+.action-buttons {
+    display: flex;
+    gap: 1rem; 
+    margin-top: 20px; 
+}
 .btn-submit {
     border: 2px solid #1976d2;
     color: #1976d2;
     background: transparent;
-    width: 25%;
+    width: 27%;
 
     &:hover {
         background: rgba(25, 118, 210, 0.1);
+    }
+}
+
+.btn-delete {
+    border: 2px solid #ff0000;
+    color: #bc0303;
+    background: transparent;
+    width: 27%; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+
+    &:hover {
+        background: #ffb3b3;
     }
 }
