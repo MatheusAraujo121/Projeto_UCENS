@@ -5,6 +5,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './pages/home/home.component';
 
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
+
 //Header e Footer, Swipe e animações
 import { SwiperModule } from 'swiper/angular';
 import { HeaderComponent } from './shared/header/header.component';
@@ -27,7 +30,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatPaginatorIntl } from '@angular/material/paginator';
-import { MatDividerModule }    from '@angular/material/divider';
+import { MatDividerModule } from '@angular/material/divider';
 
 //Institutional
 import { StoryComponent } from './pages/institutional/story/story.component';
@@ -64,7 +67,7 @@ import { ViewAssociatesComponent } from './pages/system/associates/view-associat
 import { CreateAssociatesComponent } from './pages/system/associates/create-associates/create-associates.component';
 
 //Mascara de input
-import { NgxMaskModule} from 'ngx-mask';
+import { NgxMaskModule } from 'ngx-mask';
 import { ListDependentsComponent } from './pages/system/dependents/list-dependents/list-dependents.component';
 import { CreateDependentsComponent } from './pages/system/dependents/create-dependents/create-dependents.component';
 import { EditDependentsComponent } from './pages/system/dependents/edit-dependents/edit-dependents.component';
@@ -128,10 +131,16 @@ import { ListActivitiesComponent } from './pages/system/activities/list-activiti
     MatSelectModule,
     ReactiveFormsModule,
     MatIconModule,
+    HttpClientModule,
     MatDividerModule,
-    NgxMaskModule.forRoot() 
+    NgxMaskModule.forRoot()
   ],
   providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    },
     {
       provide: MatPaginatorIntl,
       useFactory: () => {
@@ -153,6 +162,7 @@ import { ListActivitiesComponent } from './pages/system/activities/list-activiti
       }
     }
   ],
+
   bootstrap: [AppComponent]
 })
 export class AppModule { }
