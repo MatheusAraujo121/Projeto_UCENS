@@ -1,6 +1,10 @@
 <main>
     <section class="activities-page">
         <img src="assets/carp.jpg" class="bg-carpa" alt="carpa" />
+        <button mat-stroked-button color="warn" class="btn-voltar" routerLink="/dashboard">
+            <mat-icon>arrow_back</mat-icon>
+            <span>Voltar</span>
+        </button>
         <br>
         <div class="title-card-wrap">
             <div class="title-card">
@@ -33,7 +37,7 @@
 
                             <div class="card-actions">
                                 <button mat-stroked-button class="btn-know"
-                                    [routerLink]="a.link || ['/activities', a.id]">
+                                    [routerLink]="a.link || ['/view-activity', a.id]">
                                     Saiba mais
                                 </button>
                                 <button mat-stroked-button color="primary" class="btn-submit"
@@ -77,7 +81,7 @@
 
                             <div class="card-actions">
                                 <button mat-stroked-button class="btn-know"
-                                    [routerLink]="a.link || ['/activities', a.id]">
+                                    [routerLink]="a.link || ['/view-activity', a.id]">
                                     Saiba mais
                                 </button>
                                 <button mat-stroked-button color="primary" class="btn-submit"

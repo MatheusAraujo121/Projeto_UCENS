@@ -95,10 +95,16 @@
                 <mat-label>Situação</mat-label>
                 <input matInput [value]="associado.situacao" disabled />
             </mat-form-field>
-            <button mat-stroked-button class="btn-submit" [routerLink]="['/edit-associates', associado.id]">
-                <mat-icon>edit</mat-icon>
-                <span>Editar</span>
-            </button>
+            <div class="action-buttons">
+                <button mat-stroked-button class="btn-submit" [routerLink]="['/edit-associates', associado.id]">
+                    <mat-icon>edit</mat-icon>
+                    <span>Editar</span>
+                </button>
+                <button mat-stroked-button color="warn" class="btn-delete">
+                    <mat-icon>delete_outline</mat-icon>
+                    <span>Excluir</span>
+                </button>
+            </div>
         </form>
     </div>
 </main>

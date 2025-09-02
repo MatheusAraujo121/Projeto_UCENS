@@ -112,11 +112,16 @@
                 <mat-label>Atividades Proibidas</mat-label>
                 <textarea matInput [value]="dependent.atividadesProibidas" disabled></textarea>
             </mat-form-field>
-
-            <button mat-stroked-button class="btn-submit" [routerLink]="['/edit-dependents', dependent.id]">
-                <mat-icon>edit</mat-icon>
-                <span>Editar</span>
-            </button>
+            <div class="action-buttons">
+                <button mat-stroked-button class="btn-submit" [routerLink]="['/edit-dependents', dependent.id]">
+                    <mat-icon>edit</mat-icon>
+                    <span>Editar</span>
+                </button>
+                <button mat-stroked-button color="warn" class="btn-delete">
+                    <mat-icon>delete_outline</mat-icon>
+                    <span>Excluir</span>
+                </button>
+            </div>
         </form>
     </div>
 </main>

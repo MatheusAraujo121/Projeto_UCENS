@@ -1,91 +1,108 @@
 <main class="view-activity-page">
-  <div class="activity-container">
-  <!-- Bloco 1: Imagem da atividade -->
-  <div class="card block1">
-    <img src="assets/activity.jpg" alt="Imagem da Atividade" style="width:100%; border-radius: 4px;">
+  <button mat-stroked-button color="warn" class="btn-voltar" routerLink="/list-activities">
+    <mat-icon>arrow_back</mat-icon>
+    <span>Voltar</span>
+  </button>
+  <div class="activity-detail-container">
+    <img src="assets/carp.jpg" class="bg-carpa" alt="carpa" />
+    <div class="activity-header">
+            <h2>{{ activity?.nome || 'Nome da Atividade' }}</h2>
+            <span class="activity-code">Cód: {{ activity?.codigo || 'N/A' }}</span>
+        </div>
+    <div class="top-section">
+      <div class="image-placeholder card">
+        <img [src]="activity?.imageUrl || 'assets/default-activity.jpg'" alt="Imagem da Atividade"
+          class="activity-image">
+      </div>
+
+      <div class="info-group card">
+        <div class="category-identification">
+          <p><strong>Categoria:</strong> {{ activity?.categoria || 'Não Informado' }}</p>
+        </div>
+
+        <div class="details-section-top">
+          <p><strong>Professor:</strong> {{ activity?.professor || 'N/A' }}</p>
+          <p><strong>Limite de Alunos:</strong> {{ activity?.limite || 'N/A' }}</p>
+          <p><strong>Exame Médico:</strong> {{ activity?.medicalExamRequired ? 'Obrigatório' : 'Não Obrigatório' }}</p>
+          <p *ngIf="activity?.poolExamRequired"><strong>Exame de Piscina:</strong> {{ activity?.poolExamRequired ?
+            'Obrigatório' : 'Não Obrigatório' }}</p>
+        </div>
+
+        <div class="location-time-age">
+          <p><strong>Local:</strong> {{ activity?.local || 'N/A' }}</p>
+          <p><strong>Dias:</strong> {{ activity?.dias || 'N/A' }}</p>
+          <p><strong>Horários:</strong> {{ activity?.horario || 'N/A' }}</p>
+          <p><strong>Idade:</strong> {{ activity?.idadeMin || 'N/A' }} - {{ activity?.idadeMax || 'N/A' }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-section">
+      <div class="activity-description-edit card">
+        <h3>Detalhes da Atividade</h3>
+        <p>{{ activity?.descricao || 'Nenhuma descrição disponível.' }}</p>
+        <div class="action-buttons">
+          <button mat-stroked-button class="btn-edit" routerLink="/edit-activity/{{ activity?.id }}">
+            <mat-icon>edit</mat-icon>
+            <span>Editar</span>
+          </button>
+          <button mat-stroked-button color="warn" class="btn-delete">
+            <mat-icon>delete_outline</mat-icon>
+            <span>Excluir</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="classes-list-section card">
+        <h3>
+          Lista de Turmas
+          <button mat-stroked-button class="btn-new-class" routerLink="">
+            <mat-icon>add</mat-icon>
+            <span>Nova Turma</span>
+          </button>
+        </h3>
+        <div class="table-container">
+          <table mat-table [dataSource]="classesDataSource" class="mat-elevation-z8" style="width:100%;">
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef> ID </th>
+              <td mat-cell *matCellDef="let turma"> {{turma.id}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="nome">
+              <th mat-header-cell *matHeaderCellDef> Nome da Turma </th>
+              <td mat-cell *matCellDef="let turma"> {{turma.nome}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="professor">
+              <th mat-header-cell *matHeaderCellDef> Professor </th>
+              <td mat-cell *matCellDef="let turma"> {{turma.professor}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="dia">
+              <th mat-header-cell *matHeaderCellDef> Dia </th>
+              <td mat-cell *matCellDef="let turma"> {{turma.dia}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="horario">
+              <th mat-header-cell *matHeaderCellDef> Horário </th>
+              <td mat-cell *matCellDef="let turma"> {{turma.horario}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="alunos">
+              <th mat-header-cell *matHeaderCellDef> Alunos </th>
+              <td mat-cell *matCellDef="let turma"> {{turma.alunos}} / {{turma.capacidade}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+            <tr class="mat-row" *matNoDataRowDef>
+              <td class="mat-cell" colspan="6">Nenhuma turma encontrada para esta atividade.</td>
+            </tr>
+          </table>
+          <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+        </div>
+      </div>
+    </div>
   </div>
-
-  <!-- Bloco 2: Tipo, Código e Nome da atividade -->
-  <div class="card block2">
-    <h2>{{ activity.nome }}</h2>
-    <p><strong>Tipo:</strong> {{ activity.tipo }}</p>
-    <p><strong>Código:</strong> {{ activity.codigo }}</p>
-    <p><strong>Categoria:</strong> {{ activity.categoria }}</p>
-  </div>
-
-  <!-- Bloco 3: Informações do professor e exames -->
-  <div class="card block3">
-    <h3>Informações</h3>
-    <p><strong>Professor:</strong> {{ activity.professor }}</p>
-    <p><strong>Limite de participantes:</strong> {{ activity.limiteParticipantes }}</p>
-    <p><strong>Exame médico obrigatório:</strong> {{ activity.exameMedico ? 'Sim' : 'Não' }}</p>
-    <p><strong>Exame de piscina obrigatório:</strong> {{ activity.examePiscina ? 'Sim' : 'Não' }}</p>
-  </div>
-
-  <!-- Bloco 4: Local, Dias, Horário, Idade mínima/máxima -->
-  <div class="card block4">
-    <h3>Detalhes da Atividade</h3>
-    <p><strong>Local:</strong> {{ activity.local }}</p>
-    <p><strong>Dias:</strong> {{ activity.dias }}</p>
-    <p><strong>Horário:</strong> {{ activity.horario }}</p>
-    <p><strong>Idade:</strong> {{ activity.idadeMin }} - {{ activity.idadeMax }} anos</p>
-  </div>
-
-  <!-- Bloco 5: Detalhes e botão Editar -->
-  <div class="card block5">
-    <p>{{ activity.detalhes }}</p>
-    <button mat-raised-button color="primary">Editar</button>
-  </div>
-
-  <!-- Bloco 6: Título "Lista de Turmas" e botão "Nova Turma" -->
-  <div class="card block6">
-    <h2>Lista de Turmas</h2>
-    <button mat-raised-button color="accent">Nova Turma</button>
-  </div>
-
-  <!-- Bloco 7: Tabela de turmas -->
-  <div class="card block7">
-    <table mat-table [dataSource]="classes" class="mat-elevation-z8" style="width:100%;">
-      <!-- Coluna ID -->
-      <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef>ID</th>
-        <td mat-cell *matCellDef="let element">{{ element.id }}</td>
-      </ng-container>
-
-      <!-- Coluna Nome da Turma -->
-      <ng-container matColumnDef="nome">
-        <th mat-header-cell *matHeaderCellDef>Nome da Turma</th>
-        <td mat-cell *matCellDef="let element">{{ element.nome }}</td>
-      </ng-container>
-
-      <!-- Coluna Professor -->
-      <ng-container matColumnDef="professor">
-        <th mat-header-cell *matHeaderCellDef>Professor</th>
-        <td mat-cell *matCellDef="let element">{{ element.professor }}</td>
-      </ng-container>
-
-      <!-- Coluna Dia -->
-      <ng-container matColumnDef="dia">
-        <th mat-header-cell *matHeaderCellDef>Dia</th>
-        <td mat-cell *matCellDef="let element">{{ element.dia }}</td>
-      </ng-container>
-
-      <!-- Coluna Horário -->
-      <ng-container matColumnDef="horario">
-        <th mat-header-cell *matHeaderCellDef>Horário</th>
-        <td mat-cell *matCellDef="let element">{{ element.horario }}</td>
-      </ng-container>
-
-      <!-- Coluna Qtd Alunos -->
-      <ng-container matColumnDef="alunos">
-        <th mat-header-cell *matHeaderCellDef>Qtd Alunos</th>
-        <td mat-cell *matCellDef="let element">{{ element.alunos }}</td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-  </div>
-</div>
-
 </main>

@@ -136,6 +136,10 @@
                     text-transform: none;
                     border-radius: 6px;
                     font-weight: 600;
+
+                    &:hover {
+                        background: #d7d7d7;
+                    }
                 }
 
                 .btn-submit {
@@ -146,7 +150,7 @@
                     width: 25%;
 
                     &:hover {
-                        background: rgba(25, 118, 210, 0.1);
+                        background: rgba(46, 133, 220, 0.2);
                     }
                 }
             }
@@ -340,4 +344,11 @@
             }
         }
     }
+}
+
+.btn-voltar {
+    margin-bottom: 1rem;
+    border-color: #d32f2f;
+    width: 7.5%;
+    margin-left: 1.5%;
 }
