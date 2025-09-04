@@ -15,6 +15,7 @@ import { FooterComponent } from './shared/footer/footer.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 //Angular material
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -76,6 +77,10 @@ import { CreateActivityComponent } from './pages/system/activities/create-activi
 import { EditActivityComponent } from './pages/system/activities/edit-activity/edit-activity.component';
 import { ViewActivityComponent } from './pages/system/activities/view-activity/view-activity.component';
 import { ListActivitiesComponent } from './pages/system/activities/list-activities/list-activities.component';
+import { CreateEventComponent } from './pages/system/events/create-event/create-event.component';
+import { EditEventComponent } from './pages/system/events/edit-event/edit-event.component';
+import { ListEventsComponent } from './pages/system/events/list-events/list-events.component';
+import { ViewEventComponent } from './pages/system/events/view-event/view-event.component';
 
 @NgModule({
   declarations: [
@@ -110,7 +115,11 @@ import { ListActivitiesComponent } from './pages/system/activities/list-activiti
     CreateActivityComponent,
     EditActivityComponent,
     ViewActivityComponent,
-    ListActivitiesComponent
+    ListActivitiesComponent,
+    CreateEventComponent,
+    EditEventComponent,
+    ListEventsComponent,
+    ViewEventComponent
   ],
   imports: [
     BrowserModule,
@@ -130,6 +139,7 @@ import { ListActivitiesComponent } from './pages/system/activities/list-activiti
     MatInputModule,
     MatSelectModule,
     ReactiveFormsModule,
+    MatAutocompleteModule,
     MatIconModule,
     HttpClientModule,
     MatDividerModule,

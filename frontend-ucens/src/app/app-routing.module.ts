@@ -23,6 +23,8 @@ import { CreateActivityComponent } from './pages/system/activities/create-activi
 import { ViewActivityComponent } from './pages/system/activities/view-activity/view-activity.component';
 import { EditActivityComponent } from './pages/system/activities/edit-activity/edit-activity.component';
 import { SportyComponent } from './pages/departments/sporty/sporty.component';
+import { CreateEventComponent } from './pages/system/events/create-event/create-event.component';
+import { EditEventComponent } from './pages/system/events/edit-event/edit-event.component';
 
 const routes: Routes = [
   //Rotas site expositivo
@@ -56,6 +58,13 @@ const routes: Routes = [
   { path: 'create-activity', component: CreateActivityComponent },
   { path: 'view-activity/:id', component: ViewActivityComponent },
   { path: 'edit-activity/:id', component: EditActivityComponent },
+
+  //Rotas Eventos (Adicionar aqui)
+  { path: 'list-events', component: EventsComponent }, 
+  { path: 'create-event', component: CreateEventComponent },
+  { path: 'view-event/:id', component: ViewActivityComponent },
+  { path: 'edit-event/:id', component: EditEventComponent }, 
+
 ];
 
 @NgModule({
