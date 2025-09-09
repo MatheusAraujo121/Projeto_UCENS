@@ -8,9 +8,9 @@
       <!-- MENU QUANDO NÃO ESTÁ LOGADO -->
       <ng-container *ngIf="!authService.isLoggedIn()">
         <button mat-button routerLink="">Home</button>
-        <button mat-button [matMenuTriggerFor]="menuInstitutional">
+        <button mat-button #insBtn="matMenuTrigger" [matMenuTriggerFor]="menuInstitutional"  class="menu-button" [class.opened]="insBtn.menuOpen">
           <span class="menu-label">Institucional</span>
-          <mat-icon>expand_more</mat-icon>
+          <mat-icon class="menu-icon" iconPositionEnd>expand_more</mat-icon>
         </button>
         <mat-menu #menuInstitutional="matMenu">
           <button mat-menu-item routerLink="story">História</button>
@@ -20,9 +20,9 @@
           <button mat-menu-item>Ex-Presidentes</button>
         </mat-menu>
 
-        <button mat-button [matMenuTriggerFor]="menuSedes">
+        <button mat-button #sedBtn="matMenuTrigger" [matMenuTriggerFor]="menuSedes" class="menu-button" [class.opened]="sedBtn.menuOpen">
           <span class="menu-label">Sedes</span>
-          <mat-icon>expand_more</mat-icon>
+          <mat-icon class="menu-icon" iconPositionEnd>expand_more</mat-icon>
         </button>
         <mat-menu #menuSedes="matMenu">
           <button mat-menu-item>Sede Social</button>
@@ -31,21 +31,16 @@
         </mat-menu>
 
 
-    <!-- Departamentos -->
-    <button
-      mat-button
-      #depBtn="matMenuTrigger"
-      [matMenuTriggerFor]="menuDeptos"
-      class="menu-button"
-      [class.opened]="depBtn.menuOpen"
-    >
-      <span class="menu-label">Departamentos</span>
-      <mat-icon class="menu-icon">expand_more</mat-icon>
-    </button>
-    <mat-menu #menuDeptos="matMenu" class="app-menu">
-      <button mat-menu-item routerLink="departments/sporty">Esportivos</button>
-      <button mat-menu-item routerLink="departments/cultural">Culturais</button>
-    </mat-menu>
+        <!-- Departamentos -->
+        <button mat-button #depBtn="matMenuTrigger" [matMenuTriggerFor]="menuDeptos" class="menu-button"
+          [class.opened]="depBtn.menuOpen">
+          <span class="menu-label">Departamentos</span>
+          <mat-icon class="menu-icon" iconPositionEnd>expand_more</mat-icon>
+        </button>
+        <mat-menu #menuDeptos="matMenu" class="app-menu">
+          <button mat-menu-item routerLink="departments/sporty">Esportivos</button>
+          <button mat-menu-item routerLink="departments/cultural">Culturais</button>
+        </mat-menu>
         <button mat-button routerLink="events">Eventos</button>
         <button mat-button routerLink="/contact">Contato</button>
       </ng-container>

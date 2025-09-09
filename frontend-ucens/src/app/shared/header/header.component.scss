@@ -32,14 +32,9 @@
         color: #555;
         font-weight: 500;
         transition: color 0.2s;
-        padding: 0;
-
-        .menu-label {
-            margin-right: 4px;
-        }
+        padding: 1%;
 
         .menu-icon {
-            margin-left: auto;
             transition: transform 0.2s, color 0.2s;
         }
 
