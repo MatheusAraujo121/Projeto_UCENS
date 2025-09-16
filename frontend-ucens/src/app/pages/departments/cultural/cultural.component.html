@@ -1,6 +1,7 @@
 <main>
     <section class="activities-page">
         <img src="assets/carp.jpg" class="bg-carpa" alt="carpa" />
+        <br>
         <div class="title-card-wrap">
             <div class="blue-title-card">
                 <h1>Atividades — Culturais</h1>
@@ -23,7 +24,7 @@
 
                             <div class="card-actions">
                                 <button mat-stroked-button class="btn-know"
-                                    [routerLink]="a.link || ['/activities', a.id]">
+                                    [routerLink]="a.link || ['/departments/view-cultural', a.id]">
                                     Saiba mais
                                 </button>
                             </div>

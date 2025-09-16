@@ -23,6 +23,13 @@ import { CreateActivityComponent } from './pages/system/activities/create-activi
 import { ViewActivityComponent } from './pages/system/activities/view-activity/view-activity.component';
 import { EditActivityComponent } from './pages/system/activities/edit-activity/edit-activity.component';
 import { SportyComponent } from './pages/departments/sporty/sporty.component';
+import { CreateEventComponent } from './pages/system/events/create-event/create-event.component';
+import { EditEventComponent } from './pages/system/events/edit-event/edit-event.component';
+import { ViewSportyComponent } from './pages/departments/view-sporty/view-sporty.component';
+import { ViewCulturalComponent } from './pages/departments/view-cultural/view-cultural.component';
+import { ListEventsComponent } from './pages/system/events/list-events/list-events.component';
+import { ViewEventComponent } from './pages/system/events/view-event/view-event.component';
+import { EventInfoComponent } from './pages/events/event-info/event-info.component';
 
 const routes: Routes = [
   //Rotas site expositivo
@@ -32,7 +39,9 @@ const routes: Routes = [
   { path: 'regulations', component: RegulationsComponent },
   { path: 'directors', component: DirectorsComponent },
   { path: 'departments/sporty', component: SportyComponent },
+  { path: 'departments/view-sporty/:id', component: ViewSportyComponent },
   { path: 'departments/cultural', component: CulturalComponent },
+  { path: 'departments/view-cultural/:id', component: ViewCulturalComponent },
   { path: 'events', component: EventsComponent },
 
   //Rotas Admin
@@ -56,6 +65,14 @@ const routes: Routes = [
   { path: 'create-activity', component: CreateActivityComponent },
   { path: 'view-activity/:id', component: ViewActivityComponent },
   { path: 'edit-activity/:id', component: EditActivityComponent },
+
+  //Rotas Eventos 
+  { path: 'list-events', component: ListEventsComponent }, 
+  { path: 'create-event', component: CreateEventComponent },
+  { path: 'view-event/:id', component: ViewEventComponent }, 
+  { path: 'edit-event/:id', component: EditEventComponent },
+  { path: 'event-info/:id', component: EventInfoComponent },
+
 ];
 
 @NgModule({

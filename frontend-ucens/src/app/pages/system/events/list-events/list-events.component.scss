@@ -1,0 +1,105 @@
+.list-events-page {
+    position: relative;
+    padding: 2rem;
+    min-height: 80vh;
+
+    .bg-carpa {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 80%;
+        max-width: 800px;
+        opacity: 0.15;
+        transform: translate(-85%, -50%);
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .container-fluid {
+        position: relative;
+        z-index: 1;
+        max-width: 1200px;
+        margin: auto;
+    }
+
+    .toolbar {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        gap: 1rem;
+
+        .spacer {
+            flex: 1 1 auto;
+        }
+    }
+
+    .btn-custom {
+        background: transparent;
+        border-width: 1px;
+        transition: background-color 0.2s, color 0.2s;
+        font-weight: 500;
+
+        &.btn-add {
+            border-color: #1976d2;
+            color: #1976d2;
+            &:hover {
+                background-color: #1976d2;
+                color: white;
+            }
+        }
+
+        &.btn-cancel {
+            border-color: #d32f2f;
+            color: #d32f2f;
+            &:hover {
+                background-color: #d32f2f;
+                color: white;
+            }
+        }
+    }
+
+    .calendar-card {
+        background-color: #d9d9d9;
+        border-radius: 1rem;
+        padding: 1.5rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+}
+
+::ng-deep .fc {
+    .fc-button-primary {
+        background-color: transparent !important;
+        border: 2px solid #1976d2 !important;
+        color: #1976d2 !important;
+        font-weight: 500 !important;
+        text-transform: none !important;
+
+        &:hover, &:active, &:focus {
+            background-color: #1976d2 !important;
+            color: white !important;
+            box-shadow: none !important;
+        }
+
+        &:disabled {
+            border-color: rgba(0, 0, 0, 0.12) !important;
+            color: rgba(0, 0, 0, 0.26) !important;
+            background-color: transparent !important;
+        }
+    }
+    
+    .fc-button-primary:not(:disabled).fc-button-active {
+        background-color: #1976d2 !important;
+        color: white !important;
+    }
+
+    .fc-daygrid-day.fc-day-today {
+        background-color: rgba(25, 118, 210, 0.1) !important;
+    }
+
+    .fc-event {
+        font-size: 0.85em;
+        border-radius: 4px;
+        padding: 2px 4px;
+        cursor: pointer;
+    }
+}

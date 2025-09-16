@@ -1,13 +1,49 @@
-<div class="container my-5">
-    <h2 class="fw-bold mb-4 text-center">Eventos do Nippon Sorocaba</h2>
-    <b>Sobre os nossos eventos</b>
-    <br>
-    <br>
+<main>
+    <section class="events-page">
+        <img src="assets/carp.jpg" class="bg-carpa" alt="carpa" />
+        <br>
+        <div class="title-card-wrap">
+            <div class="title-card">
+                <h1>Próximos Eventos</h1>
+                <p class="lead">Fique por dentro dos principais eventos anuais da nossa associação.</p>
+            </div>
+        </div>
 
-    O Nippon Sorocaba (UCENS) é bastante conhecido, tanto pelos seus associados como pela população de Sorocaba e região pelos grandes eventos que realiza.
+        <div class="frame-wrap">
+            <div class="frame">
+                <div class="cards-grid">
+                    <article class="event-card" *ngFor="let event of events">
+                        <div class="card-media">
+                            <img [src]="event.image" [alt]="event.title" />
+                        </div>
 
-    Entre eles podemos destacar alguns eventos abertos como o Festival Japonês na Praça Kasato Maru celebrando a imigração japonesa no Brasil, o Bon Odori e tantos outros eventos gastronômicos japoneses (yakisoba, sushi, sashimi, guiozá, tempurá, etc.) e brasileiros (boi no rolete, coquetel, jantar dançante, festa do chopp, etc.) e outros eventos internos como o Shinnenkai e o Undokai.
+                        <div class="card-body">
+                            <h3 class="card-title">{{ event.title }}</h3>
+                            <p class="card-date">{{ event.date }}</p>
+                            <p class="card-short">{{ event.short }}</p>
 
-    Além de ser a sede, em muitas ocasiões, de torneios internos, regionais e até nacionais nas mais variadas atividades esportivas que sedia.
-</div>
+                            <div class="card-actions">
+                                <button mat-stroked-button class="btn-know" [routerLink]="['/event-info', event.id]">
+                                    Saiba mais
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
 
+        <div class="title-card-wrap">
+            <div class="title-card calendar-title-card">
+                <h1>Calendário do Mês</h1>
+                <p class="lead">Veja os eventos programados em nosso calendário mensal.</p>
+            </div>
+        </div>
+
+        <div class="frame-wrap">
+             <div class="calendar-container">
+                <full-calendar [options]="calendarOptions"></full-calendar>
+            </div>
+        </div>
+    </section>
+</main>
