@@ -14,11 +14,11 @@ interface Event {
 }
 
 @Component({
-  selector: 'app-view-event',
-  templateUrl: './view-event.component.html',
-  styleUrls: ['./view-event.component.scss']
+  selector: 'app-event-info',
+  templateUrl: './event-info.component.html',
+  styleUrls: ['./event-info.component.scss']
 })
-export class ViewEventComponent implements OnInit {
+export class EventInfoComponent implements OnInit {
 
   event: Event | undefined;
 

@@ -1,0 +1,33 @@
+<main class="view-event-page">
+  <button mat-stroked-button color="warn" class="btn-voltar" routerLink="/events">
+    <mat-icon>arrow_back</mat-icon>
+    <span>Voltar</span>
+  </button>
+  <div class="event-detail-container">
+    <img src="assets/carp.jpg" class="bg-carpa" alt="carpa" />
+    <div class="event-header">
+      <h2>{{ event?.nome || 'Nome do Evento' }}</h2>
+    </div>
+    <div class="top-section">
+      <div class="image-placeholder card">
+        <img [src]="event?.imagem || 'assets/default-activity.jpg'" alt="Imagem do Evento" class="event-image">
+      </div>
+
+      <div class="info-group card">
+        <div class="details-section">
+          <p><strong>Local:</strong> {{ event?.local || 'N/A' }}</p>
+
+          <div class="details-grid">
+            <p><strong>Data de Início:</strong> {{ event?.dataInicio | date:'dd/MM/yyyy' }}</p>
+            <p><strong>Data de Término:</strong> {{ event?.dataFinal | date:'dd/MM/yyyy' }}</p>
+            <p><strong>Horário de Início:</strong> {{ event?.horarioInicio }}</p>
+            <p><strong>Horário de Término:</strong> {{ event?.horarioFinal }}</p>
+          </div>
+
+          <h3>Detalhes do Evento</h3>
+          <p class="description">{{ event?.descricao || 'Nenhuma descrição disponível.' }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

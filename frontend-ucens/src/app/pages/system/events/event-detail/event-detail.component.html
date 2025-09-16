@@ -1,0 +1,32 @@
+<div class="header">
+    <h2 mat-dialog-title>{{ data.event.title }}</h2>
+    <button mat-icon-button class="close-button" [mat-dialog-close]="true">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<mat-dialog-content class="mat-typography">
+    <div class="event-details-grid">
+        <div class="detail-row">
+            <strong><mat-icon>calendar_today</mat-icon> Início:</strong>
+            <span>{{ data.event.start | date:'dd/MM/yyyy' }}</span>
+        </div>
+        <div class="detail-row">
+            <strong><mat-icon>calendar_today</mat-icon> Fim:</strong>
+            <span>{{ data.event.end | date:'dd/MM/yyyy' }}</span>
+        </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <p class="description">
+        {{ data.event.extendedProps['description'] || 'Nenhuma descrição para este evento.' }}
+    </p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-stroked-button class="btn-custom btn-add" (click)="viewEvent()">
+        <span>Visualizar Evento</span>
+    </button>
+    <button mat-stroked-button class="btn-custom btn-cancel" [mat-dialog-close]="true">Fechar</button>
+</mat-dialog-actions>

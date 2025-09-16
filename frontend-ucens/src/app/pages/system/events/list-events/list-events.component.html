@@ -1,1 +1,20 @@
-<p>list-events works!</p>
+<main class="list-events-page">
+    <img src="assets/carp.jpg" class="bg-carpa" alt="carpa" />
+    <div class="container-fluid">
+        <div class="toolbar">
+            <button mat-stroked-button class="btn-custom btn-cancel" routerLink="/dashboard">
+                <mat-icon>arrow_back</mat-icon>
+                <span>Voltar</span>
+            </button>
+            <div class="spacer"></div>
+            <button mat-stroked-button class="btn-custom btn-add" (click)="navigateToCreateEvent()">
+                <mat-icon>add</mat-icon>
+                <span>Adicionar Evento</span>
+            </button>
+        </div>
+
+        <div class="calendar-card">
+            <full-calendar [options]="calendarOptions"></full-calendar>
+        </div>
+    </div>
+</main>

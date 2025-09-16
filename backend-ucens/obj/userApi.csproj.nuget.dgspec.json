@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\0031432412023\\Downloads\\Projeto_UCENS\\backend-ucens\\userApi.csproj": {}
+    "D:\\Projeto_UCENS\\backend-ucens\\userApi.csproj": {}
   },
   "projects": {
-    "C:\\Users\\0031432412023\\Downloads\\Projeto_UCENS\\backend-ucens\\userApi.csproj": {
+    "D:\\Projeto_UCENS\\backend-ucens\\userApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\0031432412023\\Downloads\\Projeto_UCENS\\backend-ucens\\userApi.csproj",
+        "projectUniqueName": "D:\\Projeto_UCENS\\backend-ucens\\userApi.csproj",
         "projectName": "userApi",
-        "projectPath": "C:\\Users\\0031432412023\\Downloads\\Projeto_UCENS\\backend-ucens\\userApi.csproj",
-        "packagesPath": "C:\\Users\\0031432412023\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\0031432412023\\Downloads\\Projeto_UCENS\\backend-ucens\\obj\\",
+        "projectPath": "D:\\Projeto_UCENS\\backend-ucens\\userApi.csproj",
+        "packagesPath": "C:\\Users\\Gamer\\.nuget\\packages\\",
+        "outputPath": "D:\\Projeto_UCENS\\backend-ucens\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\0031432412023\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Gamer\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -100,6 +100,24 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[8.0.19, 8.0.19]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.win-x64",
+              "version": "[8.0.19, 8.0.19]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[8.0.19, 8.0.19]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[8.0.19, 8.0.19]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
