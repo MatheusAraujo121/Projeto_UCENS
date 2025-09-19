@@ -34,6 +34,7 @@ import { SocialHeadquarterComponent } from './pages/headquarters/social-headquar
 import { CountryHeadquarterIComponent } from './pages/headquarters/country-headquarter-i/country-headquarter-i.component';
 import { CountryHeadquarterIIComponent } from './pages/headquarters/country-headquarter-ii/country-headquarter-ii.component';
 import { ContactComponent } from './pages/contact/contact.component';
+import { ExPresidentsComponent } from './pages/institutional/ex-presidents/ex-presidents.component';
 
 const routes: Routes = [
   //Rotas site expositivo
@@ -51,6 +52,7 @@ const routes: Routes = [
   { path: 'headquarter/campestre1', component: CountryHeadquarterIComponent },
   { path: 'headquarter/campestre2', component: CountryHeadquarterIIComponent },
   { path: 'contact', component: ContactComponent },
+  { path: 'ex-presidents', component: ExPresidentsComponent },
 
   //Rotas Admin
   { path: 'login', component: LoginComponent },
