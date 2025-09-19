@@ -1,1 +1,352 @@
-<p>ex-presidents works!</p>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ex-presidentes da UCENS</title>
+    <style>
+        /* Estilos gerais do corpo */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        /* Container principal para centralizar o conteúdo */
+        .container {
+            max-width: 1140px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        /* Título principal */
+        .main-title {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #212529;
+            margin-bottom: 15px;
+        }
+
+        /* Parágrafo de introdução */
+        .intro-text {
+            font-size: 1.1em;
+            color: #6c757d;
+            margin-bottom: 50px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Grade responsiva para os cards */
+        .presidents-grid {
+            display: grid;
+            /* Cria colunas que têm no mínimo 220px e no máximo 1 fração do espaço. 
+               O 'auto-fit' garante que as colunas se ajustem ao espaço disponível. */
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 30px; /* Espaço entre os cards */
+        }
+
+        /* Estilo de cada card */
+        .president-card {
+            background-color: #ffffff;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        /* Efeito de elevação ao passar o mouse */
+        .president-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Imagem do presidente */
+        .president-card img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover; /* Garante que a imagem não fique distorcida */
+            border-radius: 8px; /* Cantos arredondados como na imagem */
+            margin-bottom: 20px;
+        }
+
+        /* Nome do presidente */
+        .president-card h3 {
+            font-size: 1.25em;
+            font-weight: 600;
+            margin: 0 0 5px 0;
+            color: #343a40;
+        }
+        
+        /* Período do mandato */
+        .president-card p {
+            font-size: 1em;
+            color: #6c757d;
+            margin: 0;
+        }
+        /* Descrição do cargo (nova) */
+        .president-card .role {
+            font-size: 0.85em;
+            color: #888;
+            margin-top: 8px;
+        }
+        
+        /* Divisor para a linha vermelha (novo) */
+        .grid-divider {
+            grid-column: 1 / -1; /* Faz o elemento ocupar todas as colunas da grade */
+            padding: 20px 0;
+        }
+
+        .section-divider {
+            border: 0;
+            height: 2px;
+            background-color: #e63946; /* Tom de vermelho */
+            max-width: 150px;
+            margin: 0 auto; /* Centraliza a linha */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2 class="main-title">Ex-presidentes da UCENS</h2>
+        <p class="intro-text">
+            Esta é uma homenagem da UCENS aos seus ex-presidentes, que tanto trabalharam em prol da nossa comunidade de maneira voluntária.
+        </p>
+
+        <div class="presidents-grid">
+            
+            <div class="president-card">
+                <img src="https://nipponsorocaba.com.br/nswp/wp-content/uploads/2021/05/sergio-atushi-mori.jpg" alt="Foto de Sérgio Atushi Mori">
+                <h3>Sérgio Atushi Mori</h3>
+                <p>2022/2023</p>
+            </div>
+
+            <div class="president-card">
+                 <img src="https://nipponsorocaba.com.br/nswp/wp-content/uploads/2021/05/luiz-issao-kagiyama.jpg" alt="Foto de Luiz Issao Kagiyama">
+                <h3>Luiz Issao Kagiyama</h3>
+                <p>2020/2021</p>
+            </div>
+
+            <div class="president-card">
+                 <img src="https://nipponsorocaba.com.br/nswp/wp-content/uploads/2021/05/roberto-matsushima.jpg" alt="Foto de Roberto Matsushima">
+                <h3>Roberto Matsushima</h3>
+                <p>2016 a 2019</p>
+            </div>
+
+            <div class="president-card">
+                 <img src="https://nipponsorocaba.com.br/nswp/wp-content/uploads/2021/05/yoshiaki-shinde-2.jpg" alt="Foto de Yoshiaki Shinde">
+                <h3>Yoshiaki Shinde</h3>
+                <p>2014/2015</p>
+            </div>
+
+            <div class="president-card">
+                <img src="https://nipponsorocaba.com.br/nswp/wp-content/uploads/2021/05/yoshio-haneda-2.jpg" alt="Foto de Yoshio Haneda">
+                <h3>Yoshio Haneda</h3>
+                <p>2013</p>
+            </div>
+            
+            <div class="president-card">
+                <img src="https://nipponsorocaba.com.br/nswp/wp-content/uploads/2021/05/ken-iti-nishihara-2.jpg" alt="Foto de Ken Iti Nishihara">
+                <h3>Ken Iti Nishihara</h3>
+                <p>2012</p>
+            </div>
+            
+            <div class="president-card">
+                <img src="https://nipponsorocaba.com.br/nswp/wp-content/uploads/2021/05/carlos_hayashida-2.jpg" alt="Foto de Carlos Munetachi Hayashida">
+                <h3>Carlos Munetachi Hayashida</h3>
+                <p>2010/2011</p>
+            </div>
+            
+            <div class="president-card">
+                <img src="https://nipponsorocaba.com.br/nswp/wp-content/uploads/2021/05/paulo_yasuda.jpg" alt="Foto de Paulo Mitsuro Yasuda">
+                <h3>Paulo Mitsuro Yasuda</h3>
+                <p>2009</p>
+            </div>
+            
+            <div class="president-card">
+                <img src="https://nipponsorocaba.com.br/nswp/wp-content/uploads/2021/05/kinoshita1.jpg" alt="Foto de Wilson Tadao Kinoshita">
+                <h3>Wilson Tadao Kinoshita</h3>
+                <p>2007/2008</p>
+            </div>
+
+            <div class="president-card">
+                <img src="https://nipponsorocaba.com.br/nswp/wp-content/uploads/2021/05/teruo-yamassaka.jpg " alt="Foto de Teruo Yamassaka">
+                <h3>Teruo Yamassaka</h3>
+                <p>2006</p>
+            </div>
+
+            <div class="president-card">
+                <img src="https://nipponsorocaba.com.br/nswp/wp-content/uploads/2021/05/jorge-yuzi-sakata.jpg" alt="Foto de Jorge Yuzi Sakata">
+                <h3>Jorge Yuzi Sakata</h3>
+                <p>2004/2005</p>
+            </div>
+            
+            <div class="president-card">
+                <img src="https://nipponsorocaba.com.br/nswp/wp-content/uploads/2021/05/sergio-atushi-mori.jpg" alt="Foto de Sérgio Atushi Mori">
+                <h3>Sérgio Atushi Mori</h3>
+                <p>2003</p>
+            </div>
+            
+            <div class="president-card">
+                <img src="https://nipponsorocaba.com.br/nswp/wp-content/uploads/2021/05/mario-hayakawa.jpg" alt="Foto de Mario Hayakawa">
+                <h3>Mario Hayakawa</h3>
+                <p>2002</p>
+            </div>
+            
+            <div class="president-card">
+                <img src="https://nipponsorocaba.com.br/nswp/wp-content/uploads/2021/05/ikuo-kadiama.jpg" alt="Foto de Ikuo Kadiama">
+                <h3>Ikuo Kadiama</h3>
+                <p>1979/1980<br>1985/1986<br>1995/1996<br>2001</p>
+            </div>
+            
+            <div class="president-card">
+                <img src="https://nipponsorocaba.com.br/nswp/wp-content/uploads/2021/05/shozi-umeda.jpg" alt="Foto de Shozi Umeda">
+                <h3>Shozi Umeda</h3>
+                <p>1999/2000</p>
+            </div>
+            
+            <div class="president-card">
+                <img src="https://nipponsorocaba.com.br/nswp/wp-content/uploads/2021/05/kimiyuki-nomura.jpg" alt="Foto de Kimiyuki Nomura">
+                <h3>Kimiyuki Nomura</h3>
+                <p>1991/1992<br>1997/1998</p>
+            </div>
+            
+            <div class="president-card">
+                <img src="https://nipponsorocaba.com.br/nswp/wp-content/uploads/2021/05/toshiaki-hishinuma.jpg" alt="Foto de Toshiaki Hishinuma">
+                <h3>Toshiaki Hishinuma</h3>
+                <p>1993/1994</p>
+            </div>
+            
+            <div class="president-card">
+                <img src="https://nipponsorocaba.com.br/nswp/wp-content/uploads/2021/05/kiyoshi-minami.jpg" alt="Foto de Kiyoshi Minami">
+                <h3>Kiyoshi Minami</h3>
+                <p>1989/1990</p>
+            </div>
+            
+            <div class="president-card">
+                <img src="https://placehold.co/150x150/cccccc/6c757d?text=Massanobu Sato" alt="Foto de Massanobu Sato">
+                <h3>Massanobu Sato</h3>
+                <p>1973/1974<br>1983/1984<br>1987/1988</p>
+            </div>
+            
+            <div class="president-card">
+                <img src="https://nipponsorocaba.com.br/nswp/wp-content/uploads/2021/05/tadashi-tsujino.jpg" alt="Foto de Tadashi Tsujino">
+                <h3>Tadashi Tsujino</h3>
+                <p>1981/1982</p>
+            </div>
+
+            <div class="president-card">
+                <img src="https://nipponsorocaba.com.br/nswp/wp-content/uploads/2021/05/hideo-nakahara.jpg" alt="Foto de Hideo Nakahara">
+                <h3>Hideo Nakahara</h3>
+                <p>1975/1976</p>
+            </div>
+
+            <div class="president-card">
+                <img src="https://nipponsorocaba.com.br/nswp/wp-content/uploads/2021/05/mitsuji-karazawa.jpg" alt="Foto de Mitsuji Karazawa">
+                <h3>Mitsuji Karazawa</h3>
+                <p>1971/1972</p>
+            </div>
+
+            <div class="grid-divider">
+                <hr class="section-divider">
+            </div>
+
+            <div class="president-card">
+                <img src="https://placehold.co/150x150/cccccc/6c757d?text=imagem" alt="Foto de Nobuyuki Okazaki">
+                <h3>Nobuyuki Okazaki</h3>
+                <p class="term">1969/1970</p>
+                <p class="role">Presidente da Associação<br>(exercício de fato)</p>
+            </div>
+            <div class="president-card">
+                <img src="https://nipponsorocaba.com.br/nswp/wp-content/uploads/2021/05/jose-zenkiti-tamanaha.jpg" alt="Foto de José Zenkiti Tamanaha">
+                <h3>José Zenkiti Tamanaha</h3>
+                <p class="term">1969/1970</p>
+                <p class="role">Presidente da UCENS<br>(representante de direito)</p>
+            </div>
+             <div class="president-card">
+                <img src="https://placehold.co/150x150/cccccc/6c757d?text=imagem" alt="Foto de Nobuyuki Okazaki">
+                <h3>Nobuyuki Okazaki</h3>
+                <p class="term">1968</p>
+                <p class="role">Presidente da Associação<br>(exercício de fato)</p>
+            </div>
+            <div class="president-card">
+                <img src="https://nipponsorocaba.com.br/nswp/wp-content/uploads/2021/05/takeo-matayoshi.jpg" alt="Foto de Takeo Matayoshi">
+                <h3>Takeo Matayoshi</h3>
+                <p class="term">1968</p>
+                <p class="role">Presidente da UCENS<br>(representante de direito)</p>
+            </div>
+            <div class="president-card">
+                <img src="https://placehold.co/150x150/cccccc/6c757d?text=imagem" alt="Foto de Tadatomi Yuri">
+                <h3>Tadatomi Yuri</h3>
+                <p class="term">1966/1967</p>
+                <p class="role">Presidente da Associação<br>(exercício de fato)</p>
+            </div>
+            <div class="president-card">
+                <img src="https://nipponsorocaba.com.br/nswp/wp-content/uploads/2021/05/paulo-mitsuyoshi-miyamoto.jpg" alt="Foto de Paulo Mitsuyoshi Miyamoto">
+                <h3>Paulo Mitsuyoshi Miyamoto</h3>
+                <p class="term">1966/1967</p>
+                <p class="role">Presidente da UCENS<br>(representante de direito)</p>
+            </div>
+            <div class="president-card">
+                <img src="https://placehold.co/150x150/cccccc/6c757d?text=imagem" alt="Foto de Tadatomi Yuri">
+                <h3>Tadatomi Yuri</h3>
+                <p class="term">1965</p>
+                <p class="role">Presidente da Associação<br>(exercício de fato)</p>
+            </div>
+            <div class="president-card">
+                <img src="https://nipponsorocaba.com.br/nswp/wp-content/uploads/2021/05/joao-yukio-sugui.jpg" alt="Foto de João Yukio Sugui">
+                <h3>João Yukio Sugui</h3>
+                <p class="term">1965</p>
+                <p class="role">Presidente da UCENS<br>(representante de direito)</p>
+            </div>
+            <div class="president-card">
+                <img src="https://placehold.co/150x150/cccccc/6c757d?text=imagem" alt="Foto de Tioki Takekuma">
+                <h3>Tioki Takekuma</h3>
+                <p class="term">1964</p>
+                <p class="role">Presidente da Associação<br>(exercício de fato)</p>
+            </div>
+            <div class="president-card">
+                <img src="https://nipponsorocaba.com.br/nswp/wp-content/uploads/2021/05/yoshiyuki-honda.jpg" alt="Foto de Yoshiyuki Honda">
+                <h3>Yoshiyuki Honda</h3>
+                <p class="term">1964</p>
+                <p class="role">Presidente da UCENS<br>(representante de direito)</p>
+            </div>
+            <div class="president-card">
+                <img src="https://placehold.co/150x150/cccccc/6c757d?text=imagem" alt="Foto de Momotaro Ishii">
+                <h3>Momotaro Ishii</h3>
+                <p class="term">1962/1963</p>
+                <p class="role">Presidente da Associação<br>(exercício de fato)</p>
+            </div>
+            <div class="president-card">
+                <img src="https://nipponsorocaba.com.br/nswp/wp-content/uploads/2021/05/joao-yukio-sugui.jpg" alt="Foto de João Yukio Sugui">
+                <h3>João Yukio Sugui</h3>
+                <p class="term">1962/1963</p>
+                <p class="role">Presidente da UCENS<br>(representante de direito)</p>
+            </div>
+            <div class="president-card">
+                <img src="https://placehold.co/150x150/cccccc/6c757d?text=imagem" alt="Foto de Tioki Takekuma">
+                <h3>Tioki Takekuma</h3>
+                <p class="term">1962</p>
+                <p class="role">Presidente da Associação<br>(exercício de fato)</p>
+            </div>
+            <div class="president-card">
+                <img src="https://nipponsorocaba.com.br/nswp/wp-content/uploads/2021/05/paulo-massayoshi-mitsuoka.jpg" alt="Foto de Paulo Massayoshi Mitsuoka">
+                <h3>Paulo Massayoshi Mitsuoka</h3>
+                <p class="term">1962</p>
+                <p class="role">Presidente da UCENS<br>(representante de direito)</p>
+            </div>
+            <div class="president-card">
+                <img src="https://nipponsorocaba.com.br/nswp/wp-content/uploads/2021/05/milton-masato-hida.jpg" alt="Foto de Milton Masato Hida">
+                <h3>Milton Masato Hida</h3>
+                <p class="term">1962</p>
+                <p class="role">Presidente da UCENS<br>(representante de direito)</p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
