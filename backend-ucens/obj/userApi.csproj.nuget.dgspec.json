@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Projeto_UCENS\\backend-ucens\\userApi.csproj": {}
+    "C:\\Users\\gravi\\Documents\\Faculdade\\Fatec\\ANO 2\\Projeto Integrador\\Projeto-Ucens\\backend-ucens\\userApi.csproj": {}
   },
   "projects": {
-    "D:\\Projeto_UCENS\\backend-ucens\\userApi.csproj": {
+    "C:\\Users\\gravi\\Documents\\Faculdade\\Fatec\\ANO 2\\Projeto Integrador\\Projeto-Ucens\\backend-ucens\\userApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Projeto_UCENS\\backend-ucens\\userApi.csproj",
+        "projectUniqueName": "C:\\Users\\gravi\\Documents\\Faculdade\\Fatec\\ANO 2\\Projeto Integrador\\Projeto-Ucens\\backend-ucens\\userApi.csproj",
         "projectName": "userApi",
-        "projectPath": "D:\\Projeto_UCENS\\backend-ucens\\userApi.csproj",
-        "packagesPath": "C:\\Users\\Gamer\\.nuget\\packages\\",
-        "outputPath": "D:\\Projeto_UCENS\\backend-ucens\\obj\\",
+        "projectPath": "C:\\Users\\gravi\\Documents\\Faculdade\\Fatec\\ANO 2\\Projeto Integrador\\Projeto-Ucens\\backend-ucens\\userApi.csproj",
+        "packagesPath": "C:\\Users\\gravi\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\gravi\\Documents\\Faculdade\\Fatec\\ANO 2\\Projeto Integrador\\Projeto-Ucens\\backend-ucens\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Gamer\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\gravi\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -42,9 +42,9 @@
         "restoreAuditProperties": {
           "enableAudit": "true",
           "auditLevel": "low",
-          "auditMode": "direct"
+          "auditMode": "all"
         },
-        "SdkAnalysisLevel": "9.0.300"
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net8.0": {
@@ -100,24 +100,6 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[8.0.19, 8.0.19]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Host.win-x64",
-              "version": "[8.0.19, 8.0.19]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Ref",
-              "version": "[8.0.19, 8.0.19]"
-            },
-            {
-              "name": "Microsoft.WindowsDesktop.App.Ref",
-              "version": "[8.0.19, 8.0.19]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -126,7 +108,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

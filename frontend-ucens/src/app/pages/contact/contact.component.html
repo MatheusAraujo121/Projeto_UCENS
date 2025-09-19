@@ -1,1 +1,125 @@
-<p>contact works!</p>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contato</title>
+    <style>
+        /* Estilos gerais */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #ffffff;
+            color: #333;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Container principal */
+        .contact-section {
+            width: 100%;
+            max-width: 800px;
+            text-align: center;
+        }
+
+        /* Título principal "Contato" */
+        .contact-title {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #212529;
+            margin-bottom: 50px;
+        }
+
+        /* Container para os itens de contato (layout flex) */
+        .contact-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            gap: 40px; /* Espaço entre os itens */
+            flex-wrap: wrap; /* Permite que os itens quebrem para a linha de baixo em telas pequenas */
+        }
+
+        /* Cada item individual (Telefone e Email) */
+        .contact-item {
+            flex-basis: 250px; /* Largura base de cada item */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px; /* Espaço entre o ícone, título e texto */
+        }
+        
+        /* Estilo do ícone SVG */
+        .contact-icon svg {
+            width: 50px;
+            height: 50px;
+            fill: #d9534f; /* Cor vermelha dos ícones */
+        }
+
+        /* Título de cada item (ex: "Email") */
+        .contact-item h3 {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin: 0;
+            color: #495057;
+        }
+
+        /* Detalhe do contato (número ou email) */
+        .contact-detail {
+            font-size: 1.1em;
+            margin: 0;
+        }
+
+        /* Estilo do link para o número e email */
+        .contact-detail a {
+            color: #d9534f; /* Cor vermelha do texto */
+            text-decoration: none; /* Remove o sublinhado do link */
+            font-weight: 500;
+        }
+
+        /* Efeito ao passar o mouse sobre o link */
+        .contact-detail a:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+<body>
+
+    <section class="contact-section">
+        <h2 class="contact-title">Contato</h2>
+        
+        <div class="contact-container">
+
+            <div class="contact-item">
+                <div class="contact-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                        <path d="M11 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h6zM5 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H5z"/>
+                        <path d="M8 14a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                    </svg>
+                </div>
+                <h3>Telefone / WhatsApp Business</h3>
+                <p class="contact-detail">
+                    <a href="tel:+551532313015">(15) 3231.3015</a>
+                </p>
+            </div>
+
+            <div class="contact-item">
+                <div class="contact-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                        <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555zM0 4.697v7.104l5.803-3.558L0 4.697zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757zm3.436-.586L16 11.801V4.697l-5.803 3.546z"/>
+                    </svg>
+                </div>
+                <h3>Email</h3>
+                <p class="contact-detail">
+                    <a href="mailto:adm@nipponsorocaba.com.br">adm@nipponsorocaba.com.br</a>
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+</body>
+</html>

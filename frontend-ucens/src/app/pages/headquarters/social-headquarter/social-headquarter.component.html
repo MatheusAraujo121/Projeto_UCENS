@@ -1,1 +1,128 @@
-<p>social-headquarter works!</p>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sede Social - Nippon Sorocaba</title>
+    <style>
+        /* Estilos gerais do corpo da página */
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        /* Container principal para centralizar o conteúdo */
+        .container {
+            max-width: 960px;
+            margin: auto;
+            background: #fff;
+            padding: 25px 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Estilo do título principal */
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+        }
+
+        /* Estilos dos parágrafos */
+        p {
+            font-size: 1.1em;
+            margin-bottom: 1.2em;
+        }
+
+        /* Bloco de informações de contato */
+        .contact-info {
+            background-color: #f2f2f2;
+            border-left: 4px solid #0056b3;
+            padding: 20px;
+            margin: 25px 0;
+            font-size: 1.1em;
+            line-height: 1.8;
+        }
+        
+        .contact-info strong {
+             display: block;
+             margin-bottom: 8px;
+        }
+
+        /* Galeria de imagens */
+        .gallery-section {
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .gallery-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px; /* Espaço entre as imagens */
+            margin-top: 15px;
+        }
+
+        .gallery-image {
+            flex-basis: 48%; /* Define a largura de cada imagem */
+        }
+
+        .gallery-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Media query para tornar as imagens responsivas em telas menores */
+        @media (max-width: 768px) {
+            .gallery-container {
+                flex-direction: column; /* Empilha as imagens verticalmente */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <h1>Sede Social</h1>
+
+        <p>A sede social do Nippon Sorocaba fica localizada no centro da cidade, próximo ao Sorocaba Shopping.</p>
+
+        <div class="contact-info">
+            <strong>Endereço:</strong>
+            Rua Manoel Leite Magalhães, 55<br>
+            Centro – Sorocaba/SP<br>
+            CEP 18035-140
+            <br><br>
+            <strong>Telefones:</strong>
+            (15) 3231.3015 WhatsApp Business<br>
+            (15) 3231.2003
+        </div>
+
+        <p>
+            Nossa sede social abriga o escritório da secretaria do Nippon Sorocaba, o Nitigo Gakô, e é composta por um salão de festas, palco e cozinha, onde são realizados eventos como o Shinnenkai, o Bazar do Fujin-Bu, o Engueikai/Keirokai, bailes dos departamentos, concursos de karaokê, treinos de judô, tênis de mesa, shogi, encontros dos departamentos, como Fujin-Bu, Roojin-Bu, Seinei-Bu, reuniões de diretoria e outros eventos de pequeno porte.
+        </p>
+
+        <div class="gallery-section">
+            <p>O Salão de Eventos também pode ser alugado mediante proposta à Diretoria.</p>
+
+            <div class="gallery-container">
+                <div class="gallery-image">
+                    <img src="assets/img/headquarters/sede-central-02.jpg" alt="Fachada da União Cultural e Esportiva Nipo-Brasileira de Sorocaba">
+                </div>
+                <div class="gallery-image">
+                    <img src="assets/img/headquarters/sede-central-01.jpg" alt="Salão de eventos interno com pessoas em uma festa">
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
