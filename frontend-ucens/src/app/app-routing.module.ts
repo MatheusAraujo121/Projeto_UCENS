@@ -30,6 +30,10 @@ import { ViewCulturalComponent } from './pages/departments/view-cultural/view-cu
 import { ListEventsComponent } from './pages/system/events/list-events/list-events.component';
 import { ViewEventComponent } from './pages/system/events/view-event/view-event.component';
 import { EventInfoComponent } from './pages/events/event-info/event-info.component';
+import { SocialHeadquarterComponent } from './pages/headquarters/social-headquarter/social-headquarter.component';
+import { CountryHeadquarterIComponent } from './pages/headquarters/country-headquarter-i/country-headquarter-i.component';
+import { CountryHeadquarterIIComponent } from './pages/headquarters/country-headquarter-ii/country-headquarter-ii.component';
+import { ContactComponent } from './pages/contact/contact.component';
 
 const routes: Routes = [
   //Rotas site expositivo
@@ -43,6 +47,10 @@ const routes: Routes = [
   { path: 'departments/cultural', component: CulturalComponent },
   { path: 'departments/view-cultural/:id', component: ViewCulturalComponent },
   { path: 'events', component: EventsComponent },
+  { path: 'headquarter/social', component: SocialHeadquarterComponent },
+  { path: 'headquarter/campestre1', component: CountryHeadquarterIComponent },
+  { path: 'headquarter/campestre2', component: CountryHeadquarterIIComponent },
+  { path: 'contact', component: ContactComponent },
 
   //Rotas Admin
   { path: 'login', component: LoginComponent },
