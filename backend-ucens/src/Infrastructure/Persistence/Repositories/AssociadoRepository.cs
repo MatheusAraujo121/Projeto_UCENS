@@ -63,5 +63,12 @@ namespace Infrastructure.Persistence.Repositories
             _set.Remove(entity);
             await _context.SaveChangesAsync();
         }
+        public async Task<List<Associado>> GetAllWithDependentes()
+        {
+            return await _context.Associados
+                .Include(a => a.Dependentes) 
+                .AsNoTracking()
+                .ToListAsync();
+        }
     }
 }
