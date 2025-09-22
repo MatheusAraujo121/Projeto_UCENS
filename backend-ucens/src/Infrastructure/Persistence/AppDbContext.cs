@@ -12,6 +12,7 @@ namespace Infrastructure.Persistence
         public DbSet<Associado> Associados { get; set; } = null!;
         public DbSet<Dependente> Dependentes { get; set; } = null!;
         public DbSet<Evento> Eventos { get; set; } = null!;
+        public DbSet<Atividade> Atividades { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -6,6 +6,7 @@ using Infrastructure.Persistence;
 using Application.Features.Usuarios;
 using Application.Features.Associados;
 using Application.Features.Eventos;
+using Application.Features.Atividades; 
 using Application.Common.Interfaces;
 using Infrastructure.Persistence.Repositories;
 using Domain;
@@ -24,6 +25,7 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AssociadoService>();
 builder.Services.AddScoped<DependentesService>();
 builder.Services.AddScoped<EventoService>();
+builder.Services.AddScoped<AtividadeService>();
 
 builder.Services.AddControllers();
 
