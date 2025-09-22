@@ -13,6 +13,10 @@ namespace Infrastructure.Persistence
         public DbSet<Dependente> Dependentes { get; set; } = null!;
         public DbSet<Evento> Eventos { get; set; } = null!;
         public DbSet<Atividade> Atividades { get; set; } = null!;
+        public DbSet<Turma> Turmas { get; set; } = null!;
+        public DbSet<MatriculaAssociado> MatriculasAssociados { get; set; } = null!;
+        public DbSet<MatriculaDependente> MatriculasDependentes { get; set; } = null!;
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -105,6 +109,38 @@ namespace Infrastructure.Persistence
                 entity.Property(d => d.DataNascimento)
                     .IsRequired();
             });
+
+            modelBuilder.Entity<Atividade>()
+                .HasMany(a => a.Turmas)
+                .WithOne(t => t.Atividade)
+                .HasForeignKey(t => t.AtividadeId)
+                .IsRequired();
+
+            modelBuilder.Entity<MatriculaAssociado>()
+                .HasKey(ma => new { ma.AssociadoId, ma.TurmaId });
+
+            modelBuilder.Entity<MatriculaAssociado>()
+                .HasOne(ma => ma.Associado)
+                .WithMany(a => a.Matriculas)
+                .HasForeignKey(ma => ma.AssociadoId);
+
+            modelBuilder.Entity<MatriculaAssociado>()
+                .HasOne(ma => ma.Turma)
+                .WithMany(t => t.MatriculasAssociados)
+                .HasForeignKey(ma => ma.TurmaId);
+
+            modelBuilder.Entity<MatriculaDependente>()
+                .HasKey(md => new { md.DependenteId, md.TurmaId });
+
+            modelBuilder.Entity<MatriculaDependente>()
+                .HasOne(md => md.Dependente)
+                .WithMany(d => d.Matriculas)
+                .HasForeignKey(md => md.DependenteId);
+
+            modelBuilder.Entity<MatriculaDependente>()
+                .HasOne(md => md.Turma)
+                .WithMany(t => t.MatriculasDependentes)
+                .HasForeignKey(md => md.TurmaId);
         }
     }
 }

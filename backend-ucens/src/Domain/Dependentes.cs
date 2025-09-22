@@ -21,21 +21,23 @@ namespace Domain
         public string? NumeroCarteirinha { get; set; }
         public string? Categoria { get; set; }
         public DateTime? ValidadeCarteirinha { get; set; }
-        
+
         public string? Cpf { get; set; }
-        
+
         public string? LocalNascimento { get; set; }
         public string? Nacionalidade { get; set; }
         public string? EstadoCivil { get; set; }
         public string? GrauInstrucao { get; set; }
         public string? Profissao { get; set; }
-        
+
         public string? Exames { get; set; }
         public string? AtividadesProibidas { get; set; }
-        
+
         public int AssociadoId { get; set; }
 
-        [JsonIgnore] 
+        [JsonIgnore]
         public Associado Associado { get; set; } = null!;
+        
+        public ICollection<MatriculaDependente> Matriculas { get; set; } = new List<MatriculaDependente>();
     }
 }

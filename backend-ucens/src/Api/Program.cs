@@ -7,6 +7,7 @@ using Application.Features.Usuarios;
 using Application.Features.Associados;
 using Application.Features.Eventos;
 using Application.Features.Atividades; 
+using Application.Features.Turmas; 
 using Application.Common.Interfaces;
 using Infrastructure.Persistence.Repositories;
 using Domain;
@@ -19,6 +20,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAssociadoRepository, AssociadoRepository>();
+builder.Services.AddScoped<IMatriculaAssociadoRepository, MatriculaAssociadoRepository>();
+builder.Services.AddScoped<IMatriculaDependenteRepository, MatriculaDependenteRepository>();
+builder.Services.AddScoped<ITurmaRepository, TurmaRepository>();
+
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 
 builder.Services.AddScoped<UserService>();
@@ -26,6 +31,7 @@ builder.Services.AddScoped<AssociadoService>();
 builder.Services.AddScoped<DependentesService>();
 builder.Services.AddScoped<EventoService>();
 builder.Services.AddScoped<AtividadeService>();
+builder.Services.AddScoped<TurmaService>();
 
 builder.Services.AddControllers();
 

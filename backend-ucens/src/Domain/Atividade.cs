@@ -13,14 +13,14 @@ namespace Domain
         public bool ExigePiscina { get; set; }
         public bool ExigeFisico { get; set; }
         public string? Categoria { get; set; }
-        public string? DiasDisponiveis { get; set; } 
+        public string? DiasDisponiveis { get; set; }
         public TimeSpan? HorarioSugerido { get; set; }
         public int? IdadeMinima { get; set; }
         public int? IdadeMaxima { get; set; }
         public int? LimiteParticipantes { get; set; }
-        public string? Local { get; set; } 
+        public string? Local { get; set; }
         public string? ProfessorResponsavel { get; set; }
-
         public string? Acontecimentos { get; set; }
+        public ICollection<Turma> Turmas { get; set; } = new List<Turma>();
     }
 }
