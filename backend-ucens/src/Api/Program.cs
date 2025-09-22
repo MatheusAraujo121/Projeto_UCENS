@@ -7,8 +7,9 @@ using Application.Features.Usuarios;
 using Application.Features.Associados;
 using Application.Features.Eventos;
 using Application.Features.Atividades;
-using Application.Features.Turmas; 
+using Application.Features.Turmas;
 using Application.Features.Relatorios;
+using Application.Features.Contato;
 using Application.Common.Interfaces;
 using Infrastructure.Persistence.Repositories;
 using Domain;
@@ -34,6 +35,7 @@ builder.Services.AddScoped<EventoService>();
 builder.Services.AddScoped<AtividadeService>();
 builder.Services.AddScoped<TurmaService>();
 builder.Services.AddScoped<RelatorioService>();
+builder.Services.AddScoped<EmailService>();
 
 builder.Services.AddControllers();
 
