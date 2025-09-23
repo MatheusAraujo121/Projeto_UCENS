@@ -1,6 +1,7 @@
 using Application.Features.Usuarios;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Threading.Tasks;
 
@@ -18,10 +19,12 @@ namespace Api.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Get() =>
             Ok(await _service.GetAllUsers());
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> Get(int id)
         {
             var user = await _service.GetUser(id);
@@ -37,6 +40,7 @@ namespace Api.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> Put(int id, [FromBody] UserUpdateDTO dto)
         {
             try
@@ -51,6 +55,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
             await _service.DeleteUser(id);

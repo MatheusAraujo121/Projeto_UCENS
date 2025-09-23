@@ -1,6 +1,7 @@
 using Application.Features.Turmas;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -18,12 +19,14 @@ namespace Api.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<TurmaDTO>>> GetAll()
         {
             return Ok(await _service.GetAll());
         }
 
         [HttpGet("{id:int}")]
+        [Authorize]
         public async Task<ActionResult<TurmaDTO>> GetById(int id)
         {
             var turma = await _service.GetById(id);
@@ -31,6 +34,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<Turma>> Create([FromBody] TurmaDTO dto)
         {
             try
@@ -44,22 +48,23 @@ namespace Api.Controllers
             }
         }
         
-        // --- NOVO ENDPOINT PARA DELETAR TURMA ---
         [HttpDelete("{id:int}")]
+        [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
             try
             {
                 await _service.Delete(id);
-                return NoContent(); // Retorna 204 No Content, que é o padrão para delete com sucesso.
+                return NoContent(); 
             }
             catch (System.Exception ex)
             {
-                return NotFound(new { message = ex.Message }); // Retorna 404 se a turma não for encontrada.
+                return NotFound(new { message = ex.Message }); 
             }
         }
 
         [HttpPost("matricular-associado")]
+        [Authorize]
         public async Task<IActionResult> MatricularAssociado([FromBody] MatriculaDTO dto)
         {
             await _service.MatricularAssociado(dto);
@@ -67,6 +72,7 @@ namespace Api.Controllers
         }
 
         [HttpPost("matricular-dependente")]
+        [Authorize]
         public async Task<IActionResult> MatricularDependente([FromBody] MatriculaDTO dto)
         {
             await _service.MatricularDependente(dto);
@@ -74,6 +80,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete("desmatricular-associado")]
+        [Authorize]
         public async Task<IActionResult> DesmatricularAssociado([FromBody] MatriculaDTO dto)
         {
             try
@@ -88,6 +95,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete("desmatricular-dependente")]
+        [Authorize]
         public async Task<IActionResult> DesmatricularDependente([FromBody] MatriculaDTO dto)
         {
              try
