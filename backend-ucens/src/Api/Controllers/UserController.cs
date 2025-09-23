@@ -1,6 +1,7 @@
 using Application.Features.Usuarios;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace Api.Controllers
@@ -29,17 +30,24 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(User user)
+        public async Task<IActionResult> Post([FromBody] UserCreateDTO dto)
         {
-            var created = await _service.AddUser(user);
+            var created = await _service.AddUser(dto);
             return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, User user)
+        public async Task<IActionResult> Put(int id, [FromBody] UserUpdateDTO dto)
         {
-            if (id != user.Id) return BadRequest();
-            return Ok(await _service.UpdateUser(user));
+            try
+            {
+                var updatedUser = await _service.UpdateUser(id, dto);
+                return Ok(updatedUser);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
         }
 
         [HttpDelete("{id}")]
@@ -57,7 +65,6 @@ namespace Api.Controllers
                 return Unauthorized(new { message = "Credenciais inválidas" });
 
             return Ok(new { token });
-
         }
     }
 }

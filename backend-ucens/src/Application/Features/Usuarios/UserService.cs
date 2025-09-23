@@ -26,13 +26,47 @@ namespace Application.Features.Usuarios
 
         public async Task<IEnumerable<User>> GetAllUsers() => await _repository.GetAll();
         public async Task<User?> GetUser(int id) => await _repository.GetById(id);
-        public async Task<User> AddUser(User user)
+
+        public async Task<User> AddUser(UserCreateDTO dto)
         {
-            user.Senha = _passwordService.HashPassword(user, user.Senha);
+            // --- VERIFICAÇÃO ADICIONAL DE SEGURANÇA ---
+            if (string.IsNullOrWhiteSpace(dto.Senha))
+            {
+                throw new ArgumentException("A senha não pode ser vazia.", nameof(dto.Senha));
+            }
+
+            var user = new User
+            {
+                UserName = dto.UserName,
+                Email = dto.Email
+            };
+            
+            user.Senha = _passwordService.HashPassword(user, dto.Senha);
+            
             return await _repository.Add(user);
         }
-        public async Task<User> UpdateUser(User user) => await _repository.Update(user);
+        
+        public async Task<User> UpdateUser(int id, UserUpdateDTO dto)
+        {
+            var user = await _repository.GetById(id);
+            if (user == null)
+            {
+                throw new Exception($"Usuário com ID {id} não encontrado.");
+            }
+
+            user.UserName = dto.UserName;
+            user.Email = dto.Email;
+
+            if (!string.IsNullOrEmpty(dto.Senha))
+            {
+                user.Senha = _passwordService.HashPassword(user, dto.Senha);
+            }
+
+            return await _repository.Update(user);
+        }
+
         public async Task DeleteUser(int id) => await _repository.Delete(id);
+        
         public async Task<string?> Login(LoginDTO dto)
         {
             var user = await _repository.GetByEmail(dto.Email);
@@ -42,15 +76,14 @@ namespace Application.Features.Usuarios
 
             return GenerateJwtToken(user.Email);
         }
-
-
+        
         private string GenerateJwtToken(string email)
         {
             var claims = new[]
             {
-            new Claim(JwtRegisteredClaimNames.Sub, email),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-        };
+                new Claim(JwtRegisteredClaimNames.Sub, email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -66,11 +99,8 @@ namespace Application.Features.Usuarios
         }
     }
 
-
-
     public class PasswordService
     {
-
         private readonly PasswordHasher<User> _passwordHasher = new();
 
         public string HashPassword(User user, string senha)
