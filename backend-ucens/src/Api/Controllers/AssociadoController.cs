@@ -1,4 +1,5 @@
 using Application.Features.Associados;
+using Microsoft.AspNetCore.Authorization; 
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -17,6 +18,7 @@ namespace Api.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<AssociadoDto>>> GetAll()
         {
             var associados = await _service.GetAll();
@@ -24,6 +26,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("{id:int}")]
+        [Authorize]
         public async Task<ActionResult<AssociadoDto?>> GetById(int id)
         {
             var associado = await _service.GetById(id);
@@ -31,17 +34,15 @@ namespace Api.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<AssociadoDto>> Create([FromBody] AssociadoDto dto)
         {
-            if (dto == null)
-            {
-                return BadRequest("O corpo da requisição não pode ser nulo.");
-            }
             var created = await _service.Add(dto);
             return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
 
         [HttpPut("{id:int}")]
+        [Authorize]
         public async Task<ActionResult<AssociadoDto>> Update(int id, [FromBody] AssociadoDto dto)
         {
             if (id != dto.Id)
@@ -52,6 +53,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
             await _service.Delete(id);

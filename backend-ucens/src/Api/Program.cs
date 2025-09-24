@@ -13,6 +13,7 @@ using Application.Features.Atividades;
 using Application.Features.Turmas;
 using Application.Features.Relatorios;
 using Application.Features.Contato;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,7 +44,37 @@ builder.Services.AddScoped<EmailService>();
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    // Define as informações gerais da sua API no Swagger
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "API UCENS", Version = "v1" });
+
+    // Define o esquema de segurança (JWT Bearer Token)
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Por favor, insira 'Bearer ' seguido do seu token JWT",
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+
+    // Adiciona o requisito de segurança a todas as operações que o necessitem
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+});
 
 // 4. Configuração do JWT (Autenticação)
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

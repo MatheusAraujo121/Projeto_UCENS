@@ -26,14 +26,9 @@ namespace Api.Controllers
             }
             catch (Exception ex)
             {
-                // --- ALTERAÇÃO PARA DEPURAR ---
-                // Retornando a mensagem de erro detalhada.
-                // Lembre-se de remover isso antes de colocar em produção!
                 return StatusCode(500, new 
                 { 
                     message = "Ocorreu um erro detalhado ao enviar o e-mail.",
-                    error = ex.Message,
-                    innerError = ex.InnerException?.Message 
                 });
             }
         }

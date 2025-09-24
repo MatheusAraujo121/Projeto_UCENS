@@ -1,5 +1,6 @@
 using Application.Features.Relatorios;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
 
 namespace Api.Controllers
@@ -16,6 +17,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("associados-com-dependentes")]
+        [Authorize]
         public async Task<IActionResult> GetRelatorioAssociadosComDependentes()
         {
             var relatorio = await _service.GerarRelatorioAssociadosComDependentes();

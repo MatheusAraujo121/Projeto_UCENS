@@ -1,4 +1,5 @@
 using Application.Features.Atividades;
+using Microsoft.AspNetCore.Authorization; 
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -31,6 +32,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<AtividadeDTO>> Create([FromBody] AtividadeDTO dto)
         {
             var created = await _service.Add(dto);
@@ -38,6 +40,7 @@ namespace Api.Controllers
         }
 
         [HttpPut("{id:int}")]
+        [Authorize]
         public async Task<ActionResult<AtividadeDTO>> Update(int id, [FromBody] AtividadeDTO dto)
         {
             if (id != dto.Id)
@@ -57,6 +60,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
             await _service.Delete(id);
