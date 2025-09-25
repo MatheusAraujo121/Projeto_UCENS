@@ -1,44 +1,40 @@
-<main class="view-event-page">
-  <button mat-stroked-button color="warn" class="btn-voltar" routerLink="/list-events">
-    <mat-icon>arrow_back</mat-icon>
-    <span>Voltar</span>
-  </button>
-  <div class="event-detail-container">
-    <img src="assets/carp.jpg" class="bg-carpa" alt="carpa" />
-    <div class="event-header">
-      <h2>{{ event?.nome || 'Nome do Evento' }}</h2>
-    </div>
-    <div class="top-section">
-      <div class="image-placeholder card">
-        <img [src]="event?.imagem || 'assets/default-activity.jpg'" alt="Imagem do Evento" class="event-image">
+<main class="view-page" *ngIf="!isLoading && event">
+  <div class="view-container">
+    <button mat-stroked-button color="warn" class="btn-voltar" routerLink="/list-events">
+      <mat-icon>arrow_back</mat-icon>
+      <span>Voltar para o Calendário</span>
+    </button>
+    
+    <div class="header-section">
+      <img [src]="event?.imagemUrl || 'assets/placeholder-image.jpg'" [alt]="event?.nome" class="header-image">
+      <div class="header-title">
+        <h1>{{ event?.nome }}</h1>
+        <p class="lead">Local: {{ event?.local }}</p>
       </div>
-
-      <div class="info-group card">
-        <div class="location-time-age">
-          <p><strong>Local:</strong> {{ event?.local || 'N/A' }}</p>
-          <p><strong>Data de Início:</strong> {{ event?.dataInicio | date:'dd/MM/yyyy' }}</p>
-          <p><strong>Data de Término:</strong> {{ event?.dataFinal | date:'dd/MM/yyyy' }}</p>
-          <p><strong>Horário de Início:</strong> {{ event?.horarioInicio }}</p>
-          <p><strong>Horário de Término:</strong> {{ event?.horarioFinal }}</p>
+    </div>
+    
+    <div class="details-grid">
+        <div class="detail-card">
+            <h3>Período do Evento</h3>
+            <p><strong>Início:</strong> {{ event?.inicio | date:'fullDate' }} às {{ event?.inicio | date:'shortTime' }}</p>
+            <p><strong>Fim:</strong> {{ event?.fim | date:'fullDate' }} às {{ event?.fim | date:'shortTime' }}</p>
         </div>
-      </div>
+
+        <div class="detail-card full-width">
+            <h3>Descrição</h3>
+            <p>{{ event.descricao || 'Nenhuma descrição fornecida.' }}</p>
+        </div>
     </div>
 
-    <div class="bottom-section">
-      <div class="event-description-edit card">
-        <h3>Detalhes do Evento</h3>
-        <p>{{ event?.descricao || 'Nenhuma descrição disponível.' }}</p>
-        <div class="action-buttons">
-          <button mat-stroked-button class="btn-edit" routerLink="/edit-event/{{ event?.id }}">
-            <mat-icon>edit</mat-icon>
-            <span>Editar</span>
-          </button>
-          <button mat-stroked-button color="warn" class="btn-delete">
-            <mat-icon>delete_outline</mat-icon>
-            <span>Excluir</span>
-          </button>
-        </div>
-      </div>
+    <div class="actions-bottom">
+      <button mat-stroked-button color="primary" class="btn-submit" [routerLink]="['/edit-event', event?.id]">
+        <mat-icon>edit</mat-icon>
+        <span>Editar Evento</span>
+      </button>
     </div>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-indicator">
+    <p>Carregando detalhes do evento...</p>
   </div>
 </main>

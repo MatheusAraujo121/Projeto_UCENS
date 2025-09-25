@@ -24,7 +24,7 @@ namespace Api.Controllers
                 await _service.EnviarEmailContato(dto);
                 return Ok(new { message = "Sua mensagem foi enviada com sucesso!" });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500, new 
                 { 

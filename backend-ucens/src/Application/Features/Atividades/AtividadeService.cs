@@ -50,11 +50,34 @@ namespace Application.Features.Atividades
             return MapToDto(atividade);
         }
 
-        public async Task Delete(int id)
+        public async Task Delete(int id, string webRootPath)
         {
+            var atividade = await _repo.GetById(id);
+            if (atividade == null)
+            {
+                return;
+            }
+
+            if (!string.IsNullOrEmpty(atividade.ImagemUrl))
+            {
+                try
+                {
+                    var fileName = Path.GetFileName(new Uri(atividade.ImagemUrl).AbsolutePath);
+                    var filePath = Path.Combine(webRootPath, "images", "activities", fileName);
+
+                    if (File.Exists(filePath))
+                    {
+                        File.Delete(filePath);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Erro ao deletar arquivo de imagem: {ex.Message}");
+                }
+            }
+
             await _repo.Delete(id);
         }
-
         private static AtividadeDTO MapToDto(Atividade atividade)
         {
             return new AtividadeDTO

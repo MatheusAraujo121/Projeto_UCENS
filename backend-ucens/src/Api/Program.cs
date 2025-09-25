@@ -17,12 +17,21 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Configuração do Banco de Dados (DbContext)
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularApp",
+        policyBuilder =>
+        {
+            policyBuilder.WithOrigins("http://localhost:4200") 
+                   .AllowAnyHeader()
+                   .AllowAnyMethod();
+        });
+});
+
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")
         ?? "Data Source=Nippon.db"));
 
-// 2. Injeção de Dependência (DI): Registrando Services e Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAssociadoRepository, AssociadoRepository>();
 builder.Services.AddScoped<IMatriculaAssociadoRepository, MatriculaAssociadoRepository>();
@@ -39,17 +48,13 @@ builder.Services.AddScoped<TurmaService>();
 builder.Services.AddScoped<RelatorioService>();
 builder.Services.AddScoped<EmailService>();
 
-
-// 3. Controllers e Swagger
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
-    // Define as informações gerais da sua API no Swagger
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "API UCENS", Version = "v1" });
 
-    // Define o esquema de segurança (JWT Bearer Token)
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
@@ -59,7 +64,6 @@ builder.Services.AddSwaggerGen(options =>
         Scheme = "Bearer"
     });
 
-    // Adiciona o requisito de segurança a todas as operações que o necessitem
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -76,7 +80,6 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-// 4. Configuração do JWT (Autenticação)
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -95,21 +98,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 var app = builder.Build();
 
-// Apply migrations and seed data
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var dbContext = services.GetRequiredService<AppDbContext>();
     var userService = services.GetRequiredService<UserService>();
 
-    // Aplica as migrations
     dbContext.Database.Migrate();
 
-    // Cria o usuário admin se não existir
     if (!dbContext.Users.Any(u => u.Email == "admin@gmail.com"))
     {
-        // --- CORREÇÃO AQUI ---
-        // Agora criamos um UserCreateDTO para passar para o serviço
+
         var adminUserDto = new UserCreateDTO
         {
             UserName = "admin",
@@ -128,6 +127,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseStaticFiles();
+app.UseCors("AllowAngularApp");
 
 app.UseAuthentication();
 app.UseAuthorization();

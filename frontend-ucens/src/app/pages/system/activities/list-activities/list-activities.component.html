@@ -9,8 +9,7 @@
         <div class="title-card-wrap">
             <div class="title-card">
                 <h1>Atividades — Esportivas</h1>
-                <p class="lead">Confira abaixo e saiba mais sobre as atividades eportivas que oferecemos nas nossas
-                    sedes.</p>
+                <p class="lead">Confira abaixo e saiba mais sobre as atividades esportivas que oferecemos nas nossas sedes.</p>
             </div>
         </div>
 
@@ -21,27 +20,24 @@
                         <div class="add-inner">
                             <div class="add-icon">+</div>
                         </div>
-
                         <div class="card-body add-body">
                             <div class="add-label">Nova Atividade</div>
                         </div>
                     </a>
-                    <article class="activity-card" *ngFor="let a of activities">
-                        <div class="card-media">
-                            <img [src]="a.image" [alt]="a.title" />
-                        </div>
 
+                    <article class="activity-card" *ngFor="let activity of atividadesEsportivas">
+                        <div class="card-media">
+                            <img [src]="activity.imagemUrl || 'assets/placeholder-image.jpg'" [alt]="activity.nome" />
+                        </div>
                         <div class="card-body">
-                            <h3 class="card-title">{{ a.title }}</h3>
-                            <p class="card-short">{{ a.short }}</p>
+                            <h3 class="card-title">{{ activity.nome }}</h3>
+                            <p class="card-short">{{ activity.descricao | slice:0:100 }}...</p>
 
                             <div class="card-actions">
-                                <button mat-stroked-button class="btn-know"
-                                    [routerLink]="a.link || ['/view-activity', a.id]">
+                                <button mat-stroked-button class="btn-know" [routerLink]="['/view-activity', activity.id]">
                                     Saiba mais
                                 </button>
-                                <button mat-stroked-button color="primary" class="btn-submit"
-                                    [routerLink]="a.link || ['/edit-activity', a.id]">
+                                <button mat-stroked-button color="primary" class="btn-submit" [routerLink]="['/edit-activity', activity.id]">
                                     Editar
                                 </button>
                             </div>
@@ -54,8 +50,7 @@
         <div class="title-card-wrap">
             <div class="blue-title-card">
                 <h1>Atividades — Culturais</h1>
-                <p class="lead">Confira abaixo e saiba mais sobre as atividades culturais que oferecemos nas nossas
-                    sedes.</p>
+                <p class="lead">Confira abaixo e saiba mais sobre as atividades culturais que oferecemos nas nossas sedes.</p>
             </div>
         </div>
 
@@ -70,22 +65,20 @@
                             <div class="add-label">Nova Atividade</div>
                         </div>
                     </a>
-                    <article class="activity-card" *ngFor="let a of activities">
+                    
+                    <article class="activity-card" *ngFor="let activity of atividadesCulturais">
                         <div class="card-media">
-                            <img [src]="a.image" [alt]="a.title" />
+                            <img [src]="activity.imagemUrl || 'assets/placeholder-image.jpg'" [alt]="activity.nome" />
                         </div>
-
                         <div class="card-body">
-                            <h3 class="card-title">{{ a.title }}</h3>
-                            <p class="card-short">{{ a.short }}</p>
+                             <h3 class="card-title">{{ activity.nome }}</h3>
+                            <p class="card-short">{{ activity.descricao | slice:0:100 }}...</p>
 
                             <div class="card-actions">
-                                <button mat-stroked-button class="btn-know"
-                                    [routerLink]="a.link || ['/view-activity', a.id]">
+                                <button mat-stroked-button class="btn-know" [routerLink]="['/view-activity', activity.id]">
                                     Saiba mais
                                 </button>
-                                <button mat-stroked-button color="primary" class="btn-submit"
-                                    [routerLink]="a.link || ['/edit-activity', a.id]">
+                                <button mat-stroked-button color="primary" class="btn-submit" [routerLink]="['/edit-activity', activity.id]">
                                     Editar
                                 </button>
                             </div>

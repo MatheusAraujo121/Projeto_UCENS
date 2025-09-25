@@ -15,6 +15,7 @@ import { FooterComponent } from './shared/footer/footer.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 //Angular material
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -149,6 +150,7 @@ import { EventInfoComponent } from './pages/events/event-info/event-info.compone
     MatToolbarModule,
     MatMenuModule,
     MatButtonModule,
+    MatSnackBarModule,
     MatRadioModule,   
     MatTableModule,
     MatPaginatorModule,

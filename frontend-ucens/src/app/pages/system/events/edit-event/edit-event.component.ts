@@ -1,20 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { EventoService } from 'src/app/services/events/event.service';
+import { FileUploadService } from 'src/app/services/uploads/file-upload.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Evento } from 'src/app/services/events/event.interface';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
-
-interface Event {
-  id: number;
-  nome: string;
-  dataInicio: string;
-  dataFinal: string;
-  horarioInicio: string;
-  horarioFinal: string;
-  local: string;
-  descricao: string;
-  imagem?: string;
-}
 
 @Component({
   selector: 'app-edit-event',
@@ -22,51 +14,46 @@ interface Event {
   styleUrls: ['./edit-event.component.scss']
 })
 export class EditEventComponent implements OnInit {
-  form!: FormGroup;
-  id!: number;
-  previewUrl: string | null = null;
+
+  form: FormGroup;
+  previewUrl: string | ArrayBuffer | null = null;
+  selectedFile: File | null = null;
+  isLoading = false;
+  eventId: number | null = null;
   
-  sedes: string[] = ['Sede Social', 'Sede Campestre I', 'Sede Campestre II', 'Praça Kasato Maru'];
+  sedes: string[] = ['Sede Central', 'Sede Campestre I', 'Sede Campestre II'];
   filteredOptions!: Observable<string[]>;
 
-  private allEvents: Event[] = [
-    { id: 1, nome: 'Festa Junina', dataInicio: '2025-06-20', dataFinal: '2025-06-22', horarioInicio: '18:00', horarioFinal: '23:00', local: 'Sede Campestre II', descricao: 'Tradicional festa com comidas típicas, danças e brincadeiras.', imagem: 'assets/img/banner-1.jpg' },
-    { id: 2, nome: 'Bon Odori', dataInicio: '2025-08-15', dataFinal: '2025-08-16', horarioInicio: '19:00', horarioFinal: '22:00', local: 'Praça Kasato Maru', descricao: 'Festival de dança folclórica japonesa em homenagem aos antepassados.', imagem: 'assets/activities/fujin-bu.jpg' },
-  ];
-
   constructor(
-    private route: ActivatedRoute,
     private fb: FormBuilder,
-    private router: Router
-  ) { }
-
-  ngOnInit(): void {
-    this.id = Number(this.route.snapshot.paramMap.get('id'));
-    
-    const eventToEdit = this.allEvents.find(e => e.id === this.id);
-
-    if (eventToEdit) {
-      this.previewUrl = eventToEdit.imagem || null;
-      this.buildForm(eventToEdit);
-    } else {
-      this.router.navigate(['/list-events']);
-    }
+    private eventoService: EventoService,
+    private fileUploadService: FileUploadService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private snackBar: MatSnackBar
+  ) {
+    this.form = this.fb.group({
+      id: [null],
+      nome: ['', Validators.required],
+      local: ['', Validators.required],
+      dataInicio: ['', Validators.required],
+      dataFinal: ['', Validators.required],
+      horarioInicio: ['', Validators.required],
+      horarioFinal: ['', Validators.required],
+      descricao: [''],
+      imagemUrl: ['']
+    });
   }
 
-  private buildForm(event: Event): void {
-    this.form = this.fb.group({
-      nome: [event.nome, Validators.required],
-      dataInicio: [event.dataInicio, Validators.required],
-      dataFinal: [event.dataFinal, Validators.required],
-      horarioInicio: [event.horarioInicio, Validators.required],
-      horarioFinal: [event.horarioFinal, Validators.required],
-      local: [event.local, Validators.required],
-      descricao: [event.descricao],
-      imagem: [null]
-    });
+  ngOnInit(): void {
+    const idParam = this.route.snapshot.paramMap.get('id');
+    if (idParam) {
+      this.eventId = +idParam;
+      this.loadEventData(this.eventId);
+    }
 
     this.filteredOptions = this.form.get('local')!.valueChanges.pipe(
-      startWith(event.local || ''),
+      startWith(''),
       map(value => this._filter(value || ''))
     );
   }
@@ -76,22 +63,82 @@ export class EditEventComponent implements OnInit {
     return this.sedes.filter(option => option.toLowerCase().includes(filterValue));
   }
 
+  loadEventData(id: number): void {
+    this.isLoading = true;
+    this.eventoService.getById(id).subscribe({
+      next: (data: Evento) => {
+        // Separa a data e a hora para preencher o formulário
+        const inicio = new Date(data.inicio);
+        const fim = new Date(data.fim);
+
+        this.form.patchValue({
+          ...data,
+          dataInicio: this.formatDate(inicio),
+          horarioInicio: this.formatTime(inicio),
+          dataFinal: this.formatDate(fim),
+          horarioFinal: this.formatTime(fim)
+        });
+        this.previewUrl = data.imagemUrl || null;
+        this.isLoading = false;
+      },
+      error: () => this.router.navigate(['/list-events'])
+    });
+  }
+
   onFileChange(event: any): void {
     const file = event.target.files[0];
     if (file) {
+      this.selectedFile = file;
       const reader = new FileReader();
-      reader.onload = () => this.previewUrl = reader.result as string;
       reader.readAsDataURL(file);
+      reader.onload = () => this.previewUrl = reader.result;
     }
   }
 
-  atualizar(): void {
-    if (this.form.valid) {
-      console.log('Dados atualizados do Evento:', this.form.value);
-      alert('Evento atualizado com sucesso! (Simulação)');
-      this.router.navigate(['/list-events']); // ou para a página de visualização do evento
+  efetuarAtualizacao(): void {
+    if (this.form.invalid || !this.eventId) return;
+    this.isLoading = true;
+
+    if (this.selectedFile) {
+      this.fileUploadService.uploadImage(this.selectedFile, 'events').subscribe({
+        next: (response) => {
+          this.form.patchValue({ imagemUrl: response.url });
+          this.atualizarEvento();
+        },
+        error: () => {
+          this.snackBar.open('Ocorreu um erro ao enviar a nova imagem.', 'Fechar', { duration: 3000 });
+          this.isLoading = false;
+        }
+      });
     } else {
-      this.form.markAllAsTouched();
+      this.atualizarEvento();
     }
   }
+
+  private atualizarEvento(): void {
+    if (!this.eventId) return;
+    
+    // Combina data e hora antes de enviar
+    const formValue = this.form.value;
+    const eventoParaSalvar = {
+      ...formValue,
+      inicio: new Date(`${formValue.dataInicio}T${formValue.horarioInicio}`),
+      fim: new Date(`${formValue.dataFinal}T${formValue.horarioFinal}`)
+    };
+
+    this.eventoService.update(this.eventId, eventoParaSalvar).subscribe({
+      next: () => {
+        this.snackBar.open('Evento atualizado com sucesso!', 'Fechar', { duration: 3000 });
+        this.router.navigate(['/list-events']);
+      },
+      error: () => {
+        this.snackBar.open('Erro ao atualizar. Verifique se você está logado.', 'Fechar', { duration: 5000 });
+        this.isLoading = false;
+      }
+    });
+  }
+  
+  // Funções auxiliares para formatar data e hora
+  private formatDate = (date: Date) => date.toISOString().split('T')[0];
+  private formatTime = (date: Date) => date.toTimeString().split(' ')[0].substring(0, 5);
 }

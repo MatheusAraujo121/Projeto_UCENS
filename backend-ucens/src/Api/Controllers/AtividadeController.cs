@@ -1,5 +1,6 @@
 using Application.Features.Atividades;
-using Microsoft.AspNetCore.Authorization; 
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -11,10 +12,12 @@ namespace Api.Controllers
     public class AtividadeController : ControllerBase
     {
         private readonly AtividadeService _service;
+        private readonly IWebHostEnvironment _env; 
 
-        public AtividadeController(AtividadeService service)
+        public AtividadeController(AtividadeService service, IWebHostEnvironment env)
         {
             _service = service;
+            _env = env;
         }
 
         [HttpGet]
@@ -63,7 +66,7 @@ namespace Api.Controllers
         [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
-            await _service.Delete(id);
+            await _service.Delete(id, _env.WebRootPath);
             return NoContent();
         }
     }
