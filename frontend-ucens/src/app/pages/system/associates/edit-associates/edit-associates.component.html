@@ -1,10 +1,11 @@
 <main class="cadastro-page">
     <div class="cadastro-container">
-        <h2>Editar Associado #{{ id }}</h2>
         <img src="assets/carp.jpg" class="bg-carpa" alt="carpa" />
+        <h2>Editar Associado #{{ id }}</h2>
+
         <form [formGroup]="form" (ngSubmit)="atualizar()">
-            <p class="section-label"><em>Dados Básicos</em></p>
             <div class="form-grid">
+                <p class="section-label full-width"><em>Dados Básicos</em></p>
                 <mat-form-field appearance="fill">
                     <mat-label>Nome</mat-label>
                     <input matInput formControlName="nome" />
@@ -13,10 +14,8 @@
                     <mat-label>Cognome</mat-label>
                     <input matInput formControlName="cognome" />
                 </mat-form-field>
-            </div>
 
-            <p class="section-label"><em>Identificação</em></p>
-            <div class="form-grid">
+                <p class="section-label full-width"><em>Identificação</em></p>
                 <mat-form-field appearance="fill">
                     <mat-label>CPF</mat-label>
                     <input matInput formControlName="cpf" mask="000.000.000-00" />
@@ -25,22 +24,18 @@
                     <mat-label>RG</mat-label>
                     <input matInput formControlName="rg" mask="00.000.000-0" />
                 </mat-form-field>
-            </div>
 
-            <p class="section-label"><em>Contato</em></p>
-            <div class="form-grid">
+                <p class="section-label full-width"><em>Contato</em></p>
                 <mat-form-field appearance="fill">
-                    <mat-label>Telefone</mat-label>
+                    <mat-label>Celular</mat-label>
                     <input matInput formControlName="telefone" mask="(00) 00000-0000" />
                 </mat-form-field>
                 <mat-form-field appearance="fill" class="full-width">
                     <mat-label>E‑mail</mat-label>
                     <input matInput type="email" formControlName="email" />
                 </mat-form-field>
-            </div>
 
-            <p class="section-label"><em>Família</em></p>
-            <div class="form-grid">
+                <p class="section-label full-width"><em>Família</em></p>
                 <mat-form-field appearance="fill">
                     <mat-label>Nome do Pai</mat-label>
                     <input matInput formControlName="nomePai" />
@@ -49,14 +44,29 @@
                     <mat-label>Nome da Mãe</mat-label>
                     <input matInput formControlName="nomeMae" />
                 </mat-form-field>
-            </div>
 
-            <p class="section-label"><em>Outros Dados</em></p>
-            <div class="form-grid">
+                <p class="section-label full-width"><em>Endereço</em></p>
+                <mat-form-field appearance="fill">
+                    <mat-label>Endereço</mat-label>
+                    <input matInput formControlName="endereco" placeholder="Rua, Avenida, etc." />
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Número</mat-label>
+                    <input matInput formControlName="numero" placeholder="123" />
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Complemento</mat-label>
+                    <input matInput formControlName="complemento" placeholder="Apto, Bloco, etc." />
+                </mat-form-field>
+
+                <p class="section-label full-width"><em>Outros Dados</em></p>
                 <mat-form-field appearance="fill">
                     <mat-label>Data de Nascimento</mat-label>
-                    <input matInput type="date" formControlName="dataNascimento" />
+                    <input matInput [matDatepicker]="pickerInicio" formControlName="dataNascimento">
+                    <mat-datepicker-toggle matSuffix [for]="pickerInicio"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerInicio></mat-datepicker>
                 </mat-form-field>
+
                 <mat-form-field appearance="fill">
                     <mat-label>Sexo</mat-label>
                     <mat-select formControlName="sexo">
@@ -85,16 +95,24 @@
                     <mat-label>Profissão</mat-label>
                     <input matInput formControlName="profissao" />
                 </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Situação</mat-label>
+                    <mat-select formControlName="situacao">
+                        <mat-option value="Regular">Regular</mat-option>
+                        <mat-option value="Inadimplente">Inadimplente</mat-option>
+                        <mat-option value="Desligado">Desligado</mat-option>
+                    </mat-select>
+                </mat-form-field>
             </div>
 
             <div class="btns-bottom">
-                <button mat-stroked-button class="btn-cancel" routerLink="/view-associates/{{ id }}">
+                <button mat-stroked-button class="btn-cancel" [routerLink]="['/view-associates', id]" type="button">
                     <mat-icon>close</mat-icon>
                     <span>Cancelar</span>
                 </button>
                 <button mat-stroked-button class="btn-submit" type="submit">
-                    <mat-icon>radio_button_unchecked</mat-icon>
-                    <span>Atualizar</span>
+                    <mat-icon>save</mat-icon>
+                    <span>Atualizar Cadastro</span>
                 </button>
             </div>
         </form>

@@ -22,6 +22,8 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatDatepickerModule } from '@angular/material/datepicker'; 
+import { MatNativeDateModule } from '@angular/material/core'; 
 import { MatButtonModule } from '@angular/material/button';
 import { MatRadioModule }     from '@angular/material/radio';
 import { MatIconModule } from '@angular/material/icon';
@@ -34,6 +36,12 @@ import { MatSelectModule } from '@angular/material/select';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { MatDividerModule } from '@angular/material/divider';
+
+//Config do idioma em portugues para as datas
+import { registerLocaleData } from '@angular/common';
+import localePt from '@angular/common/locales/pt';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
+registerLocaleData(localePt);
 
 //Institutional
 import { StoryComponent } from './pages/institutional/story/story.component';
@@ -153,6 +161,8 @@ import { EventInfoComponent } from './pages/events/event-info/event-info.compone
     MatSnackBarModule,
     MatRadioModule,   
     MatTableModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     MatPaginatorModule,
     MatSortModule,
     MatFormFieldModule,
@@ -171,6 +181,7 @@ import { EventInfoComponent } from './pages/events/event-info/event-info.compone
       useClass: AuthInterceptor,
       multi: true
     },
+    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' },
     {
       provide: MatPaginatorIntl,
       useFactory: () => {

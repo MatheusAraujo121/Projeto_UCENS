@@ -8,6 +8,10 @@
 <mat-dialog-content class="mat-typography">
   <div class="event-details-grid">
     <div class="detail-row">
+      <strong><mat-icon>location_on</mat-icon> Local:</strong>
+      <span>{{ data.event.extendedProps['local'] }}</span>
+    </div>
+    <div class="detail-row">
       <strong><mat-icon>calendar_today</mat-icon> Início:</strong>
       <span>{{ data.event.start | date:'dd/MM/yyyy' }}</span>
     </div>

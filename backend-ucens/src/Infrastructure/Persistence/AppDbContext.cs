@@ -88,8 +88,11 @@ namespace Infrastructure.Persistence
                    entity.Property(a => a.Profissao)
                        .HasMaxLength(100);
 
-                   entity.Property(a => a.StatusQuo)
+                   entity.Property(a => a.Situacao)
                        .HasMaxLength(30);
+
+                   entity.Property(a => a.GrauInstrucao)
+                      .HasMaxLength(30);
 
                    entity.HasMany(a => a.Dependentes)
                        .WithOne(d => d.Associado)

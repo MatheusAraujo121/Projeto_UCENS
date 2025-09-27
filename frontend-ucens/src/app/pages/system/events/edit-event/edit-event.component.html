@@ -37,13 +37,17 @@
         </mat-form-field>
 
         <mat-form-field appearance="fill">
-          <mat-label>Data de Início</mat-label>
-          <input matInput formControlName="dataInicio" type="date" />
+          <mat-label>Data de Início (dd/mm/yyyy)</mat-label>
+          <input matInput [matDatepicker]="pickerInicio" formControlName="dataInicio">
+          <mat-datepicker-toggle matSuffix [for]="pickerInicio"></mat-datepicker-toggle>
+          <mat-datepicker #pickerInicio></mat-datepicker>
         </mat-form-field>
 
         <mat-form-field appearance="fill">
-          <mat-label>Data de Término</mat-label>
-          <input matInput formControlName="dataFinal" type="date" />
+          <mat-label>Data de Término (dd/mm/yyyy)</mat-label>
+          <input matInput [matDatepicker]="pickerFinal" formControlName="dataFinal">
+          <mat-datepicker-toggle matSuffix [for]="pickerFinal"></mat-datepicker-toggle>
+          <mat-datepicker #pickerFinal></mat-datepicker>
         </mat-form-field>
 
         <mat-form-field appearance="fill">
@@ -68,7 +72,7 @@
           <span>Cancelar</span>
         </button>
         <button mat-stroked-button class="btn-submit" type="submit" [disabled]="form.invalid || isLoading">
-          <mat-icon>save</mat-icon>
+          <mat-icon>radio_button_unchecked</mat-icon>
           <span *ngIf="!isLoading">Salvar Alterações</span>
           <span *ngIf="isLoading">Salvando...</span>
         </button>

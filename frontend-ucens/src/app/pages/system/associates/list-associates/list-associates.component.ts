@@ -1,72 +1,25 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
 
-//essa parte até o components é somente para teste, pois isso ficara no backend
-//e não no frontend, mas é necessário para o funcionamento do componente
-//depois de implementado o backend, essa parte deve ser removida
-//e o componente deve ser adaptado para receber os dados do backend
-
-interface Associado {
-  nome: string;
-  cognome: string;
-  situacao: 'Regular' | 'Desligado' | 'Inadimplente';
-}
-
-const EXAMPLE_DATA: Associado[] = [
-  { nome: 'Andressa Akemi Tanaka', cognome: 'Tanaka', situacao: 'Regular' },
-  { nome: 'Ana Beatriz Takahashi', cognome: 'Takahashi', situacao: 'Regular' },
-  { nome: 'André Francisco de Souza', cognome: 'Souza', situacao: 'Desligado' },
-  { nome: 'Carlos Eduardo Lima', cognome: 'Lima', situacao: 'Regular' },
-  { nome: 'Juliana Matsuda', cognome: 'Matsuda', situacao: 'Inadimplente' },
-  { nome: 'Fernanda Yamamoto', cognome: 'Yamamoto', situacao: 'Regular' },
-  { nome: 'Felipe Taniguchi', cognome: 'Taniguchi', situacao: 'Regular' },
-  { nome: 'João Pedro Nakagawa', cognome: 'Nakagawa', situacao: 'Regular' },
-  { nome: 'Camila Sato', cognome: 'Sato', situacao: 'Regular' },
-  { nome: 'Larissa Kobayashi', cognome: 'Kobayashi', situacao: 'Desligado' },
-  { nome: 'Gabriel Honda', cognome: 'Honda', situacao: 'Regular' },
-  { nome: 'Patrícia Shimizu', cognome: 'Shimizu', situacao: 'Regular' },
-  { nome: 'Rodrigo Fujita', cognome: 'Fujita', situacao: 'Inadimplente' },
-  { nome: 'Beatriz Uehara', cognome: 'Uehara', situacao: 'Regular' },
-  { nome: 'Daniel Sasaki', cognome: 'Sasaki', situacao: 'Regular' },
-  { nome: 'Eduardo Hasegawa', cognome: 'Hasegawa', situacao: 'Desligado' },
-  { nome: 'Natália Kitano', cognome: 'Kitano', situacao: 'Regular' },
-  { nome: 'Bruno Kanashiro', cognome: 'Kanashiro', situacao: 'Regular' },
-  { nome: 'Luana Oshima', cognome: 'Oshima', situacao: 'Desligado' },
-  { nome: 'Ricardo Morimoto', cognome: 'Morimoto', situacao: 'Regular' },
-  { nome: 'Thaís Kinoshita', cognome: 'Kinoshita', situacao: 'Inadimplente' },
-  { nome: 'Igor Nishimura', cognome: 'Nishimura', situacao: 'Regular' },
-  { nome: 'Paula Matsumoto', cognome: 'Matsumoto', situacao: 'Desligado' },
-  { nome: 'Vinícius Okada', cognome: 'Okada', situacao: 'Regular' },
-  { nome: 'Tatiane Miyazaki', cognome: 'Miyazaki', situacao: 'Regular' },
-  { nome: 'Amanda Shibata', cognome: 'Shibata', situacao: 'Regular' },
-  { nome: 'Lucas Nishida', cognome: 'Nishida', situacao: 'Regular' },
-  { nome: 'Letícia Arakaki', cognome: 'Arakaki', situacao: 'Inadimplente' },
-  { nome: 'Gustavo Yamaguchi', cognome: 'Yamaguchi', situacao: 'Regular' },
-  { nome: 'Renata Kawakami', cognome: 'Kawakami', situacao: 'Desligado' },
-  { nome: 'Mariana Okamoto', cognome: 'Okamoto', situacao: 'Regular' },
-  { nome: 'Tiago Iwasaki', cognome: 'Iwasaki', situacao: 'Inadimplente' },
-  { nome: 'Elaine Nishikawa', cognome: 'Nishikawa', situacao: 'Regular' },
-  { nome: 'Diego Kuniyoshi', cognome: 'Kuniyoshi', situacao: 'Regular' },
-  { nome: 'Simone Murakami', cognome: 'Murakami', situacao: 'Regular' },
-  { nome: 'Henrique Takemoto', cognome: 'Takemoto', situacao: 'Desligado' },
-  { nome: 'Vanessa Ueno', cognome: 'Ueno', situacao: 'Regular' },
-  { nome: 'Marcelo Kato', cognome: 'Kato', situacao: 'Regular' },
-  { nome: 'Érika Kamikawa', cognome: 'Kamikawa', situacao: 'Regular' }
-];
-//até aqui
+// Importando o serviço e a interface para comunicar com o backend
+import { AssociateService } from 'src/app/services/associates/associate.service';
+import { Associate } from 'src/app/services/associates/associate.interface';
 
 @Component({
   selector: 'app-list-associates',
   templateUrl: './list-associates.component.html',
   styleUrls: ['./list-associates.component.scss']
 })
-export class ListAssociatesComponent implements AfterViewInit {
+export class ListAssociatesComponent implements AfterViewInit, OnInit {
   displayedColumns = ['nome', 'cognome', 'situacao'];
-  dataSource = new MatTableDataSource<Associado>(EXAMPLE_DATA);
+  // A tabela agora começa vazia e será preenchida com os dados do backend
+  dataSource = new MatTableDataSource<Associate>([]);
 
+  // Seus filtros personalizados permanecem inalterados
   filterNome = new FormControl('');
   filterSituacao = new FormControl('');
   filterGlobal = new FormControl('');
@@ -74,11 +27,35 @@ export class ListAssociatesComponent implements AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
+  // Injetando o serviço de associados para buscar os dados
+  constructor(private associateService: AssociateService) {}
+
+  ngOnInit(): void {
+    // Assim que o componente inicia, buscamos os associados
+    this.loadAssociates();
+  }
+
+  /**
+   * Busca os dados dos associados no backend e preenche a tabela.
+   */
+  loadAssociates(): void {
+    this.associateService.getAssociados().subscribe({
+      next: (associados) => {
+        this.dataSource.data = associados;
+      },
+      error: (err) => {
+        console.error('Ocorreu um erro ao buscar os associados:', err);
+        // Aqui você pode adicionar um feedback visual para o usuário, como um toast ou snackbar.
+      }
+    });
+  }
+
   ngAfterViewInit() {
+    // A configuração do paginador e da ordenação continua a mesma
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
 
-    // Custom filterPredicate para combinar filtros
+    // Sua função de filtro personalizada continua exatamente a mesma
     this.dataSource.filterPredicate = (data, filter) => {
       const { nome, cognome, situacao } = data;
       const searchTerms = JSON.parse(filter) as any;
@@ -91,7 +68,7 @@ export class ListAssociatesComponent implements AfterViewInit {
       return matchNome && matchSituacao && matchGlobal;
     };
 
-    // Subscribe aos controles para atualizar filtro
+    // A lógica de aplicação dos filtros também permanece inalterada
     this.filterNome.valueChanges.subscribe(() => this.applyFilter());
     this.filterSituacao.valueChanges.subscribe(() => this.applyFilter());
     this.filterGlobal.valueChanges.subscribe(() => this.applyFilter());

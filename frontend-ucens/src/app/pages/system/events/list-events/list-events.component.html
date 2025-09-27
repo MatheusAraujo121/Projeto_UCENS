@@ -1,19 +1,20 @@
-<main class="events-list-page">
-  <div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <h1>Calendário de Eventos</h1>
-      <a mat-stroked-button color="primary" class="btn-add-event" routerLink="/create-event">
-        <mat-icon>add</mat-icon>
-        <span>Novo Evento</span>
-      </a>
-    </div>
+<main class="list-events-page">
+    <img src="assets/carp.jpg" class="bg-carpa" alt="carpa" />
+    <div class="container-fluid">
+        <div class="toolbar">
+            <button mat-stroked-button class="btn-custom btn-cancel" routerLink="/dashboard">
+                <mat-icon>arrow_back</mat-icon>
+                <span>Voltar</span>
+            </button>
+            <div class="spacer"></div>
+            <button mat-stroked-button class="btn-custom btn-add" routerLink="/create-event">
+                <mat-icon>add</mat-icon>
+                <span>Adicionar Evento</span>
+            </button>
+        </div>
 
-    <div *ngIf="isLoading" class="text-center">
-      <p>Carregando calendário...</p>
+        <div class="calendar-card">
+            <full-calendar [options]="calendarOptions"></full-calendar>
+        </div>
     </div>
-
-    <div *ngIf="!isLoading" class="calendar-container">
-      <full-calendar [options]="calendarOptions"></full-calendar>
-    </div>
-  </div>
 </main>

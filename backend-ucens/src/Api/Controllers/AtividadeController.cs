@@ -53,7 +53,7 @@ namespace Api.Controllers
 
             try
             {
-                var updated = await _service.Update(id, dto);
+                var updated = await _service.Update(id, _env.WebRootPath, dto);
                 return Ok(updated);
             }
             catch (System.Exception ex)

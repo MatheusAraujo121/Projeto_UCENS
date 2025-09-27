@@ -1,163 +1,92 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-
-interface Associate {
-  id: number;
-  nome: string;
-  cognome: string;
-  cpf: string;
-  rg: string;
-  telefone: string;
-  email: string;
-  nomePai: string;
-  nomeMae: string;
-  dataNascimento: string;
-  sexo: string;
-  estadoCivil: string;
-  localNascimento: string;
-  nacionalidade: string;
-  grauInstrucao: string;
-  profissao: string;
-  situacao: 'Regular' | 'Desligado' | 'Inadimplente';
-}
+import { ActivatedRoute, Router } from '@angular/router';
+import { AssociateService } from 'src/app/services/associates/associate.service';
+import { Associate } from 'src/app/services/associates/associate.interface';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-view-associates',
   templateUrl: './view-associates.component.html',
   styleUrls: ['./view-associates.component.scss']
 })
-
 export class ViewAssociatesComponent implements OnInit {
 
-  associadoIndex = 0;
-  associados: Associate[] = [
-    {
-      id: 1,
-      nome: 'Andressa Akemi Tanaka',
-      cognome: 'Tanaka',
-      cpf: '817.476.938-20',
-      rg: '24.860.906-3',
-      telefone: '(11) 98765-4321',
-      email: 'andressa@example.com',
-      nomePai: 'Carlos Tanaka',
-      nomeMae: 'Marina Akemi',
-      dataNascimento: '1995-03-14',
-      sexo: 'Feminino',
-      estadoCivil: 'Casada',
-      localNascimento: 'Sorocaba, SP',
-      nacionalidade: 'Brasileira',
-      grauInstrucao: 'Ensino Superior Completo',
-      profissao: 'Engenheira',
-      situacao: 'Regular'
-    },
-    {
-      id: 2,
-      nome: 'Ana Beatriz Takahashi',
-      cognome: 'Takahashi',
-      cpf: '214.563.982-01',
-      rg: '45.210.998-7',
-      telefone: '(11) 99888-1234',
-      email: 'ana.takahashi@example.com',
-      nomePai: 'Eduardo Takahashi',
-      nomeMae: 'Keiko Takahashi',
-      dataNascimento: '1998-05-12',
-      sexo: 'Feminino',
-      estadoCivil: 'Solteira',
-      localNascimento: 'São Paulo, SP',
-      nacionalidade: 'Brasileira',
-      grauInstrucao: 'Ensino Superior Completo',
-      profissao: 'Designer Gráfica',
-      situacao: 'Regular'
-    },
-    {
-      id: 3,
-      nome: 'André Francisco de Souza',
-      cognome: 'Souza',
-      cpf: '345.908.712-44',
-      rg: '33.889.102-2',
-      telefone: '(21) 98444-5566',
-      email: 'andre.souza@example.com',
-      nomePai: 'Francisco de Souza',
-      nomeMae: 'Maria Helena de Souza',
-      dataNascimento: '1990-09-03',
-      sexo: 'Masculino',
-      estadoCivil: 'Casado',
-      localNascimento: 'Niterói, RJ',
-      nacionalidade: 'Brasileira',
-      grauInstrucao: 'Ensino Médio Completo',
-      profissao: 'Técnico de Informática',
-      situacao: 'Desligado'
-    },
-    {
-      id: 4,
-      nome: 'Juliana Matsuda',
-      cognome: 'Matsuda',
-      cpf: '576.320.987-00',
-      rg: '42.321.774-0',
-      telefone: '(41) 97777-6655',
-      email: 'juliana.matsuda@example.com',
-      nomePai: 'Carlos Matsuda',
-      nomeMae: 'Luciana Matsuda',
-      dataNascimento: '1992-11-08',
-      sexo: 'Feminino',
-      estadoCivil: 'Solteira',
-      localNascimento: 'Curitiba, PR',
-      nacionalidade: 'Brasileira',
-      grauInstrucao: 'Ensino Superior Incompleto',
-      profissao: 'Recepcionista',
-      situacao: 'Inadimplente'
-    },
-    {
-      id: 5,
-      nome: 'Felipe Taniguchi',
-      cognome: 'Taniguchi',
-      cpf: '709.123.456-88',
-      rg: '28.456.332-5',
-      telefone: '(13) 98866-3321',
-      email: 'felipe.taniguchi@example.com',
-      nomePai: 'Ricardo Taniguchi',
-      nomeMae: 'Angela Taniguchi',
-      dataNascimento: '1997-06-30',
-      sexo: 'Masculino',
-      estadoCivil: 'Solteiro',
-      localNascimento: 'Santos, SP',
-      nacionalidade: 'Brasileira',
-      grauInstrucao: 'Ensino Técnico Completo',
-      profissao: 'Eletricista',
-      situacao: 'Regular'
-    },
-    {
-      id: 6,
-      nome: 'Larissa Kobayashi',
-      cognome: 'Kobayashi',
-      cpf: '832.123.789-55',
-      rg: '36.920.345-1',
-      telefone: '(11) 98765-1122',
-      email: 'larissa.kobayashi@example.com',
-      nomePai: 'Sérgio Kobayashi',
-      nomeMae: 'Renata Kobayashi',
-      dataNascimento: '1994-01-27',
-      sexo: 'Feminino',
-      estadoCivil: 'Casada',
-      localNascimento: 'Mogi das Cruzes, SP',
-      nacionalidade: 'Brasileira',
-      grauInstrucao: 'Ensino Superior Completo',
-      profissao: 'Contadora',
-      situacao: 'Desligado'
-    }
-  ];
+  // A lista de associados foi removida daqui.
+  associado: Associate | null = null; // Armazena o associado atual
+  public associadoIds: number[] = [];
+  public currentIndex = 0;
 
-  constructor(private route: ActivatedRoute) { }
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private snackBar: MatSnackBar,
+    private associateService: AssociateService  // Injeta o serviço
+  ) { }
 
   ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id');
+    // Usamos switchMap para lidar com mudanças de rota sem múltiplas inscrições
+    this.route.paramMap.subscribe(params => {
+      const idParam = params.get('id');
+      if (idParam) {
+        const id = +idParam;
+        this.loadAllIdsAndSetCurrent(id);
+      }
+    });
   }
 
-
-  get associado(): Associate {
-    return this.associados[this.associadoIndex];
+  // Carrega todos os IDs e depois busca os dados do associado atual
+  private loadAllIdsAndSetCurrent(currentId: number): void {
+    this.associateService.getAssociadoIds().subscribe(ids => {
+      this.associadoIds = ids;
+      this.currentIndex = this.associadoIds.findIndex(id => id === currentId);
+      this.loadAssociado(currentId);
+    });
   }
 
-  anterior() { if (this.associadoIndex > 0) this.associadoIndex--; }
-  proximo() { if (this.associadoIndex < this.associados.length - 1) this.associadoIndex++; }
+  // Busca os dados de um associado específico na API
+  private loadAssociado(id: number): void {
+    this.associateService.getAssociado(id).subscribe({
+      next: (data) => {
+        this.associado = data;
+      },
+      error: (err) => {
+        this.router.navigate(['/list-associates']);
+      }
+    });
+  }
+
+  // Navega para o associado anterior na lista de IDs
+  anterior() {
+    if (this.currentIndex > 0) {
+      this.currentIndex--;
+      const prevId = this.associadoIds[this.currentIndex];
+      this.router.navigate(['/view-associates', prevId]);
+    }
+  }
+
+  // Navega para o próximo associado na lista de IDs
+  proximo() {
+    if (this.currentIndex < this.associadoIds.length - 1) {
+      this.currentIndex++;
+      const nextId = this.associadoIds[this.currentIndex];
+      this.router.navigate(['/view-associates', nextId]);
+    }
+  }
+
+  // Adiciona a função de exclusão
+  excluir() {
+    if (this.associado) {
+      if (confirm(`Tem certeza que deseja excluir o associado ${this.associado.nome}?`)) {
+        this.associateService.deleteAssociado(this.associado.id).subscribe({
+          next: () => {
+            this.snackBar.open('Associado excluído com sucesso!', 'Fechar', { duration: 3000 });
+            this.router.navigate(['/list-associates']);
+          },
+          error: (err) => {
+            this.snackBar.open('Erro ao excluir associado!', 'Fechar', { duration: 3000 });
+          }
+        });
+      }
+    }
+  }
 }

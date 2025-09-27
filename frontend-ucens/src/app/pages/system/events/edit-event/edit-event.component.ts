@@ -21,7 +21,7 @@ export class EditEventComponent implements OnInit {
   isLoading = false;
   eventId: number | null = null;
   
-  sedes: string[] = ['Sede Central', 'Sede Campestre I', 'Sede Campestre II'];
+  sedes: string[] = ['Sede Social', 'Sede Campestre I', 'Sede Campestre II', 'Parque Kasato Maru'];
   filteredOptions!: Observable<string[]>;
 
   constructor(
@@ -37,8 +37,8 @@ export class EditEventComponent implements OnInit {
       nome: ['', Validators.required],
       local: ['', Validators.required],
       dataInicio: ['', Validators.required],
-      dataFinal: ['', Validators.required],
       horarioInicio: ['', Validators.required],
+      dataFinal: ['', Validators.required],
       horarioFinal: ['', Validators.required],
       descricao: [''],
       imagemUrl: ['']
@@ -67,15 +67,14 @@ export class EditEventComponent implements OnInit {
     this.isLoading = true;
     this.eventoService.getById(id).subscribe({
       next: (data: Evento) => {
-        // Separa a data e a hora para preencher o formulário
         const inicio = new Date(data.inicio);
         const fim = new Date(data.fim);
 
         this.form.patchValue({
           ...data,
-          dataInicio: this.formatDate(inicio),
+          dataInicio: inicio,
           horarioInicio: this.formatTime(inicio),
-          dataFinal: this.formatDate(fim),
+          dataFinal: fim,
           horarioFinal: this.formatTime(fim)
         });
         this.previewUrl = data.imagemUrl || null;
@@ -118,12 +117,14 @@ export class EditEventComponent implements OnInit {
   private atualizarEvento(): void {
     if (!this.eventId) return;
     
-    // Combina data e hora antes de enviar
     const formValue = this.form.value;
+    const dataInicioCompleta = this.combineDateAndTime(formValue.dataInicio, formValue.horarioInicio);
+    const dataFinalCompleta = this.combineDateAndTime(formValue.dataFinal, formValue.horarioFinal);
+
     const eventoParaSalvar = {
       ...formValue,
-      inicio: new Date(`${formValue.dataInicio}T${formValue.horarioInicio}`),
-      fim: new Date(`${formValue.dataFinal}T${formValue.horarioFinal}`)
+      inicio: dataInicioCompleta,
+      fim: dataFinalCompleta
     };
 
     this.eventoService.update(this.eventId, eventoParaSalvar).subscribe({
@@ -137,8 +138,18 @@ export class EditEventComponent implements OnInit {
       }
     });
   }
-  
-  // Funções auxiliares para formatar data e hora
-  private formatDate = (date: Date) => date.toISOString().split('T')[0];
-  private formatTime = (date: Date) => date.toTimeString().split(' ')[0].substring(0, 5);
+
+  private formatTime = (date: Date): string => {
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    return `${hours}:${minutes}`;
+  };
+
+  private combineDateAndTime(date: Date, time: string): Date {
+    const [hours, minutes] = time.split(':').map(Number);
+    const newDate = new Date(date);
+    newDate.setHours(hours, minutes, 0, 0);
+    
+    return newDate;
+  }
 }
