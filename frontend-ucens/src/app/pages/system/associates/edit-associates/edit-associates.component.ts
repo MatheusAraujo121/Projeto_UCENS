@@ -54,16 +54,11 @@ export class EditAssociatesComponent implements OnInit {
     }
   }
 
-  /**
-   * Busca os dados do associado no backend e preenche o formulário.
-   * @param id O ID do associado.
-   */
   loadAssociadoData(id: number): void {
     this.associateService.getAssociado(id).subscribe({
       next: (data) => {
         if (data) {
           this.associado = data;
-          // Formata a data para o formato 'YYYY-MM-DD' que o input type="date" espera
           const formattedDate = data.dataNascimento.split('T')[0];
           this.form.patchValue({
             ...data,

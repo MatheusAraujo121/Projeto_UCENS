@@ -32,7 +32,6 @@ namespace Application.Features.Associados
                 AssociadoId = dto.AssociadoId,
                 Situacao = dto.Situacao,
                 GrauParentesco = dto.GrauParentesco,
-                DataLimite = dto.DataLimite,
                 Nome = dto.Nome,
                 Cognome = dto.Cognome,
                 NumeroCarteirinha = dto.NumeroCarteirinha,
@@ -74,7 +73,6 @@ namespace Application.Features.Associados
             dependente.Sexo = dto.Sexo;
             dependente.Situacao = dto.Situacao;
             dependente.GrauParentesco = dto.GrauParentesco;
-            dependente.DataLimite = dto.DataLimite;
             dependente.Cognome = dto.Cognome;
             dependente.NumeroCarteirinha = dto.NumeroCarteirinha;
             dependente.Categoria = dto.Categoria;

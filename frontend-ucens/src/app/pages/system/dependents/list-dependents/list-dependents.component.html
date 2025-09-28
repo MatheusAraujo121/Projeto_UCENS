@@ -10,16 +10,18 @@
         <div class="filters">
             <mat-form-field appearance="outline">
                 <mat-label>Filtrar por nome</mat-label>
-                <input matInput [formControl]="filterNome" placeholder="Nome">
+                <input matInput [formControl]="filterNome" placeholder="Nome do dependente ou associado">
             </mat-form-field>
 
+            <!-- Filtro atualizado para Parentesco -->
             <mat-form-field appearance="outline">
-                <mat-label>Situação do contrato</mat-label>
-                <mat-select [formControl]="filterSituacao">
+                <mat-label>Filtrar por Parentesco</mat-label>
+                <!-- O formControlName foi atualizado para filterParentesco -->
+                <mat-select [formControl]="filterParentesco">
                     <mat-option value="">Todos</mat-option>
-                    <mat-option value="Regular">Regular</mat-option>
-                    <mat-option value="Inadimplente">Inadimplente</mat-option>
-                    <mat-option value="Desligado">Desligado</mat-option>
+                    <mat-option value="Cônjuge">Cônjuge</mat-option>
+                    <mat-option value="Filho(a)">Filho(a)</mat-option>
+                    <mat-option value="Outro">Outro</mat-option>
                 </mat-select>
             </mat-form-field>
 
@@ -40,19 +42,19 @@
             <!-- Nome Dependente -->
             <ng-container matColumnDef="nome">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome Dependente</th>
-                <td mat-cell *matCellDef="let row" routerLink="/view-dependents/:id">{{ row.nome }}</td>
+                <td mat-cell *matCellDef="let row" [routerLink]="['/view-dependents', row.id]">{{ row.nome }}</td>
             </ng-container>
 
             <!-- Nome Associado -->
             <ng-container matColumnDef="nomeAssociado">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome Associado</th>
-                <td mat-cell *matCellDef="let row" routerLink="/view-dependents/:id">{{ row.nomeAssociado }}</td>
+                <td mat-cell *matCellDef="let row" [routerLink]="['/view-dependents', row.id]">{{ row.nomeAssociado }}</td>
             </ng-container>
 
-            <!-- Situação -->
-            <ng-container matColumnDef="situacao">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Situação</th>
-                <td mat-cell *matCellDef="let row" routerLink="/view-dependents/:id">{{ row.situacao }}</td>
+            <!-- Coluna de Parentesco -->
+            <ng-container matColumnDef="parentesco">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Parentesco</th>
+                <td mat-cell *matCellDef="let row" [routerLink]="['/view-dependents', row.id]">{{ row.parentesco }}</td>
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
