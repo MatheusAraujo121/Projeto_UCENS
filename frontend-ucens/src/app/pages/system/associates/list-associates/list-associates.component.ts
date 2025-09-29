@@ -4,6 +4,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 // Importando o serviço e a interface para comunicar com o backend
 import { AssociateService } from 'src/app/services/associates/associate.service';
@@ -28,7 +29,8 @@ export class ListAssociatesComponent implements AfterViewInit, OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   // Injetando o serviço de associados para buscar os dados
-  constructor(private associateService: AssociateService) {}
+  constructor(private associateService: AssociateService,
+    private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     // Assim que o componente inicia, buscamos os associados
@@ -44,8 +46,7 @@ export class ListAssociatesComponent implements AfterViewInit, OnInit {
         this.dataSource.data = associados;
       },
       error: (err) => {
-        console.error('Ocorreu um erro ao buscar os associados:', err);
-        // Aqui você pode adicionar um feedback visual para o usuário, como um toast ou snackbar.
+        this.snackBar.open('Ocorreu um erro ao buscar os associados:', 'Fechar', { duration: 3000 });
       }
     });
   }

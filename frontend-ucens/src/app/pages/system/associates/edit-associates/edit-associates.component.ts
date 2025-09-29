@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AssociateService } from 'src/app/services/associates/associate.service';
 import { Associate } from 'src/app/services/associates/associate.interface';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-edit-associates',
@@ -18,11 +19,11 @@ export class EditAssociatesComponent implements OnInit {
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private associateService: AssociateService,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
-    // Inicializa o formulário com todos os campos e validadores
     this.form = this.fb.group({
       nome: ['', Validators.required],
       cognome: [''],
@@ -42,11 +43,8 @@ export class EditAssociatesComponent implements OnInit {
       profissao: [''],
       telefone: ['', [Validators.minLength(11)]],
       email: ['', [Validators.required, Validators.email]],
-      // É uma boa prática definir um status padrão para novos associados
       situacao: ['', Validators.required]
     });
-
-    // Pega o ID da rota e carrega os dados do associado
     const idParam = this.route.snapshot.paramMap.get('id');
     if (idParam) {
       this.id = +idParam;
@@ -59,42 +57,38 @@ export class EditAssociatesComponent implements OnInit {
       next: (data) => {
         if (data) {
           this.associado = data;
-          const formattedDate = data.dataNascimento.split('T')[0];
+          const dateString = data.dataNascimento;
+          const [year, month, day] = dateString.split('T')[0].split('-').map(Number);
+          const localDate = new Date(year, month - 1, day);
           this.form.patchValue({
             ...data,
-            dataNascimento: formattedDate
+            dataNascimento: localDate
           });
         }
       },
       error: (err) => {
-        console.error('Erro ao buscar dados do associado:', err);
-        alert('Associado não encontrado.');
+        this.snackBar.open('Associado não encontrado.', 'Fechar', { duration: 3000 });
         this.router.navigate(['/list-associates']);
       }
     });
   }
 
-  /**
-   * Envia os dados atualizados do formulário para o backend.
-   */
   atualizar() {
     if (this.form.invalid) {
+      this.snackBar.open('Por favor, preencha todos os campos obrigatórios.', 'Fechar', { duration: 3000 });
       this.form.markAllAsTouched();
       return;
     }
 
     if (this.id) {
-      // Combina os valores do formulário com o ID original para enviar ao backend
       const updatedData = { ...this.form.value, id: this.id };
-
       this.associateService.updateAssociate(this.id, updatedData).subscribe({
         next: () => {
-          alert('Associado atualizado com sucesso!');
+          this.snackBar.open('Associado atualizado com sucesso!', 'Fechar', { duration: 3000 });
           this.router.navigate(['/view-associates', this.id]);
         },
         error: (err) => {
-          console.error('Erro ao atualizar associado:', err);
-          alert('Ocorreu um erro ao tentar atualizar os dados. Por favor, tente novamente.');
+          this.snackBar.open('Ocorreu um erro ao tentar atualizar os dados. Por favor, tente novamente.', 'Fechar', { duration: 3000 });
         }
       });
     }

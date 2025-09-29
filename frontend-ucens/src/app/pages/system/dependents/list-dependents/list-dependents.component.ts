@@ -4,19 +4,16 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { FormControl } from '@angular/forms';
 import { forkJoin } from 'rxjs';
-
-// Serviços e interfaces necessários para buscar dados do backend
 import { DependentService } from 'src/app/services/dependents/dependent.service';
 import { Dependent } from 'src/app/services/dependents/dependent.interface';
 import { AssociateService } from 'src/app/services/associates/associate.service';
 import { Associate } from 'src/app/services/associates/associate.interface';
 
-// Interface para o formato de exibição na tabela (agora com parentesco)
 interface DependenteDisplay {
   id: number;
   nome: string;
   nomeAssociado: string;
-  parentesco?: string; // Alterado de situacao para parentesco
+  parentesco?: string;
 }
 
 @Component({

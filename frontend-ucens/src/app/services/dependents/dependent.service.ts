@@ -32,5 +32,12 @@ export class DependentService {
   createDependent(dependentData: Partial<Dependent>): Observable<Dependent> {
     return this.http.post<Dependent>(this.apiUrl, dependentData);
   }
+
+  /**
+ * Atualiza os dados de um dependente existente.
+ */
+  updateDependent(id: number, dependentData: Partial<Dependent>): Observable<Dependent> {
+    return this.http.put<Dependent>(`${this.apiUrl}/${id}`, dependentData);
+  }
 }
 

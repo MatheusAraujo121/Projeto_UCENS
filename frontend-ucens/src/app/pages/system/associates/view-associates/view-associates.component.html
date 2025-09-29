@@ -34,17 +34,17 @@
       <p class="section-label"><em>Identificação</em></p>
       <mat-form-field appearance="fill">
         <mat-label>CPF</mat-label>
-        <input matInput [value]="associado.cpf" disabled mask="000.000.000-00" />
+        <input matInput [value]="associado.cpf | mask: '000.000.000-00'" disabled/>
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>RG</mat-label>
-        <input matInput [value]="associado.rg" disabled mask="00.000.000-0" />
+        <input matInput [value]="associado.rg | mask: '00.000.000-0'" disabled/>
       </mat-form-field>
 
       <p class="section-label"><em>Contato</em></p>
       <mat-form-field appearance="fill">
         <mat-label>Telefone</mat-label>
-        <input matInput [value]="associado.telefone" disabled mask="(00) 00000-0000" />
+        <input matInput [value]="associado.telefone | mask: '(00) 00000-0000'" disabled/>
       </mat-form-field>
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>E-mail</mat-label>
@@ -74,11 +74,13 @@
         <mat-label>Complemento</mat-label>
         <input matInput [value]="associado.complemento" disabled />
       </mat-form-field>
-      
+
       <p class="section-label"><em>Outros Dados</em></p>
       <mat-form-field appearance="fill">
         <mat-label>Data de Nascimento</mat-label>
-        <input matInput type="date" [value]="associado.dataNascimento" disabled />
+        <input matInput [matDatepicker]="pickerInicio" [value]="associado.dataNascimento" disabled>
+        <mat-datepicker-toggle matSuffix [for]="pickerInicio"></mat-datepicker-toggle>
+        <mat-datepicker #pickerInicio></mat-datepicker>
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Sexo</mat-label>
