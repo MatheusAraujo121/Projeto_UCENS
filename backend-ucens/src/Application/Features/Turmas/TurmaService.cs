@@ -37,6 +37,11 @@ namespace Application.Features.Turmas
             return turma == null ? null : MapToDto(turma);
         }
 
+        public async Task<List<TurmaDTO>> GetByAtividadeId(int atividadeId)
+        {
+            var turmas = await _turmaRepo.GetByAtividadeId(atividadeId);
+            return turmas.Select(t => MapToDto(t)).ToList();
+        }
         public async Task<Turma> Add(TurmaDTO dto)
         {
             var atividade = await _atividadeRepo.GetById(dto.AtividadeId);
@@ -56,7 +61,29 @@ namespace Application.Features.Turmas
             return await _turmaRepo.Add(turma);
         }
 
-        // --- NOVO MÉTODO PARA DELETAR TURMA ---
+        public async Task Update(int id, TurmaDTO dto)
+        {
+            var turma = await _turmaRepo.GetById(id);
+            if (turma == null)
+            {
+                throw new System.Exception($"Turma com ID {id} não encontrada.");
+            }
+
+            var atividade = await _atividadeRepo.GetById(dto.AtividadeId);
+            if (atividade == null)
+            {
+                throw new System.Exception($"Atividade com ID {dto.AtividadeId} não encontrada. Não é possível atualizar a turma.");
+            }
+
+            turma.Nome = dto.Nome;
+            turma.Professor = dto.Professor;
+            turma.DiasHorarios = dto.DiasHorarios;
+            turma.Vagas = dto.Vagas;
+            turma.AtividadeId = dto.AtividadeId;
+
+            await _turmaRepo.Update(turma);
+        }
+
         public async Task Delete(int id)
         {
             var turma = await _turmaRepo.GetById(id);
@@ -69,6 +96,18 @@ namespace Application.Features.Turmas
 
         public async Task MatricularAssociado(MatriculaDTO dto)
         {
+            var turma = await _turmaRepo.GetByIdWithMatriculados(dto.TurmaId);
+            if (turma == null)
+            {
+                throw new System.Exception("Turma não encontrada.");
+            }
+
+            var totalMatriculados = turma.MatriculasAssociados.Count + turma.MatriculasDependentes.Count;
+            if (totalMatriculados >= turma.Vagas)
+            {
+                throw new System.Exception("Não há vagas disponíveis nesta turma.");
+            }
+
             var matricula = new MatriculaAssociado { TurmaId = dto.TurmaId, AssociadoId = dto.AlunoId };
             await _matriculaAssociadoRepo.Add(matricula);
         }
@@ -85,6 +124,18 @@ namespace Application.Features.Turmas
 
         public async Task MatricularDependente(MatriculaDTO dto)
         {
+            var turma = await _turmaRepo.GetByIdWithMatriculados(dto.TurmaId);
+            if (turma == null)
+            {
+                throw new System.Exception("Turma não encontrada.");
+            }
+
+            var totalMatriculados = turma.MatriculasAssociados.Count + turma.MatriculasDependentes.Count;
+            if (totalMatriculados >= turma.Vagas)
+            {
+                throw new System.Exception("Não há vagas disponíveis nesta turma.");
+            }
+
             var matricula = new MatriculaDependente { TurmaId = dto.TurmaId, DependenteId = dto.AlunoId };
             await _matriculaDependenteRepo.Add(matricula);
         }

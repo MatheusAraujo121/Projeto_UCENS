@@ -1,5 +1,6 @@
 using Application.Common.Interfaces;
 using Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace Application.Features.Eventos
     {
         private readonly IRepository<Evento> _repo;
 
+        // Removida a injeção de IWebHostEnvironment
         public EventoService(IRepository<Evento> repo)
         {
             _repo = repo;
@@ -63,6 +65,7 @@ namespace Application.Features.Eventos
             return MapToDto(evento);
         }
 
+        // Método Delete agora só deleta do banco, sem lógica de arquivo.
         public async Task Delete(int id)
         {
             await _repo.Delete(id);
@@ -76,8 +79,8 @@ namespace Application.Features.Eventos
                 Nome = evento.Nome,
                 Descricao = evento.Descricao,
                 Local = evento.Local,
-                Inicio = evento.Inicio,
-                Fim = evento.Fim,
+                Inicio = DateTime.SpecifyKind(evento.Inicio, DateTimeKind.Utc),
+                Fim = DateTime.SpecifyKind(evento.Fim, DateTimeKind.Utc),
                 ImagemUrl = evento.ImagemUrl
             };
         }

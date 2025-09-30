@@ -1,17 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-
-interface Event {
-  id: number;
-  nome: string;
-  dataInicio: string;
-  dataFinal: string;
-  horarioInicio: string;
-  horarioFinal: string;
-  local: string;
-  descricao: string;
-  imagem?: string;
-}
+import { EventoService } from 'src/app/services/events/event.service';
+import { Evento } from 'src/app/services/events/event.interface';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-event-info',
@@ -20,27 +11,39 @@ interface Event {
 })
 export class EventInfoComponent implements OnInit {
 
-  event: Event | undefined;
-
-  private allEvents: Event[] = [
-    { id: 1, nome: 'Festa Junina', dataInicio: '2025-06-20', dataFinal: '2025-06-22', horarioInicio: '18:00', horarioFinal: '23:00', local: 'Sede Campestre II', descricao: 'Tradicional festa com comidas típicas, danças e brincadeiras.', imagem: 'assets/img/banner-1.jpg' },
-    { id: 2, nome: 'Bon Odori', dataInicio: '2025-08-15', dataFinal: '2025-08-16', horarioInicio: '19:00', horarioFinal: '22:00', local: 'Praça Kasato Maru', descricao: 'Festival de dança folclórica japonesa em homenagem aos antepassados.', imagem: 'assets/activities/fujin-bu.jpg' },
-  ];
+  event: Evento | null = null;
+  isLoading = true;
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private eventoService: EventoService,
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
     if (idParam) {
       const eventId = +idParam;
-      this.event = this.allEvents.find(evt => evt.id === eventId);
-
-      if (!this.event) {
-        this.router.navigate(['/list-events']);
-      }
+      this.loadEvent(eventId);
+    } else {
+      this.snackBar.open('ID do evento não encontrado.', 'Fechar', { duration: 3000 });
+      this.router.navigate(['/events']);
     }
+  }
+
+  loadEvent(id: number): void {
+    this.isLoading = true;
+    this.eventoService.getById(id).subscribe({
+      next: (data) => {
+        this.event = data;
+        this.isLoading = false;
+      },
+      error: () => {
+        this.snackBar.open('Não foi possível carregar o evento.', 'Fechar', { duration: 3000 });
+        this.router.navigate(['/events']);
+        this.isLoading = false;
+      }
+    });
   }
 }

@@ -1,26 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup } from '@angular/forms';
-
-interface Associate {
-  id: number;
-  nome: string;
-  cognome: string;
-  cpf: string;
-  rg: string;
-  telefone: string;
-  email: string;
-  nomePai: string;
-  nomeMae: string;
-  dataNascimento: string;
-  sexo: string;
-  estadoCivil: string;
-  localNascimento: string;
-  nacionalidade: string;
-  grauInstrucao: string;
-  profissao: string;
-  situacao: string;
-}
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AssociateService } from 'src/app/services/associates/associate.service';
+import { Associate } from 'src/app/services/associates/associate.interface';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-edit-associates',
@@ -28,153 +11,86 @@ interface Associate {
   styleUrls: ['./edit-associates.component.scss']
 })
 export class EditAssociatesComponent implements OnInit {
-  id: string | null = null;
+  id: number | null = null;
   form!: FormGroup;
+  associado: Associate | null = null;
 
-  associados: Associate[] = [
-    {
-      id: 1,
-      nome: 'Andressa Akemi Tanaka',
-      cognome: 'Tanaka',
-      cpf: '817.476.938-20',
-      rg: '24.860.906-3',
-      telefone: '(11) 98765-4321',
-      email: 'andressa@example.com',
-      nomePai: 'Carlos Tanaka',
-      nomeMae: 'Marina Akemi',
-      dataNascimento: '1995-03-14',
-      sexo: 'Feminino',
-      estadoCivil: 'Casada',
-      localNascimento: 'Sorocaba, SP',
-      nacionalidade: 'Brasileira',
-      grauInstrucao: 'Ensino Superior Completo',
-      profissao: 'Engenheira',
-      situacao: 'Regular'
-    },
-    {
-      id: 2,
-      nome: 'Ana Beatriz Takahashi',
-      cognome: 'Takahashi',
-      cpf: '214.563.982-01',
-      rg: '45.210.998-7',
-      telefone: '(11) 99888-1234',
-      email: 'ana.takahashi@example.com',
-      nomePai: 'Eduardo Takahashi',
-      nomeMae: 'Keiko Takahashi',
-      dataNascimento: '1998-05-12',
-      sexo: 'Feminino',
-      estadoCivil: 'Solteira',
-      localNascimento: 'São Paulo, SP',
-      nacionalidade: 'Brasileira',
-      grauInstrucao: 'Ensino Superior Completo',
-      profissao: 'Designer Gráfica',
-      situacao: 'Regular'
-    },
-    {
-      id: 3,
-      nome: 'André Francisco de Souza',
-      cognome: 'Souza',
-      cpf: '345.908.712-44',
-      rg: '33.889.102-2',
-      telefone: '(21) 98444-5566',
-      email: 'andre.souza@example.com',
-      nomePai: 'Francisco de Souza',
-      nomeMae: 'Maria Helena de Souza',
-      dataNascimento: '1990-09-03',
-      sexo: 'Masculino',
-      estadoCivil: 'Casado',
-      localNascimento: 'Niterói, RJ',
-      nacionalidade: 'Brasileira',
-      grauInstrucao: 'Ensino Médio Completo',
-      profissao: 'Técnico de Informática',
-      situacao: 'Desligado'
-    },
-    {
-      id: 4,
-      nome: 'Juliana Matsuda',
-      cognome: 'Matsuda',
-      cpf: '576.320.987-00',
-      rg: '42.321.774-0',
-      telefone: '(41) 97777-6655',
-      email: 'juliana.matsuda@example.com',
-      nomePai: 'Carlos Matsuda',
-      nomeMae: 'Luciana Matsuda',
-      dataNascimento: '1992-11-08',
-      sexo: 'Feminino',
-      estadoCivil: 'Solteira',
-      localNascimento: 'Curitiba, PR',
-      nacionalidade: 'Brasileira',
-      grauInstrucao: 'Ensino Superior Incompleto',
-      profissao: 'Recepcionista',
-      situacao: 'Inadimplente'
-    },
-    {
-      id: 5,
-      nome: 'Felipe Taniguchi',
-      cognome: 'Taniguchi',
-      cpf: '709.123.456-88',
-      rg: '28.456.332-5',
-      telefone: '(13) 98866-3321',
-      email: 'felipe.taniguchi@example.com',
-      nomePai: 'Ricardo Taniguchi',
-      nomeMae: 'Angela Taniguchi',
-      dataNascimento: '1997-06-30',
-      sexo: 'Masculino',
-      estadoCivil: 'Solteiro',
-      localNascimento: 'Santos, SP',
-      nacionalidade: 'Brasileira',
-      grauInstrucao: 'Ensino Técnico Completo',
-      profissao: 'Eletricista',
-      situacao: 'Regular'
-    },
-    {
-      id: 6,
-      nome: 'Larissa Kobayashi',
-      cognome: 'Kobayashi',
-      cpf: '832.123.789-55',
-      rg: '36.920.345-1',
-      telefone: '(11) 98765-1122',
-      email: 'larissa.kobayashi@example.com',
-      nomePai: 'Sérgio Kobayashi',
-      nomeMae: 'Renata Kobayashi',
-      dataNascimento: '1994-01-27',
-      sexo: 'Feminino',
-      estadoCivil: 'Casada',
-      localNascimento: 'Mogi das Cruzes, SP',
-      nacionalidade: 'Brasileira',
-      grauInstrucao: 'Ensino Superior Completo',
-      profissao: 'Contadora',
-      situacao: 'Desligado'
-    }
-  ];
-
-  constructor(private route: ActivatedRoute, private fb: FormBuilder) { }
+  constructor(
+    private route: ActivatedRoute,
+    private fb: FormBuilder,
+    private associateService: AssociateService,
+    private router: Router,
+    private snackBar: MatSnackBar
+  ) { }
 
   ngOnInit(): void {
-    this.id = this.route.snapshot.paramMap.get('id');
-    const associado = this.associados.find(a => a.id === Number(this.id));
-
     this.form = this.fb.group({
-      nome: [associado?.nome || ''],
-      cognome: [associado?.cognome || ''],
-      cpf: [associado?.cpf || ''],
-      rg: [associado?.rg || ''],
-      telefone: [associado?.telefone || ''],
-      email: [associado?.email || ''],
-      nomePai: [associado?.nomePai || ''],
-      nomeMae: [associado?.nomeMae || ''],
-      dataNascimento: [associado?.dataNascimento || ''],
-      sexo: [associado?.sexo || ''],
-      estadoCivil: [associado?.estadoCivil || ''],
-      localNascimento: [associado?.localNascimento || ''],
-      nacionalidade: [associado?.nacionalidade || ''],
-      grauInstrucao: [associado?.grauInstrucao || ''],
-      profissao: [associado?.profissao || ''],
-      situacao: [associado?.situacao || '']
+      nome: ['', Validators.required],
+      cognome: [''],
+      cpf: ['', [Validators.minLength(11)]],
+      rg: ['', [Validators.minLength(9)]],
+      dataNascimento: ['', Validators.required],
+      sexo: ['', Validators.required],
+      estadoCivil: ['', Validators.required],
+      nomePai: [''],
+      nomeMae: [''],
+      endereco: ['', Validators.required],
+      numero: ['', Validators.required],
+      complemento: [''],
+      localNascimento: [''],
+      nacionalidade: ['', Validators.required],
+      grauInstrucao: [''],
+      profissao: [''],
+      telefone: ['', [Validators.minLength(11)]],
+      email: ['', [Validators.required, Validators.email]],
+      situacao: ['', Validators.required]
+    });
+    const idParam = this.route.snapshot.paramMap.get('id');
+    if (idParam) {
+      this.id = +idParam;
+      this.loadAssociadoData(this.id);
+    }
+  }
+
+  loadAssociadoData(id: number): void {
+    this.associateService.getAssociado(id).subscribe({
+      next: (data) => {
+        if (data) {
+          this.associado = data;
+          const dateString = data.dataNascimento;
+          const [year, month, day] = dateString.split('T')[0].split('-').map(Number);
+          const localDate = new Date(year, month - 1, day);
+          this.form.patchValue({
+            ...data,
+            dataNascimento: localDate
+          });
+        }
+      },
+      error: (err) => {
+        this.snackBar.open('Associado não encontrado.', 'Fechar', { duration: 3000 });
+        this.router.navigate(['/list-associates']);
+      }
     });
   }
 
   atualizar() {
-    console.log('Dados atualizados:', this.form.value);
+    if (this.form.invalid) {
+      this.snackBar.open('Por favor, preencha todos os campos obrigatórios.', 'Fechar', { duration: 3000 });
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    if (this.id) {
+      const updatedData = { ...this.form.value, id: this.id };
+      this.associateService.updateAssociate(this.id, updatedData).subscribe({
+        next: () => {
+          this.snackBar.open('Associado atualizado com sucesso!', 'Fechar', { duration: 3000 });
+          this.router.navigate(['/view-associates', this.id]);
+        },
+        error: (err) => {
+          this.snackBar.open('Ocorreu um erro ao tentar atualizar os dados. Por favor, tente novamente.', 'Fechar', { duration: 3000 });
+        }
+      });
+    }
   }
 }

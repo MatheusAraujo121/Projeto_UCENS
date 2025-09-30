@@ -1,0 +1,55 @@
+<main class="cadastro-page">
+  <div class="cadastro-container">
+    <img src="assets/carp.jpg" class="bg-carpa" alt="carpa" />
+    
+    <h2>Editar Turma #{{ turmaId }}</h2>
+
+    <form [formGroup]="form" (ngSubmit)="efetuarAtualizacao()">
+
+      <p class="section-label"><em>Identificação da Turma</em></p>
+      <div class="form-grid">
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Nome da Turma</mat-label>
+          <input matInput formControlName="nome" placeholder="Ex: Turma A - Manhã" />
+        </mat-form-field>
+      </div>
+
+      <p class="section-label"><em>Detalhes</em></p>
+      <div class="form-grid">
+        <mat-form-field appearance="fill">
+          <mat-label>Professor Responsável</mat-label>
+          <input matInput formControlName="professor" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Dias da Semana</mat-label>
+          <mat-select formControlName="diasDisponiveis" multiple>
+            <mat-option *ngFor="let dia of diasSemana" [value]="dia">{{ dia }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Horário</mat-label>
+            <input matInput type="time" formControlName="horarioSugerido" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Número de Vagas</mat-label>
+          <input matInput type="number" formControlName="vagas" />
+        </mat-form-field>
+      </div>
+
+      <div class="btns-bottom">
+        <button mat-stroked-button class="btn-cancel" type="button" (click)="goBack()">
+          <mat-icon>close</mat-icon>
+          <span>Cancelar</span>
+        </button>
+        <button mat-stroked-button class="btn-submit" type="submit" [disabled]="form.invalid || isLoading">
+          <mat-icon>radio_button_unchecked</mat-icon>
+          <span *ngIf="!isLoading">Salvar Alterações</span>
+          <span *ngIf="isLoading">Salvando...</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</main>

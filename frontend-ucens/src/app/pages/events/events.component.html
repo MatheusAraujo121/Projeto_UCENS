@@ -10,8 +10,8 @@
         </div>
 
         <div class="frame-wrap">
-            <div class="frame">
-                <div class="cards-grid">
+            <div *ngIf="!isLoading" class="frame">
+                <div *ngIf="events.length > 0; else noEvents" class="cards-grid">
                     <article class="event-card" *ngFor="let event of events">
                         <div class="card-media">
                             <img [src]="event.image" [alt]="event.title" />
@@ -20,7 +20,7 @@
                         <div class="card-body">
                             <h3 class="card-title">{{ event.title }}</h3>
                             <p class="card-date">{{ event.date }}</p>
-                            <p class="card-short">{{ event.short }}</p>
+                            <p class="card-short">{{ event.short | slice:0:120 }}{{ (event.short && event.short.length > 120) ? '...' : '' }}</p>
 
                             <div class="card-actions">
                                 <button mat-stroked-button class="btn-know" [routerLink]="['/event-info', event.id]">
@@ -30,6 +30,12 @@
                         </div>
                     </article>
                 </div>
+                 <ng-template #noEvents>
+                    <p class="text-center p-4 text-white">Nenhum evento futuro encontrado.</p>
+                </ng-template>
+            </div>
+             <div *ngIf="isLoading" class="d-flex justify-content-center p-5">
+                <p>Carregando eventos...</p>
             </div>
         </div>
 

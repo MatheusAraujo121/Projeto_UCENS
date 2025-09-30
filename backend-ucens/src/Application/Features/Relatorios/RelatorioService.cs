@@ -23,7 +23,7 @@ namespace Application.Features.Relatorios
                 Id = a.Id,
                 Nome = a.Nome,
                 CPF = a.CPF,
-                StatusQuo = a.StatusQuo,
+                Situacao = a.Situacao,
                 Dependentes = a.Dependentes.Select(d => new RelatorioDependenteDTO
                 {
                     Id = d.Id,

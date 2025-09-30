@@ -53,11 +53,34 @@
                     <input matInput formControlName="nomeMae" />
                 </mat-form-field>
             </div>
+
+            <p class="section-label"><em>Endereço</em></p>
+            <div class="form-grid">
+
+                <mat-form-field appearance="fill">
+                    <mat-label>Endereço</mat-label>
+                    <input matInput formControlName="endereco" />
+                </mat-form-field>
+
+                <mat-form-field appearance="fill">
+                    <mat-label>Número</mat-label>
+                    <input matInput formControlName="numero" />
+                </mat-form-field>
+
+                <mat-form-field appearance="fill">
+                    <mat-label>Complemento</mat-label>
+                    <input matInput formControlName="complemento" />
+                </mat-form-field>
+
+            </div>
             <p class="section-label"><em>Outros Dados</em></p>
             <div class="form-grid">
+
                 <mat-form-field appearance="fill">
                     <mat-label>Data de Nascimento</mat-label>
-                    <input matInput formControlName="dataNascimento" type="date" />
+                    <input matInput [matDatepicker]="pickerInicio" formControlName="dataNascimento">
+                    <mat-datepicker-toggle matSuffix [for]="pickerInicio"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerInicio></mat-datepicker>
                 </mat-form-field>
 
                 <mat-form-field appearance="fill">
@@ -75,7 +98,7 @@
                 </mat-form-field>
 
                 <mat-form-field appearance="fill">
-                    <mat-label>Local de Nascimento </mat-label>
+                    <mat-label>Local de Nascimento</mat-label>
                     <input matInput formControlName="localNascimento" />
                 </mat-form-field>
 

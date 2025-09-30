@@ -56,6 +56,11 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("GrauInstrucao")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("LocalNascimento")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -101,7 +106,7 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("StatusQuo")
+                    b.Property<string>("Situacao")
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("TEXT");

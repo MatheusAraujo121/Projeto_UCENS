@@ -25,6 +25,14 @@ namespace Api.Controllers
             return Ok(await _service.GetAll());
         }
 
+        [HttpGet("por-atividade/{atividadeId:int}")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<TurmaDTO>>> GetByAtividadeId(int atividadeId)
+        {
+            var turmas = await _service.GetByAtividadeId(atividadeId);
+            return Ok(turmas);
+        }
+
         [HttpGet("{id:int}")]
         [Authorize]
         public async Task<ActionResult<TurmaDTO>> GetById(int id)
@@ -45,6 +53,26 @@ namespace Api.Controllers
             catch (System.Exception ex)
             {
                 return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpPut("{id:int}")]
+        [Authorize]
+        public async Task<IActionResult> Update(int id, [FromBody] TurmaDTO dto)
+        {
+            if (id != dto.Id)
+            {
+                return BadRequest(new { message = "O ID da rota não corresponde ao ID do corpo da requisição." });
+            }
+            
+            try
+            {
+                await _service.Update(id, dto);
+                return NoContent(); 
+            }
+            catch (System.Exception ex)
+            {
+                return NotFound(new { message = ex.Message });
             }
         }
         

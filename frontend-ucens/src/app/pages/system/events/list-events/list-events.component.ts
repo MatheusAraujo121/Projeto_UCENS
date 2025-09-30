@@ -1,72 +1,71 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { CalendarOptions, EventClickArg } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import ptBrLocale from '@fullcalendar/core/locales/pt-br';
 import { MatDialog } from '@angular/material/dialog';
 import { EventDetailComponent } from '../event-detail/event-detail.component';
+import { EventoService } from 'src/app/services/events/event.service';
+import { Evento } from 'src/app/services/events/event.interface';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-list-events',
   templateUrl: './list-events.component.html',
   styleUrls: ['./list-events.component.scss']
 })
-export class ListEventsComponent {
+export class ListEventsComponent implements OnInit {
 
-  constructor(private router: Router, public dialog: MatDialog) { }
+  isLoading = true; 
 
   calendarOptions: CalendarOptions = {
-    plugins: [dayGridPlugin, interactionPlugin],
     initialView: 'dayGridMonth',
-    locale: ptBrLocale,
-    headerToolbar: {
-      left: 'prev,next today',
-      center: 'title',
-      right: 'dayGridMonth,dayGridWeek,dayGridDay'
-    },
-    weekends: true,
-    aspectRatio: 2,
-    events: [
-      { 
-        id: '1',
-        title: 'Festa Junina', 
-        start: '2025-06-20', 
-        end: '2025-06-23',
-        backgroundColor: '#d32f2f',
-        borderColor: '#d32f2f',
-        extendedProps: {
-          description: 'Tradicional festa com comidas típicas, danças e brincadeiras para toda a família.',
-          imageUrl: 'assets/activities/karate.jpg' 
-        }
-      },
-      { 
-        id: '2',
-        title: 'Bon Odori', 
-        start: '2025-08-15', 
-        end: '2025-08-17',
-        backgroundColor: '#1976d2',
-        borderColor: '#1976d2',
-        extendedProps: {
-          description: 'Festival de dança folclórica japonesa em homenagem aos antepassados, realizado na Praça Kasato Maru.',
-          imageUrl: 'assets/activities/karate.jpg' 
-        }
-      }
-    ],
+    plugins: [dayGridPlugin, interactionPlugin],
     eventClick: this.handleEventClick.bind(this),
+    events: [],
+    locale: 'pt-br',
+    buttonText: {
+      today: 'Hoje'
+    }
   };
 
-  handleEventClick(clickInfo: EventClickArg) {
-    this.dialog.open(EventDetailComponent, {
-      data: {
-        event: clickInfo.event
+  constructor(
+    public dialog: MatDialog,
+    private eventoService: EventoService,
+    private snackBar: MatSnackBar
+  ) {}
+
+  ngOnInit(): void {
+    this.loadEvents();
+  }
+
+  loadEvents(): void {
+    this.isLoading = true;
+    this.eventoService.getAll().subscribe({
+      next: (data) => {
+        this.calendarOptions.events = data.map(event => ({
+          id: event.id.toString(),
+          title: event.nome,
+          start: event.inicio,
+          end: event.fim,
+          extendedProps: {
+            description: event.descricao,
+            local: event.local,
+            imagemUrl: event.imagemUrl
+          }
+        }));
+        this.isLoading = false;
       },
-      width: '500px',
-      maxWidth: '90vw' 
+      error: (err) => {
+        this.snackBar.open('Não foi possível carregar os eventos.', 'Fechar', { duration: 3000 });
+        this.isLoading = false;
+      }
     });
   }
 
-  navigateToCreateEvent(): void {
-    this.router.navigate(['/create-event']);
+  handleEventClick(clickInfo: EventClickArg): void {
+    this.dialog.open(EventDetailComponent, {
+      width: '600px',
+      data: { event: clickInfo.event }
+    });
   }
 }

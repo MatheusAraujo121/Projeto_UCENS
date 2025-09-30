@@ -1,78 +1,82 @@
 <main class="cadastro-page">
-    <div class="cadastro-container">
-        <img src="assets/carp.jpg" class="bg-carpa" alt="carpa" />
-        <h2>Editar Evento #{{ id }}</h2>
+  <div class="cadastro-container">
+    <img src="assets/carp.jpg" class="bg-carpa" alt="carpa" />
+    <h2>Editar Evento #{{ eventId }}</h2>
 
-        <form [formGroup]="form" (ngSubmit)="atualizar()">
-            <p class="section-label"><em>Imagem de Divulgação</em></p>
-            <div class="form-grid full-width preview-container">
-                <div class="frame">
-                    <img *ngIf="previewUrl" [src]="previewUrl" class="image-preview" alt="Prévia do evento" />
-                </div>
-            </div>
-            <div class="form-grid full-width">
-                <button mat-stroked-button type="button" class="upload-btn" (click)="fileInput.click()">
-                    <mat-icon>upload</mat-icon>
-                    Alterar Imagem
-                </button>
-                <input #fileInput type="file" accept="image/*" (change)="onFileChange($event)" hidden />
-            </div>
+    <form [formGroup]="form" (ngSubmit)="efetuarAtualizacao()">
+      <p class="section-label"><em>Imagem do Evento</em></p>
+      <div class="form-grid full-width preview-container">
+        <div>
+          <img *ngIf="previewUrl" [src]="previewUrl" class="image-preview" alt="Prévia do evento" />
+        </div>
+      </div>
 
-            <p class="section-label"><em>Informações do Evento</em></p>
-            <div class="form-grid">
-                <mat-form-field appearance="fill">
-                    <mat-label>Nome do Evento</mat-label>
-                    <input matInput formControlName="nome" placeholder="Ex: Festa Junina" />
-                </mat-form-field>
+      <div class="form-grid full-width">
+        <button mat-stroked-button type="button" class="upload-btn" (click)="fileInput.click()">
+          <mat-icon>upload</mat-icon>
+          Selecionar Nova Imagem
+        </button>
+        <input #fileInput type="file" accept="image/*" (change)="onFileChange($event)" hidden />
+      </div>
 
-                <mat-form-field appearance="fill">
-                    <mat-label>Local</mat-label>
-                    <input type="text" placeholder="Digite ou selecione um local" matInput formControlName="local"
-                        [matAutocomplete]="auto">
-                    <mat-autocomplete #auto="matAutocomplete">
-                        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-                            {{option}}
-                        </mat-option>
-                    </mat-autocomplete>
-                </mat-form-field>
+      <p class="section-label"><em>Informações do Evento</em></p>
+      <div class="form-grid">
+        <mat-form-field appearance="fill">
+          <mat-label>Nome do Evento</mat-label>
+          <input matInput formControlName="nome" />
+        </mat-form-field>
 
-                <mat-form-field appearance="fill">
-                    <mat-label>Data de Início</mat-label>
-                    <input matInput formControlName="dataInicio" type="date" />
-                </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Local</mat-label>
+          <input type="text" matInput formControlName="local" [matAutocomplete]="auto">
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+              {{option}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
 
-                <mat-form-field appearance="fill">
-                    <mat-label>Data de Término</mat-label>
-                    <input matInput formControlName="dataFinal" type="date" />
-                </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Data de Início (dd/mm/yyyy)</mat-label>
+          <input matInput [matDatepicker]="pickerInicio" formControlName="dataInicio">
+          <mat-datepicker-toggle matSuffix [for]="pickerInicio"></mat-datepicker-toggle>
+          <mat-datepicker #pickerInicio></mat-datepicker>
+        </mat-form-field>
 
-                <mat-form-field appearance="fill">
-                    <mat-label>Horário de Início</mat-label>
-                    <input matInput formControlName="horarioInicio" type="time" />
-                </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Data de Término (dd/mm/yyyy)</mat-label>
+          <input matInput [matDatepicker]="pickerFinal" formControlName="dataFinal">
+          <mat-datepicker-toggle matSuffix [for]="pickerFinal"></mat-datepicker-toggle>
+          <mat-datepicker #pickerFinal></mat-datepicker>
+        </mat-form-field>
 
-                <mat-form-field appearance="fill">
-                    <mat-label>Horário de Término</mat-label>
-                    <input matInput formControlName="horarioFinal" type="time" />
-                </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Horário de Início</mat-label>
+          <input matInput formControlName="horarioInicio" type="time" />
+        </mat-form-field>
 
-                <mat-form-field appearance="fill" class="full-width">
-                    <mat-label>Descrição</mat-label>
-                    <textarea matInput formControlName="descricao"
-                        placeholder="Descreva brevemente o evento..."></textarea>
-                </mat-form-field>
-            </div>
+        <mat-form-field appearance="fill">
+          <mat-label>Horário de Término</mat-label>
+          <input matInput formControlName="horarioFinal" type="time" />
+        </mat-form-field>
 
-            <div class="btns-bottom">
-                <button mat-stroked-button class="btn-cancel" routerLink="/list-events">
-                    <mat-icon>close</mat-icon>
-                    <span>Cancelar</span>
-                </button>
-                <button mat-stroked-button class="btn-submit" type="submit">
-                    <mat-icon>radio_button_unchecked</mat-icon>
-                    <span>Atualizar Evento</span>
-                </button>
-            </div>
-        </form>
-    </div>
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Descrição</mat-label>
+          <textarea matInput formControlName="descricao"></textarea>
+        </mat-form-field>
+      </div>
+
+      <div class="btns-bottom">
+        <button mat-stroked-button class="btn-cancel" routerLink="/list-events">
+          <mat-icon>close</mat-icon>
+          <span>Cancelar</span>
+        </button>
+        <button mat-stroked-button class="btn-submit" type="submit" [disabled]="form.invalid || isLoading">
+          <mat-icon>radio_button_unchecked</mat-icon>
+          <span *ngIf="!isLoading">Salvar Alterações</span>
+          <span *ngIf="isLoading">Salvando...</span>
+        </button>
+      </div>
+    </form>
+  </div>
 </main>

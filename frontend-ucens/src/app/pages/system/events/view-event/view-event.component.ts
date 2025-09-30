@@ -1,17 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-
-interface Event {
-  id: number;
-  nome: string;
-  dataInicio: string;
-  dataFinal: string;
-  horarioInicio: string;
-  horarioFinal: string;
-  local: string;
-  descricao: string;
-  imagem?: string;
-}
+import { EventoService } from 'src/app/services/events/event.service';
+import { Evento } from 'src/app/services/events/event.interface';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-view-event',
@@ -20,27 +12,63 @@ interface Event {
 })
 export class ViewEventComponent implements OnInit {
 
-  event: Event | undefined;
-
-  private allEvents: Event[] = [
-    { id: 1, nome: 'Festa Junina', dataInicio: '2025-06-20', dataFinal: '2025-06-22', horarioInicio: '18:00', horarioFinal: '23:00', local: 'Sede Campestre II', descricao: 'Tradicional festa com comidas típicas, danças e brincadeiras.', imagem: 'assets/img/banner-1.jpg' },
-    { id: 2, nome: 'Bon Odori', dataInicio: '2025-08-15', dataFinal: '2025-08-16', horarioInicio: '19:00', horarioFinal: '22:00', local: 'Praça Kasato Maru', descricao: 'Festival de dança folclórica japonesa em homenagem aos antepassados.', imagem: 'assets/activities/fujin-bu.jpg' },
-  ];
+  event: Evento | null = null;
+  isLoading = true;
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private eventoService: EventoService,
+    private snackBar: MatSnackBar,
+    private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
     if (idParam) {
-      const eventId = +idParam;
-      this.event = this.allEvents.find(evt => evt.id === eventId);
+      const id = +idParam;
+      this.loadEventDetails(id);
+    } else {
+      this.snackBar.open('ID do evento não fornecido.', 'Fechar', { duration: 3000 });
+      this.router.navigate(['/list-events']);
+    }
+  }
 
-      if (!this.event) {
+  loadEventDetails(id: number): void {
+    this.isLoading = true;
+    this.eventoService.getById(id).subscribe({
+      next: (data) => {
+        this.event = data;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        this.snackBar.open('Não foi possível carregar os detalhes do evento.', 'Fechar', { duration: 3000 });
+        this.isLoading = false;
         this.router.navigate(['/list-events']);
       }
+    });
+  }
+
+  deleteEvent(): void {
+    if (this.event && confirm(`Tem certeza que deseja excluir o evento "${this.event.nome}"?`)) {
+      this.isLoading = true;
+      this.eventoService.delete(this.event.id).subscribe({
+        next: () => {
+          this.snackBar.open('Evento excluído com sucesso!', 'Fechar', { duration: 3000 });
+          this.router.navigate(['/list-events']);
+        },
+        error: (err) => {
+          this.snackBar.open('Erro ao excluir. Verifique se você está logado.', 'Fechar', { duration: 3000 });
+          this.isLoading = false;
+        }
+      });
     }
+  }
+
+  getSafeImageUrl(url?: string): SafeUrl | string {
+    if (url) {
+      return this.sanitizer.bypassSecurityTrustUrl(url);
+    }
+    return 'assets/default-activity.jpg';
   }
 }

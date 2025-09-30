@@ -3,23 +3,23 @@
     <mat-icon>arrow_back</mat-icon>
     <span>Voltar</span>
   </button>
-  <div class="event-detail-container">
+  <div class="event-detail-container" *ngIf="!isLoading && event">
     <img src="assets/carp.jpg" class="bg-carpa" alt="carpa" />
     <div class="event-header">
-      <h2>{{ event?.nome || 'Nome do Evento' }}</h2>
+      <h2>{{ event.nome || 'Nome do Evento' }}</h2>
     </div>
     <div class="top-section">
       <div class="image-placeholder card">
-        <img [src]="event?.imagem || 'assets/default-activity.jpg'" alt="Imagem do Evento" class="event-image">
+        <img [src]="getSafeImageUrl(event.imagemUrl)" alt="Imagem do Evento" class="event-image">
       </div>
 
       <div class="info-group card">
         <div class="location-time-age">
-          <p><strong>Local:</strong> {{ event?.local || 'N/A' }}</p>
-          <p><strong>Data de Início:</strong> {{ event?.dataInicio | date:'dd/MM/yyyy' }}</p>
-          <p><strong>Data de Término:</strong> {{ event?.dataFinal | date:'dd/MM/yyyy' }}</p>
-          <p><strong>Horário de Início:</strong> {{ event?.horarioInicio }}</p>
-          <p><strong>Horário de Término:</strong> {{ event?.horarioFinal }}</p>
+          <p><strong>Local:</strong> {{ event.local || 'N/A' }}</p>
+          <p><strong>Data de Início:</strong> {{ event.inicio | date:'dd/MM/yyyy' }}</p>
+          <p><strong>Data de Término:</strong> {{ event.fim | date:'dd/MM/yyyy' }}</p>
+          <p><strong>Horário de Início:</strong> {{ event.inicio | date:'HH:mm' }}</p>
+          <p><strong>Horário de Término:</strong> {{ event.fim | date:'HH:mm' }}</p>
         </div>
       </div>
     </div>
@@ -27,13 +27,13 @@
     <div class="bottom-section">
       <div class="event-description-edit card">
         <h3>Detalhes do Evento</h3>
-        <p>{{ event?.descricao || 'Nenhuma descrição disponível.' }}</p>
+        <p>{{ event.descricao || 'Nenhuma descrição disponível.' }}</p>
         <div class="action-buttons">
-          <button mat-stroked-button class="btn-edit" routerLink="/edit-event/{{ event?.id }}">
+          <button mat-stroked-button class="btn-edit" [routerLink]="['/edit-event', event.id]">
             <mat-icon>edit</mat-icon>
             <span>Editar</span>
           </button>
-          <button mat-stroked-button color="warn" class="btn-delete">
+          <button mat-stroked-button color="warn" class="btn-delete" (click)="deleteEvent()">
             <mat-icon>delete_outline</mat-icon>
             <span>Excluir</span>
           </button>

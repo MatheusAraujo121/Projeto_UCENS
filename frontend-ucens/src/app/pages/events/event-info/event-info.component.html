@@ -3,29 +3,32 @@
     <mat-icon>arrow_back</mat-icon>
     <span>Voltar</span>
   </button>
-  <div class="event-detail-container">
+  <div *ngIf="isLoading" class="text-center p-5">
+      <p>Carregando informações do evento...</p>
+  </div>
+  <div *ngIf="!isLoading && event" class="event-detail-container">
     <img src="assets/carp.jpg" class="bg-carpa" alt="carpa" />
     <div class="event-header">
-      <h2>{{ event?.nome || 'Nome do Evento' }}</h2>
+      <h2>{{ event.nome }}</h2>
     </div>
     <div class="top-section">
       <div class="image-placeholder card">
-        <img [src]="event?.imagem || 'assets/default-activity.jpg'" alt="Imagem do Evento" class="event-image">
+        <img [src]="event.imagemUrl || 'assets/placeholder-image.jpg'" [alt]="event.nome" class="event-image">
       </div>
 
       <div class="info-group card">
         <div class="details-section">
-          <p><strong>Local:</strong> {{ event?.local || 'N/A' }}</p>
+          <p><strong>Local:</strong> {{ event.local }}</p>
 
           <div class="details-grid">
-            <p><strong>Data de Início:</strong> {{ event?.dataInicio | date:'dd/MM/yyyy' }}</p>
-            <p><strong>Data de Término:</strong> {{ event?.dataFinal | date:'dd/MM/yyyy' }}</p>
-            <p><strong>Horário de Início:</strong> {{ event?.horarioInicio }}</p>
-            <p><strong>Horário de Término:</strong> {{ event?.horarioFinal }}</p>
+            <p><strong>Data de Início:</strong> {{ event.inicio | date:'dd/MM/yyyy' }}</p>
+            <p><strong>Data de Término:</strong> {{ event.fim | date:'dd/MM/yyyy' }}</p>
+            <p><strong>Horário de Início:</strong> {{ event.inicio | date:'HH:mm' }}</p>
+            <p><strong>Horário de Término:</strong> {{ event.fim | date:'HH:mm' }}</p>
           </div>
 
           <h3>Detalhes do Evento</h3>
-          <p class="description">{{ event?.descricao || 'Nenhuma descrição disponível.' }}</p>
+          <p class="description">{{ event.descricao || 'Nenhuma descrição disponível.' }}</p>
         </div>
       </div>
     </div>

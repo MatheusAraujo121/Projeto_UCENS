@@ -4,7 +4,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './pages/home/home.component';
-
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 
@@ -15,12 +14,15 @@ import { FooterComponent } from './shared/footer/footer.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 //Angular material
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatDatepickerModule } from '@angular/material/datepicker'; 
+import { MatNativeDateModule } from '@angular/material/core'; 
 import { MatButtonModule } from '@angular/material/button';
 import { MatRadioModule }     from '@angular/material/radio';
 import { MatIconModule } from '@angular/material/icon';
@@ -30,9 +32,15 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { MatDividerModule } from '@angular/material/divider';
+
+//Config do idioma em portugues para as datas
+import { registerLocaleData } from '@angular/common';
+import localePt from '@angular/common/locales/pt';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
+registerLocaleData(localePt);
 
 //Institutional
 import { StoryComponent } from './pages/institutional/story/story.component';
@@ -94,6 +102,12 @@ import { EventDetailComponent } from './pages/system/events/event-detail/event-d
 import { ViewEventComponent } from './pages/system/events/view-event/view-event.component';
 import { EventInfoComponent } from './pages/events/event-info/event-info.component';
 
+//Turmas
+import { CreateClassComponent } from './pages/system/classes/create-class/create-class.component';
+import { EditClassComponent } from './pages/system/classes/edit-class/edit-class.component';
+import { ViewClassComponent } from './pages/system/classes/view-class/view-class.component';
+import { AuthGuard } from './guards/auth.guard';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -135,7 +149,10 @@ import { EventInfoComponent } from './pages/events/event-info/event-info.compone
     ViewSportyComponent,
     ViewCulturalComponent,
     ViewEventComponent,
-    EventInfoComponent
+    EventInfoComponent,
+    CreateClassComponent,
+    EditClassComponent,
+    ViewClassComponent
   ],
   imports: [
     BrowserModule,
@@ -149,13 +166,17 @@ import { EventInfoComponent } from './pages/events/event-info/event-info.compone
     MatToolbarModule,
     MatMenuModule,
     MatButtonModule,
+    MatSnackBarModule,
     MatRadioModule,   
     MatTableModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     MatPaginatorModule,
     MatSortModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
+    FormsModule,
     ReactiveFormsModule,
     MatAutocompleteModule,
     MatIconModule,
@@ -169,6 +190,7 @@ import { EventInfoComponent } from './pages/events/event-info/event-info.compone
       useClass: AuthInterceptor,
       multi: true
     },
+    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' },
     {
       provide: MatPaginatorIntl,
       useFactory: () => {
@@ -188,7 +210,8 @@ import { EventInfoComponent } from './pages/events/event-info/event-info.compone
         };
         return paginatorIntl;
       }
-    }
+    },
+    AuthGuard
   ],
 
   bootstrap: [AppComponent]

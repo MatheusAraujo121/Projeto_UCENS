@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { MatMenuTrigger } from '@angular/material/menu';
-import { AuthService } from 'src/app/services/auth.service';
+import { AuthService } from 'src/app/services/auth/auth.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -17,6 +17,5 @@ export class HeaderComponent {
 
   logout() {
     this.authService.logout();
-    this.router.navigate(['/']);
   }
 }

@@ -37,7 +37,11 @@ public class Associado
     [MaxLength(100)]
     public string Profissao { get; set; } = string.Empty;
     [MaxLength(30)]
-    public string StatusQuo { get; set; } = string.Empty;
+    public string Situacao { get; set; } = string.Empty;
+
+    [MaxLength(100)]
+    public string GrauInstrucao { get; set; } = string.Empty;
+
     public ICollection<Dependente> Dependentes { get; set; } = new List<Dependente>();
     public ICollection<MatriculaAssociado> Matriculas { get; set; } = new List<MatriculaAssociado>();
 }

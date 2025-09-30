@@ -1,24 +1,52 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { AtividadeService } from 'src/app/services/activities/activity.service';
+import { Atividade } from 'src/app/services/activities/activity.interface';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 interface Activity {
   id: string;
   title: string;
-  image: string;     
+  image: string;
   short: string;
-  link?: string;     
+  link?: string;
 }
+
 @Component({
   selector: 'app-cultural',
   templateUrl: './cultural.component.html',
   styleUrls: ['./cultural.component.scss']
 })
-export class CulturalComponent {
-  activities: Activity[] = [
-    { id: '1', title: 'Beisebol', image: 'assets/activities/baseball.jpg', short: 'Praticado por duas equipes, com posições de ataque e defesa usando taco e bola.' },
-    { id: '2', title: 'Futebol', image: 'assets/activities/futebol.jpg', short: 'Esporte nacional praticado na UCENS nas modalidades de campo e quadra.' },
-    { id: '3', title: 'Gateball', image: 'assets/activities/gateball.jpg', short: 'Coletivo, semelhante ao críquete, muito popular entre associados.' },
-    { id: '4', title: 'Judô', image: 'assets/activities/judo.jpg', short: 'Arte marcial japonesa — técnica, disciplina e defesa pessoal.' },
-    { id: '5', title: 'Karate', image: 'assets/activities/karaoke.jpg', short: 'Treinos regulares para adultos e crianças, foco em tradição e técnica.' },
-    { id: '6', title: 'Natação', image: 'assets/activities/mallet-golf.jpg', short: 'Aulas para todas as idades, práticas e condicionamento.' },
-    { id: '7', title: 'Yoga', image: 'assets/activities/nitigo-gako.jpg', short: 'Alongamento, consciência corporal e relaxamento.' }
-  ];
+export class CulturalComponent implements OnInit {
+  activities: Activity[] = [];
+  isLoading = true;
+
+  constructor(
+    private atividadeService: AtividadeService,
+    private snackBar: MatSnackBar
+  ) { }
+
+  ngOnInit(): void {
+    this.loadActivities();
+  }
+
+  loadActivities(): void {
+    this.isLoading = true;
+    this.atividadeService.getAll().subscribe({
+      next: (data: Atividade[]) => {
+        this.activities = data
+          .filter(a => a.categoria === 'Cultural')
+          .map(a => ({
+            id: a.id.toString(),
+            title: a.nome,
+            image: a.imagemUrl || 'assets/placeholder-image.jpg',
+            short: a.descricao || ''
+          }));
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.snackBar.open('Ocorreu um erro ao carregar as atividades culturais.', 'Fechar', { duration: 3000 });
+      }
+    });
+  }
 }

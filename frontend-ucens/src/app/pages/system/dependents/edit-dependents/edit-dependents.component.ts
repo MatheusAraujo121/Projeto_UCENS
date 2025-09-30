@@ -1,34 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
-interface Carteirinha {
-  nome: string;
-  cognome: string;
-  numero: string;
-  categoria: string;
-  validade: string;
-}
-
-interface Dependent {
-  id: number;
-  idAssociado: number;
-  situacao: 'Regular' | 'Inadimplente' | 'Desligado';
-  grauParentesco: string;
-  dataLimite: string;
-  carteirinha: Carteirinha;
-  sexo: string;
-  cpf: string;
-  rg: string;
-  dataNascimento: string;
-  localNascimento: string;
-  nacionalidade: string;
-  estadoCivil: string;
-  grauInstrucao: string;
-  profissao: string;
-  exames: string;
-  atividadesProibidas: string;
-}
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { forkJoin, Observable } from 'rxjs';
+import { startWith, map } from 'rxjs/operators';
+import { DependentService } from 'src/app/services/dependents/dependent.service';
+import { AssociateService } from 'src/app/services/associates/associate.service';
+import { Associate } from 'src/app/services/associates/associate.interface';
+import { Dependent } from 'src/app/services/dependents/dependent.interface';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-edit-dependents',
@@ -36,194 +15,177 @@ interface Dependent {
   styleUrls: ['./edit-dependents.component.scss']
 })
 export class EditDependentsComponent implements OnInit {
-  form!: FormGroup;
+  form: FormGroup;
   id!: number;
-  dependents: Dependent[] = [
-    {
-      id: 1,
-      idAssociado: 1,
-      situacao: 'Regular',
-      grauParentesco: 'Filho',
-      dataLimite: '2025-12-31',
-      carteirinha: { nome: 'Lucas Tanaka', cognome: 'Tanaka', numero: '000123', categoria: 'Dependente', validade: '2025-12-31' },
-      sexo: 'Masculino',
-      cpf: '123.456.789-10',
-      rg: '11.111.111-1',
-      dataNascimento: '2010-05-20',
-      localNascimento: 'Sorocaba, SP',
-      nacionalidade: 'Brasileira',
-      estadoCivil: 'Solteiro',
-      grauInstrucao: 'Ensino Fundamental',
-      profissao: 'Estudante',
-      exames: 'Hemograma anual',
-      atividadesProibidas: 'Natação em piscina comum'
-    },
-    {
-      id: 2,
-      idAssociado: 3,
-      situacao: 'Regular',
-      grauParentesco: 'Filha',
-      dataLimite: '2025-12-31',
-      carteirinha: {
-        nome: 'Marina Sato',
-        cognome: 'Takahashi',
-        numero: '000125',
-        categoria: 'Dependente',
-        validade: '2025-12-31'
-      },
-      sexo: 'Feminino',
-      cpf: '111.222.333-44',
-      rg: '33.333.333-3',
-      dataNascimento: '2012-04-03',
-      localNascimento: 'São Paulo, SP',
-      nacionalidade: 'Brasileira',
-      estadoCivil: 'Solteira',
-      grauInstrucao: 'Ensino Fundamental',
-      profissao: 'Estudante',
-      exames: 'Oftalmológico anual',
-      atividadesProibidas: 'Esportes com bola'
-    },
-    {
-      id: 3,
-      idAssociado: 4,
-      situacao: 'Desligado',
-      grauParentesco: 'Filho',
-      dataLimite: '2023-12-31',
-      carteirinha: {
-        nome: 'Pedro Souza',
-        cognome: 'Souza',
-        numero: '000126',
-        categoria: 'Dependente',
-        validade: '2023-12-31'
-      },
-      sexo: 'Masculino',
-      cpf: '222.333.444-55',
-      rg: '44.444.444-4',
-      dataNascimento: '2009-10-28',
-      localNascimento: 'Niterói, RJ',
-      nacionalidade: 'Brasileira',
-      estadoCivil: 'Solteiro',
-      grauInstrucao: 'Ensino Fundamental',
-      profissao: 'Estudante',
-      exames: 'Consulta psicológica',
-      atividadesProibidas: 'Academia'
-    },
-    {
-      id: 4,
-      idAssociado: 5,
-      situacao: 'Regular',
-      grauParentesco: 'Filha',
-      dataLimite: '2025-12-31',
-      carteirinha: {
-        nome: 'Carolina Lima',
-        cognome: 'Lima',
-        numero: '000127',
-        categoria: 'Dependente',
-        validade: '2025-12-31'
-      },
-      sexo: 'Feminino',
-      cpf: '555.666.777-88',
-      rg: '55.555.555-5',
-      dataNascimento: '2013-03-11',
-      localNascimento: 'Campinas, SP',
-      nacionalidade: 'Brasileira',
-      estadoCivil: 'Solteira',
-      grauInstrucao: 'Ensino Fundamental',
-      profissao: 'Estudante',
-      exames: 'Cardiológico anual',
-      atividadesProibidas: 'Corrida de longa distância'
-    },
-    {
-      id: 5,
-      idAssociado: 6,
-      situacao: 'Inadimplente',
-      grauParentesco: 'Filho',
-      dataLimite: '2025-12-31',
-      carteirinha: {
-        nome: 'Matheus Matsuda',
-        cognome: 'Matsuda',
-        numero: '000128',
-        categoria: 'Dependente',
-        validade: '2025-12-31'
-      },
-      sexo: 'Masculino',
-      cpf: '999.888.777-66',
-      rg: '66.666.666-6',
-      dataNascimento: '2011-12-05',
-      localNascimento: 'Curitiba, PR',
-      nacionalidade: 'Brasileira',
-      estadoCivil: 'Solteiro',
-      grauInstrucao: 'Ensino Fundamental',
-      profissao: 'Estudante',
-      exames: 'Consulta fonoaudiológica',
-      atividadesProibidas: 'Esportes aquáticos'
-    },
-    {
-      id: 6,
-      idAssociado: 1,
-      situacao: 'Regular',
-      grauParentesco: 'Filho',
-      dataLimite: '2025-12-31',
-      carteirinha: { nome: 'Lucas Tanaka', cognome: 'Tanaka', numero: '000123', categoria: 'Dependente', validade: '2025-12-31' },
-      sexo: 'Masculino',
-      cpf: '123.456.789-10',
-      rg: '11.111.111-1',
-      dataNascimento: '2010-05-20',
-      localNascimento: 'Sorocaba, SP',
-      nacionalidade: 'Brasileira',
-      estadoCivil: 'Solteiro',
-      grauInstrucao: 'Ensino Fundamental',
-      profissao: 'Estudante',
-      exames: 'Hemograma anual',
-      atividadesProibidas: 'Natação em piscina comum'
-    }
-  ];
+  isLoading = true;
+  associateName: string = '';
+  associates: Associate[] = [];
+  associateFilterCtrl = new FormControl<string | Associate>('');
+  filteredAssociates!: Observable<Associate[]>;
 
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
-    private router: Router
-  ) { }
-
-  ngOnInit(): void {
-    this.id = Number(this.route.snapshot.paramMap.get('id'));
-    const dep = this.dependents.find(d => d.id === this.id)!;
-    this.buildForm(dep);
-  }
-
-  private buildForm(dep: Dependent): void {
+    private router: Router,
+    private dependentService: DependentService,
+    private associateService: AssociateService,
+    private snackBar: MatSnackBar
+  ) {
     this.form = this.fb.group({
-      idAssociado: [dep.idAssociado, Validators.required],
-      situacao: [dep.situacao, Validators.required],
-      grauParentesco: [dep.grauParentesco, Validators.required],
-      dataLimite: [dep.dataLimite, Validators.required],
+      associadoId: [null, Validators.required],
+      situacao: [''],
+      grauParentesco: ['', Validators.required],
+      exames: [''],
+      atividadesProibidas: [''],
       carteirinha: this.fb.group({
-        nome: [dep.carteirinha.nome, Validators.required],
-        cognome: [dep.carteirinha.cognome, Validators.required],
-        numero: [dep.carteirinha.numero, Validators.required],
-        categoria: [dep.carteirinha.categoria, Validators.required],
-        validade: [dep.carteirinha.validade, Validators.required]
+        nome: ['', Validators.required],
+        cognome: [''],
+        numero: [''],
+        categoria: [''],
+        validade: [''],
       }),
-      sexo: [dep.sexo, Validators.required],
-      cpf: [dep.cpf, [Validators.required, Validators.minLength(14)]],
-      rg: [dep.rg, [Validators.required, Validators.minLength(12)]],
-      dataNascimento: [dep.dataNascimento, Validators.required],
-      localNascimento: [dep.localNascimento, Validators.required],
-      nacionalidade: [dep.nacionalidade, Validators.required],
-      estadoCivil: [dep.estadoCivil, Validators.required],
-      grauInstrucao: [dep.grauInstrucao, Validators.required],
-      profissao: [dep.profissao, Validators.required],
-      exames: [dep.exames],
-      atividadesProibidas: [dep.atividadesProibidas]
+      sexo: ['', Validators.required],
+      cpf: ['', [Validators.minLength(11)]],
+      rg: ['', [Validators.minLength(9)]],
+      dataNascimento: ['', Validators.required],
+      localNascimento: [''],
+      nacionalidade: [''],
+      estadoCivil: [''],
+      grauInstrucao: [''],
+      profissao: [''],
     });
   }
 
-  atualizar(): void {
-    if (this.form.valid) {
-      console.log('Dependente atualizado:', this.form.value);
-      this.router.navigate(['/view-dependents', this.id]);
-    } else {
-      this.form.markAllAsTouched();
+  ngOnInit(): void {
+    const idParam = this.route.snapshot.paramMap.get('id');
+    if (!idParam) {
+      this.snackBar.open('ID do dependente não encontrado!', 'Fechar', { duration: 3000 });
+      this.router.navigate(['/list-dependents']);
+      return;
     }
+    this.id = +idParam;
+    this.loadDataAndPopulateForm();
+  }
+
+  loadDataAndPopulateForm(): void {
+    forkJoin({
+      dependent: this.dependentService.getDependentById(this.id),
+      associates: this.associateService.getAssociados()
+    }).subscribe({
+      next: ({ dependent, associates }) => {
+        this.associates = associates;
+        this.populateForm(dependent); 
+        this.isLoading = false;
+      },
+      error: (err) => {
+        this.snackBar.open('Não foi possível carregar os dados do dependente.', 'Fechar', { duration: 3000 });
+        this.router.navigate(['/list-dependents']);
+      }
+    });
+  }
+
+  private populateForm(dep: Dependent): void {
+    const selectedAssociate = this.associates.find(a => a.id === dep.associadoId);
+    this.associateName = selectedAssociate ? selectedAssociate.nome : 'Nenhum associado vinculado';
+    this.form.patchValue({
+      associadoId: selectedAssociate,
+      situacao: dep.situacao,
+      grauParentesco: dep.grauParentesco,
+      exames: dep.exames,
+      atividadesProibidas: dep.atividadesProibidas,
+      carteirinha: {
+        nome: dep.nome,
+        cognome: dep.cognome,
+        numero: dep.numeroCarteirinha,
+        categoria: dep.categoria,
+        validade: this.formatDate(dep.validadeCarteirinha),
+      },
+      sexo: dep.sexo,
+      cpf: dep.cpf,
+      rg: dep.rg,
+      dataNascimento: this.formatDate(dep.dataNascimento),
+      localNascimento: dep.localNascimento,
+      nacionalidade: dep.nacionalidade,
+      estadoCivil: dep.estadoCivil,
+      grauInstrucao: dep.grauInstrucao,
+      profissao: dep.profissao,
+    });
+
+    this.associateFilterCtrl.setValue(selectedAssociate || '');
+    this.filteredAssociates = this.associateFilterCtrl.valueChanges.pipe(
+      startWith(''),
+      map(value => {
+        const name = typeof value === 'string' ? value : value?.nome;
+        return name ? this._filterAssociates(name) : this.associates.slice();
+      })
+    );
+  }
+
+ private formatDate(date: any): string {
+  if (!date) return '';
+  if (typeof date === 'string' && date.length === 10) return date; // já está no formato correto
+  try {
+    const d = new Date(date);
+    return d.toISOString().slice(0, 10);
+  } catch (e) {
+    return '';
+  }
+}
+
+  private _filterAssociates(name: string): Associate[] {
+    const filterValue = name.toLowerCase();
+    return this.associates.filter(associate => associate.nome.toLowerCase().includes(filterValue));
+  }
+
+  displayAssociateName(associate: Associate): string {
+    return associate && associate.nome ? associate.nome : '';
+  }
+
+  onAssociateSelected(associate: Associate): void {
+    this.form.get('associadoId')?.setValue(associate);
+  }
+
+  atualizar(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      this.snackBar.open('Por favor, preencha os campos obrigatórios.', 'Fechar', { duration: 3000 });
+      return;
+    }
+
+    const formValue = this.form.getRawValue();
+
+    // Enviando as datas como strings 'YYYY-MM-DD' para evitar problemas de fuso horário
+    const payload: Partial<Dependent> = {
+      id: this.id,
+      nome: formValue.carteirinha.nome,
+      cognome: formValue.carteirinha.cognome,
+      dataNascimento: formValue.dataNascimento,
+      sexo: formValue.sexo,
+      cpf: formValue.cpf,
+      rg: formValue.rg,
+      estadoCivil: formValue.estadoCivil,
+      grauInstrucao: formValue.grauInstrucao,
+      localNascimento: formValue.localNascimento,
+      nacionalidade: formValue.nacionalidade,
+      profissao: formValue.profissao,
+      associadoId: formValue.associadoId.id,
+      situacao: formValue.situacao,
+      grauParentesco: formValue.grauParentesco,
+      numeroCarteirinha: formValue.carteirinha.numero,
+      categoria: formValue.carteirinha.categoria,
+      validadeCarteirinha: formValue.carteirinha.validade ? formValue.carteirinha.validade : null,
+      exames: formValue.exames,
+      atividadesProibidas: formValue.atividadesProibidas
+    };
+
+    this.dependentService.updateDependent(this.id, payload).subscribe({
+      next: () => {
+        this.snackBar.open('Dependente atualizado com sucesso!', 'Fechar', { duration: 3000 });
+        this.router.navigate(['/list-dependents']);
+      },
+      error: (err) => {
+        this.snackBar.open('Ocorreu um erro ao tentar atualizar o dependente.', 'Fechar', { duration: 3000 });
+      }
+    });
   }
 }

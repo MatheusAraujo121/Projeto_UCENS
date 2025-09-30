@@ -35,5 +35,16 @@ namespace Infrastructure.Persistence.Repositories
                     .ThenInclude(md => md.Dependente)
                 .ToListAsync();
         }
+
+        public async Task<List<Turma>> GetByAtividadeId(int atividadeId)
+        {
+            return await _context.Turmas
+                .Where(t => t.AtividadeId == atividadeId)
+                .Include(t => t.MatriculasAssociados)
+                    .ThenInclude(ma => ma.Associado) 
+                .Include(t => t.MatriculasDependentes)
+                    .ThenInclude(md => md.Dependente) 
+                .ToListAsync();
+        }
     }
 }

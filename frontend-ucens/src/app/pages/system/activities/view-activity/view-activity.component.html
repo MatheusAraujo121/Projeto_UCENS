@@ -3,36 +3,34 @@
     <mat-icon>arrow_back</mat-icon>
     <span>Voltar</span>
   </button>
-  <div class="activity-detail-container">
+  <div class="activity-detail-container" *ngIf="!isLoading && activity">
     <img src="assets/carp.jpg" class="bg-carpa" alt="carpa" />
     <div class="activity-header">
-            <h2>{{ activity?.nome || 'Nome da Atividade' }}</h2>
-            <span class="activity-code">Cód: {{ activity?.codigo || 'N/A' }}</span>
-        </div>
+      <h2>{{ activity.nome || 'Nome da Atividade' }}</h2>
+      <span class="activity-code">Cód: {{ activity.codigo || 'N/A' }}</span>
+    </div>
     <div class="top-section">
       <div class="image-placeholder card">
-        <img [src]="activity?.imageUrl || 'assets/default-activity.jpg'" alt="Imagem da Atividade"
-          class="activity-image">
+        <img [src]="getSafeImageUrl(activity.imagemUrl)" alt="Imagem da Atividade" class="activity-image">
       </div>
 
       <div class="info-group card">
         <div class="category-identification">
-          <p><strong>Categoria:</strong> {{ activity?.categoria || 'Não Informado' }}</p>
+          <p><strong>Categoria:</strong> {{ activity.categoria || 'Não Informado' }}</p>
         </div>
 
         <div class="details-section-top">
-          <p><strong>Professor:</strong> {{ activity?.professor || 'N/A' }}</p>
-          <p><strong>Limite de Alunos:</strong> {{ activity?.limite || 'N/A' }}</p>
-          <p><strong>Exame Médico:</strong> {{ activity?.medicalExamRequired ? 'Obrigatório' : 'Não Obrigatório' }}</p>
-          <p *ngIf="activity?.poolExamRequired"><strong>Exame de Piscina:</strong> {{ activity?.poolExamRequired ?
-            'Obrigatório' : 'Não Obrigatório' }}</p>
+          <p><strong>Professor:</strong> {{ activity.professorResponsavel || 'N/A' }}</p>
+          <p><strong>Limite de Alunos:</strong> {{ activity.limiteParticipantes || 'N/A' }}</p>
+          <p><strong>Exame Médico:</strong> {{ activity.exigeFisico ? 'Obrigatório' : 'Não Obrigatório' }}</p>
+          <p><strong>Exame de Piscina:</strong> {{ activity.exigePiscina ? 'Obrigatório' : 'Não Obrigatório' }}</p>
         </div>
 
         <div class="location-time-age">
-          <p><strong>Local:</strong> {{ activity?.local || 'N/A' }}</p>
-          <p><strong>Dias:</strong> {{ activity?.dias || 'N/A' }}</p>
-          <p><strong>Horários:</strong> {{ activity?.horario || 'N/A' }}</p>
-          <p><strong>Idade:</strong> {{ activity?.idadeMin || 'N/A' }} - {{ activity?.idadeMax || 'N/A' }}</p>
+          <p><strong>Local:</strong> {{ activity.local.join(', ') || 'N/A' }}</p>
+          <p><strong>Dias:</strong> {{ activity.diasDisponiveis.join(', ') || 'N/A' }}</p>
+          <p><strong>Horários:</strong> {{ activity.horarioSugerido || 'N/A' }}</p>
+          <p><strong>Idade:</strong> {{ activity.idadeMinima || 'N/A' }} - {{ activity.idadeMaxima || 'N/A' }}</p>
         </div>
       </div>
     </div>
@@ -40,13 +38,13 @@
     <div class="bottom-section">
       <div class="activity-description-edit card">
         <h3>Detalhes da Atividade</h3>
-        <p>{{ activity?.descricao || 'Nenhuma descrição disponível.' }}</p>
+        <p>{{ activity.descricao || 'Nenhuma descrição disponível.' }}</p>
         <div class="action-buttons">
-          <button mat-stroked-button class="btn-edit" routerLink="/edit-activity/{{ activity?.id }}">
+          <button mat-stroked-button class="btn-edit" [routerLink]="['/edit-activity', activity.id]">
             <mat-icon>edit</mat-icon>
             <span>Editar</span>
           </button>
-          <button mat-stroked-button color="warn" class="btn-delete">
+          <button mat-stroked-button color="warn" class="btn-delete" (click)="deleteActivity()">
             <mat-icon>delete_outline</mat-icon>
             <span>Excluir</span>
           </button>
@@ -56,7 +54,7 @@
       <div class="classes-list-section card">
         <h3>
           Lista de Turmas
-          <button mat-stroked-button class="btn-new-class" routerLink="">
+          <button mat-stroked-button class="btn-new-class" routerLink="/create-class/{{ activity.id }}">
             <mat-icon>add</mat-icon>
             <span>Nova Turma</span>
           </button>
@@ -67,34 +65,26 @@
               <th mat-header-cell *matHeaderCellDef> ID </th>
               <td mat-cell *matCellDef="let turma"> {{turma.id}} </td>
             </ng-container>
-
             <ng-container matColumnDef="nome">
               <th mat-header-cell *matHeaderCellDef> Nome da Turma </th>
               <td mat-cell *matCellDef="let turma"> {{turma.nome}} </td>
             </ng-container>
-
             <ng-container matColumnDef="professor">
               <th mat-header-cell *matHeaderCellDef> Professor </th>
               <td mat-cell *matCellDef="let turma"> {{turma.professor}} </td>
             </ng-container>
-
-            <ng-container matColumnDef="dia">
-              <th mat-header-cell *matHeaderCellDef> Dia </th>
-              <td mat-cell *matCellDef="let turma"> {{turma.dia}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="horario">
-              <th mat-header-cell *matHeaderCellDef> Horário </th>
-              <td mat-cell *matCellDef="let turma"> {{turma.horario}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="alunos">
-              <th mat-header-cell *matHeaderCellDef> Alunos </th>
-              <td mat-cell *matCellDef="let turma"> {{turma.alunos}} / {{turma.capacidade}} </td>
-            </ng-container>
+            <ng-container matColumnDef="diasHorarios">
+        <th mat-header-cell *matHeaderCellDef> Dias e Horários </th>
+        <td mat-cell *matCellDef="let turma"> {{turma.diasHorarios || 'N/A'}} </td>
+      </ng-container>
+            
+            <ng-container matColumnDef="vagas">
+        <th mat-header-cell *matHeaderCellDef> Vagas </th>
+        <td mat-cell *matCellDef="let turma"> {{turma.alunosMatriculados.length|| 0}} / {{turma.vagas}} </td>
+      </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            <tr mat-row (click)="viewTurma(row)" *matRowDef="let row; columns: displayedColumns;"></tr>
 
             <tr class="mat-row" *matNoDataRowDef>
               <td class="mat-cell" colspan="6">Nenhuma turma encontrada para esta atividade.</td>

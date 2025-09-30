@@ -8,7 +8,7 @@ namespace Application.Features.Relatorios
         public int Id { get; set; }
         public string Nome { get; set; } = string.Empty;
         public string CPF { get; set; } = string.Empty;
-        public string? StatusQuo { get; set; }
+        public string? Situacao { get; set; }
         public List<RelatorioDependenteDTO> Dependentes { get; set; } = new();
     }
 

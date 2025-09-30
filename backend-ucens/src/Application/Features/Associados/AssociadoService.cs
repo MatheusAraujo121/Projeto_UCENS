@@ -8,7 +8,7 @@ namespace Application.Features.Associados
 {
     public class AssociadoService
     {
-        private readonly IRepository<Associado> _repo; 
+        private readonly IRepository<Associado> _repo;
 
         public AssociadoService(IRepository<Associado> repo)
         {
@@ -22,8 +22,24 @@ namespace Application.Features.Associados
             {
                 Id = a.Id,
                 Nome = a.Nome,
+                Email = a.Email,
+                Cognome = a.Cognome,
                 CPF = a.CPF,
+                Rg = a.Rg,
                 DataNascimento = a.DataNascimento,
+                Sexo = a.Sexo,
+                EstadoCivil = a.EstadoCivil,
+                NomePai = a.NomePai,
+                NomeMae = a.NomeMae,
+                Endereco = a.Endereco,
+                Numero = a.Numero,
+                Complemento = a.Complemento,
+                Telefone = a.Telefone,
+                LocalNascimento = a.LocalNascimento,
+                Nacionalidade = a.Nacionalidade,
+                Profissao = a.Profissao,
+                Situacao = a.Situacao,
+                GrauInstrucao = a.GrauInstrucao,
                 Dependentes = a.Dependentes.Select(d => new DependentesDTO
                 {
                     Id = d.Id,
@@ -43,8 +59,24 @@ namespace Application.Features.Associados
             {
                 Id = a.Id,
                 Nome = a.Nome,
+                Email = a.Email,
+                Cognome = a.Cognome,
                 CPF = a.CPF,
+                Rg = a.Rg,
                 DataNascimento = a.DataNascimento,
+                Sexo = a.Sexo,
+                EstadoCivil = a.EstadoCivil,
+                NomePai = a.NomePai,
+                NomeMae = a.NomeMae,
+                Endereco = a.Endereco,
+                Numero = a.Numero,
+                Complemento = a.Complemento,
+                Telefone = a.Telefone,
+                LocalNascimento = a.LocalNascimento,
+                Nacionalidade = a.Nacionalidade,
+                Profissao = a.Profissao,
+                Situacao = a.Situacao,
+                GrauInstrucao = a.GrauInstrucao,
                 Dependentes = a.Dependentes.Select(d => new DependentesDTO
                 {
                     Id = d.Id,
@@ -60,11 +92,10 @@ namespace Application.Features.Associados
             var associado = new Associado
             {
                 Nome = dto.Nome,
-                CPF = dto.CPF,
-                DataNascimento = dto.DataNascimento,
-                Email = dto.Email,
                 Cognome = dto.Cognome,
+                CPF = dto.CPF,
                 Rg = dto.Rg,
+                DataNascimento = dto.DataNascimento,
                 Sexo = dto.Sexo,
                 EstadoCivil = dto.EstadoCivil,
                 NomePai = dto.NomePai,
@@ -72,11 +103,13 @@ namespace Application.Features.Associados
                 Endereco = dto.Endereco,
                 Numero = dto.Numero,
                 Complemento = dto.Complemento,
-                Telefone = dto.Telefone,
                 LocalNascimento = dto.LocalNascimento,
                 Nacionalidade = dto.Nacionalidade,
                 Profissao = dto.Profissao,
-                StatusQuo = dto.StatusQuo
+                Telefone = dto.Telefone,
+                Email = dto.Email,
+                Situacao = dto.Situacao,
+                GrauInstrucao = dto.GrauInstrucao
             };
 
             await _repo.Add(associado);
@@ -91,9 +124,24 @@ namespace Application.Features.Associados
             if (associado == null) throw new System.Exception("Associado não encontrado");
 
             associado.Nome = dto.Nome;
+            associado.Cognome = dto.Cognome;
             associado.CPF = dto.CPF;
+            associado.Rg = dto.Rg;
             associado.DataNascimento = dto.DataNascimento;
-
+            associado.Sexo = dto.Sexo;
+            associado.EstadoCivil = dto.EstadoCivil;
+            associado.NomePai = dto.NomePai;
+            associado.NomeMae = dto.NomeMae;
+            associado.Endereco = dto.Endereco;
+            associado.Numero = dto.Numero;
+            associado.Complemento = dto.Complemento;
+            associado.LocalNascimento = dto.LocalNascimento;
+            associado.Nacionalidade = dto.Nacionalidade;
+            associado.Profissao = dto.Profissao;
+            associado.Telefone = dto.Telefone;
+            associado.Email = dto.Email;
+            associado.Situacao = dto.Situacao;
+            associado.GrauInstrucao = dto.GrauInstrucao;
 
             await _repo.Update(associado);
 

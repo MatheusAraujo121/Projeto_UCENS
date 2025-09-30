@@ -7,8 +7,16 @@
             <p class="section-label"><em>Vínculo</em></p>
             <div class="form-grid">
                 <mat-form-field appearance="fill">
-                    <mat-label>ID do Associado</mat-label>
-                    <input matInput formControlName="idAssociado" />
+                    <mat-label>Associado Responsável</mat-label>
+                    <input type="text" placeholder="Digite para pesquisar..." matInput
+                        [formControl]="associateFilterCtrl" [value]="associateName" formControlName="idAssociado"
+                        [matAutocomplete]="auto">
+                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayAssociateName">
+                        <mat-option *ngFor="let associate of filteredAssociates | async" [value]="associate"
+                            (onSelectionChange)="form.get('associadoId')?.setValue(associate)">
+                            {{ associate.nome }}
+                        </mat-option>
+                    </mat-autocomplete>
                 </mat-form-field>
                 <mat-form-field appearance="fill">
                     <mat-label>Situação</mat-label>
@@ -21,10 +29,6 @@
                 <mat-form-field appearance="fill">
                     <mat-label>Grau de Parentesco</mat-label>
                     <input matInput formControlName="grauParentesco" />
-                </mat-form-field>
-                <mat-form-field appearance="fill">
-                    <mat-label>Data Limite</mat-label>
-                    <input matInput type="date" formControlName="dataLimite" />
                 </mat-form-field>
             </div>
 
@@ -48,7 +52,7 @@
                 </mat-form-field>
                 <mat-form-field appearance="fill">
                     <mat-label>Validade</mat-label>
-                    <input matInput type="date" formControlName="validade" />
+                    <input matInput formControlName="validade">
                 </mat-form-field>
             </div>
 
@@ -76,8 +80,11 @@
             <div class="form-grid">
                 <mat-form-field appearance="fill">
                     <mat-label>Data de Nascimento</mat-label>
-                    <input matInput type="date" formControlName="dataNascimento" />
+                    <input matInput [matDatepicker]="pickerNascimento" formControlName="dataNascimento">
+                    <mat-datepicker-toggle matSuffix [for]="pickerNascimento"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerNascimento></mat-datepicker>
                 </mat-form-field>
+
                 <mat-form-field appearance="fill">
                     <mat-label>Local de Nascimento</mat-label>
                     <input matInput formControlName="localNascimento" />
