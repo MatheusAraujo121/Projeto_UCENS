@@ -3,8 +3,6 @@ import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { forkJoin, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
-// Serviços e Interfaces
 import { DependentService } from 'src/app/services/dependents/dependent.service';
 import { Dependent } from 'src/app/services/dependents/dependent.interface';
 import { AssociateService } from 'src/app/services/associates/associate.service';
@@ -35,7 +33,7 @@ export class ViewDependentsComponent implements OnInit {
         const id = Number(params.get('id'));
         if (isNaN(id) || id <= 0) {
           this.handleInvalidId();
-          return of(null); // Para a cadeia de observables
+          return of(null); 
         }
         return this.loadData(id);
       })

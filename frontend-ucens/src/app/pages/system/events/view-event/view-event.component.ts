@@ -42,7 +42,6 @@ export class ViewEventComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Erro ao buscar detalhes do evento', err);
         this.snackBar.open('Não foi possível carregar os detalhes do evento.', 'Fechar', { duration: 3000 });
         this.isLoading = false;
         this.router.navigate(['/list-events']);
@@ -50,7 +49,6 @@ export class ViewEventComponent implements OnInit {
     });
   }
 
-  // Função para deletar o evento
   deleteEvent(): void {
     if (this.event && confirm(`Tem certeza que deseja excluir o evento "${this.event.nome}"?`)) {
       this.isLoading = true;
@@ -67,7 +65,6 @@ export class ViewEventComponent implements OnInit {
     }
   }
 
-  // Função para garantir que a URL da imagem seja segura
   getSafeImageUrl(url?: string): SafeUrl | string {
     if (url) {
       return this.sanitizer.bypassSecurityTrustUrl(url);

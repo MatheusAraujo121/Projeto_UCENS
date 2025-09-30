@@ -15,7 +15,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class ListEventsComponent implements OnInit {
 
-  isLoading = true; // <-- Variável adicionada
+  isLoading = true; 
 
   calendarOptions: CalendarOptions = {
     initialView: 'dayGridMonth',
@@ -56,7 +56,6 @@ export class ListEventsComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
-        console.error("Erro ao carregar eventos", err);
         this.snackBar.open('Não foi possível carregar os eventos.', 'Fechar', { duration: 3000 });
         this.isLoading = false;
       }

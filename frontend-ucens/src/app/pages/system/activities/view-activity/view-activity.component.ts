@@ -17,10 +17,8 @@ export class ViewActivityComponent implements OnInit {
 
   activity: Atividade | null = null;
   isLoading = true;
-
-  // Variáveis para a tabela de turmas
   displayedColumns: string[] = ['id', 'nome', 'professor', 'dia', 'horario', 'alunos'];
-  classesDataSource = new MatTableDataSource<Turma>(); // Começa com dados vazios
+  classesDataSource = new MatTableDataSource<Turma>(); 
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -54,7 +52,6 @@ export class ViewActivityComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Erro ao buscar detalhes da atividade', err);
         this.snackBar.open('Não foi possível carregar a atividade.', 'Fechar', { duration: 3000 });
         this.isLoading = false;
         this.router.navigate(['/list-activities']);
@@ -62,7 +59,6 @@ export class ViewActivityComponent implements OnInit {
     });
   }
 
-  // Função de deletar adicionada
   deleteActivity(): void {
     if (this.activity && confirm(`Tem certeza que deseja excluir a atividade "${this.activity.nome}"?`)) {
       this.isLoading = true;
@@ -72,7 +68,6 @@ export class ViewActivityComponent implements OnInit {
           this.router.navigate(['/list-activities']);
         },
         error: (err) => {
-          console.error('Erro ao excluir atividade', err);
           this.snackBar.open('Erro ao excluir a atividade. Verifique se você está logado.', 'Fechar', { duration: 3000 });
           this.isLoading = false;
         }

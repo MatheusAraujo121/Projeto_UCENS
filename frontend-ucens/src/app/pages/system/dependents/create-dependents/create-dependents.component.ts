@@ -3,8 +3,6 @@ import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms'
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
-
-// Serviços e Interfaces
 import { DependentService } from 'src/app/services/dependents/dependent.service';
 import { AssociateService } from 'src/app/services/associates/associate.service';
 import { Associate } from 'src/app/services/associates/associate.interface';
@@ -18,8 +16,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class CreateDependentsComponent implements OnInit {
   form!: FormGroup;
-
-  // Propriedades para o autocomplete de associados
   associates: Associate[] = [];
   associateFilterCtrl = new FormControl<string | Associate>('');
   filteredAssociates!: Observable<Associate[]>;
@@ -60,9 +56,6 @@ export class CreateDependentsComponent implements OnInit {
     this.loadAssociates();
   }
 
-  /**
-   * Carrega a lista de associados e configura o filtro do autocomplete.
-   */
   loadAssociates(): void {
     this.associateService.getAssociados().subscribe(associates => {
       this.associates = associates;
@@ -76,31 +69,19 @@ export class CreateDependentsComponent implements OnInit {
     });
   }
 
-  /**
-   * Lógica de filtro para o autocomplete de associados.
-   */
   private _filterAssociates(name: string): Associate[] {
     const filterValue = name.toLowerCase();
     return this.associates.filter(associate => associate.nome.toLowerCase().includes(filterValue));
   }
 
-  /**
-   * Função para exibir o nome do associado no campo após a seleção.
-   */
   displayAssociateName(associate: Associate): string {
     return associate && associate.nome ? associate.nome : '';
   }
 
-  /**
-   * Define o valor do formControl 'associadoId' quando uma opção é selecionada.
-   */
   onAssociateSelected(associate: Associate): void {
     this.form.get('associadoId')?.setValue(associate);
   }
 
-  /**
-   * Processa os dados do formulário e os envia para a API.
-   */
   efetuarCadastro(): void {
     if (this.form.invalid) {
       this.snackBar.open('Por favor, preencha todos os campos obrigatórios.', 'Fechar', { duration: 3000 });
@@ -134,13 +115,12 @@ export class CreateDependentsComponent implements OnInit {
 
     this.dependentService.createDependent(payload).subscribe({
       next: () => {
-                this.snackBar.open('Dependente cadastrado com sucesso!', 'Fechar', { duration: 3000 });
+        this.snackBar.open('Dependente cadastrado com sucesso!', 'Fechar', { duration: 3000 });
         this.router.navigate(['/list-dependents']);
       },
       error: (err) => {
-        console.error('Erro ao cadastrar dependente:', err);
-                this.snackBar.open('Ocorreu um erro ao tentar cadastrar o dependente. Verifique os dados e tente novamente.', 'Fechar', { duration: 3000 });
-              }
+        this.snackBar.open('Ocorreu um erro ao tentar cadastrar o dependente. Verifique os dados e tente novamente.', 'Fechar', { duration: 3000 });
+      }
     });
   }
 }

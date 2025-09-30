@@ -33,7 +33,6 @@ export class ListActivitiesComponent implements OnInit {
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('Erro ao buscar atividades', error);
         this.isLoading = false;
         this.snackBar.open('Ocorreu um erro ao carregar as atividades.', 'Fechar', { duration: 3000 });
       }

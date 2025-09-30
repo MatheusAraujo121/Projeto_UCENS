@@ -28,11 +28,10 @@ export class EditActivityComponent implements OnInit {
     private atividadeService: AtividadeService,
     private fileUploadService: FileUploadService,
     private router: Router,
-    private route: ActivatedRoute, // Para pegar o ID da URL
+    private route: ActivatedRoute, 
     private snackBar: MatSnackBar
   ) {
     this.form = this.fb.group({
-      // O 'id' é importante para a requisição de update
       id: [null],
       codigo: ['', Validators.required],
       nome: ['', Validators.required],
@@ -52,7 +51,6 @@ export class EditActivityComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Pega o ID da atividade a partir da URL
     const idParam = this.route.snapshot.paramMap.get('id');
     if (idParam) {
       this.activityId = +idParam;
@@ -64,13 +62,11 @@ export class EditActivityComponent implements OnInit {
     this.isLoading = true;
     this.atividadeService.getById(id).subscribe({
       next: (data: Atividade) => {
-        // Preenche o formulário com os dados da atividade
         this.form.patchValue(data);
-        this.previewUrl = data.imagemUrl || null; // Mostra a imagem atual
+        this.previewUrl = data.imagemUrl || null; 
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Erro ao buscar atividade', err);
         this.snackBar.open('Erro ao carregar dados da atividade.', 'Fechar', { duration: 3000 });
         this.router.navigate(['/list-activities']);
       }
@@ -96,20 +92,17 @@ export class EditActivityComponent implements OnInit {
     this.isLoading = true;
 
     if (this.selectedFile) {
-      // Se uma nova imagem foi selecionada, faz o upload primeiro
       this.fileUploadService.uploadImage(this.selectedFile, 'activities').subscribe({
         next: (response) => {
           this.form.patchValue({ imagemUrl: response.url });
           this.atualizarAtividade();
         },
         error: (err) => {
-          console.error('Erro no upload da nova imagem', err);
           this.snackBar.open('Ocorreu um erro ao enviar a nova imagem.', 'Fechar', { duration: 3000 });
           this.isLoading = false;
         }
       });
     } else {
-      // Se não há nova imagem, atualiza a atividade diretamente
       this.atualizarAtividade();
     }
   }
@@ -123,7 +116,6 @@ export class EditActivityComponent implements OnInit {
         this.router.navigate(['/list-activities']);
       },
       error: (error) => {
-        console.error('Erro ao atualizar atividade', error);
         this.snackBar.open('Erro ao atualizar. Verifique os dados e se você está logado.', 'Fechar', { duration: 5000 });
         this.isLoading = false;
       }

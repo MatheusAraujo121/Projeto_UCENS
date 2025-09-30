@@ -4,11 +4,7 @@
         <h2>Cadastrar Dependente</h2>
 
         <form [formGroup]="form" (ngSubmit)="efetuarCadastro()">
-
-            <!-- Seções do Formulário -->
             <div class="form-grid">
-
-                <!-- Vínculo -->
                 <p class="section-label full-width"><em>Vínculo</em></p>
                 <mat-form-field appearance="fill">
                     <mat-label>Associado Responsável</mat-label>
@@ -34,8 +30,6 @@
                     <mat-label>Grau de Parentesco</mat-label>
                     <input matInput formControlName="grauParentesco" placeholder="Ex: Filho(a), Cônjuge" />
                 </mat-form-field>
-
-                <!-- Dados do Dependente (Nome, Cognome, etc. estão no grupo da carteirinha) -->
                 <ng-container formGroupName="carteirinha">
                     <p class="section-label full-width"><em>Dados do Dependente e Carteirinha</em></p>
                     <mat-form-field appearance="fill">
@@ -60,7 +54,6 @@
                     </mat-form-field>
                 </ng-container>
 
-                <!-- Identificação Pessoal -->
                 <p class="section-label full-width"><em>Identificação Pessoal</em></p>
                 <mat-form-field appearance="fill">
                     <mat-label>Sexo</mat-label>
@@ -79,7 +72,6 @@
                     <input matInput formControlName="rg" mask="00.000.000-0" placeholder="00.000.000-0" />
                 </mat-form-field>
 
-                <!-- Dados Pessoais -->
                 <p class="section-label full-width"><em>Dados Adicionais</em></p>
                 <mat-form-field appearance="fill">
                     <mat-label>Data de Nascimento</mat-label>
@@ -108,7 +100,6 @@
                     <input matInput formControlName="profissao" />
                 </mat-form-field>
 
-                <!-- Extras -->
                 <p class="section-label full-width"><em>Informações Médicas</em></p>
                 <mat-form-field appearance="fill" class="full-width">
                     <mat-label>Exames</mat-label>
@@ -122,7 +113,6 @@
                 </mat-form-field>
             </div>
 
-            <!-- Botões -->
             <div class="btns-bottom">
                 <button mat-stroked-button class="btn-cancel" type="button" routerLink="/list-dependents">
                     <mat-icon>close</mat-icon> Cancelar

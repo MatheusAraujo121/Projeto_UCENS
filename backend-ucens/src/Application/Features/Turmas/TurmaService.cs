@@ -55,8 +55,6 @@ namespace Application.Features.Turmas
             };
             return await _turmaRepo.Add(turma);
         }
-
-        // --- NOVO MÉTODO PARA DELETAR TURMA ---
         public async Task Delete(int id)
         {
             var turma = await _turmaRepo.GetById(id);

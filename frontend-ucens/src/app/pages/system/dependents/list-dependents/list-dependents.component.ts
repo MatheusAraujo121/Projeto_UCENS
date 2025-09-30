@@ -8,6 +8,7 @@ import { DependentService } from 'src/app/services/dependents/dependent.service'
 import { Dependent } from 'src/app/services/dependents/dependent.interface';
 import { AssociateService } from 'src/app/services/associates/associate.service';
 import { Associate } from 'src/app/services/associates/associate.interface';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 interface DependenteDisplay {
   id: number;
@@ -22,13 +23,10 @@ interface DependenteDisplay {
   styleUrls: ['./list-dependents.component.scss']
 })
 export class ListDependentsComponent implements AfterViewInit, OnInit {
-  // Colunas da tabela atualizadas para exibir parentesco
   displayedColumns = ['nome', 'nomeAssociado', 'parentesco'];
   dataSource = new MatTableDataSource<DependenteDisplay>([]);
-
-  // Filtros mantidos (o filtro de situação agora filtrará o parentesco)
   filterNome = new FormControl('');
-  filterParentesco = new FormControl(''); // Renomeado para clareza
+  filterParentesco = new FormControl(''); 
   filterGlobal = new FormControl('');
 
   @ViewChild(MatSort) sort!: MatSort;
@@ -36,17 +34,14 @@ export class ListDependentsComponent implements AfterViewInit, OnInit {
 
   constructor(
     private dependentService: DependentService,
-    private associateService: AssociateService
+    private associateService: AssociateService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
     this.loadData();
   }
 
-  /**
-   * Busca os dados de dependentes e associados da API, combina as informações
-   * e preenche a tabela.
-   */
   loadData(): void {
     forkJoin({
       dependents: this.dependentService.getDependents(),
@@ -63,7 +58,6 @@ export class ListDependentsComponent implements AfterViewInit, OnInit {
             id: dep.id,
             nome: dep.nome,
             nomeAssociado: associado ? associado.nome : 'Não encontrado',
-            // Mapeia o grauParentesco do backend para a propriedade parentesco
             parentesco: dep.grauParentesco
           };
         });
@@ -71,8 +65,7 @@ export class ListDependentsComponent implements AfterViewInit, OnInit {
         this.dataSource.data = displayData;
       },
       error: (err) => {
-        console.error('Erro ao carregar dados:', err);
-        alert('Falha ao carregar a lista de dependentes.');
+        this.snackBar.open('Falha ao carregar a lista de dependentes.', 'Fechar', { duration: 3000 });
       }
     });
   }
@@ -80,12 +73,10 @@ export class ListDependentsComponent implements AfterViewInit, OnInit {
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
-
-    // Função de filtro adaptada para a propriedade 'parentesco'
     this.dataSource.filterPredicate = (data, filter) => {
       const { nome, nomeAssociado, parentesco } = data;
       const search = JSON.parse(filter) as any;
-      const safeParentesco = parentesco || ''; // Garante que não seja undefined
+      const safeParentesco = parentesco || ''; 
 
       const mNome = nome.toLowerCase().includes(search.nome) || nomeAssociado.toLowerCase().includes(search.nome);
       const mParentesco = search.parentesco ? safeParentesco.toLowerCase() === search.parentesco : true;
@@ -100,7 +91,6 @@ export class ListDependentsComponent implements AfterViewInit, OnInit {
     this.filterGlobal.valueChanges.subscribe(() => this.applyFilter());
   }
 
-  // Função de aplicar filtro adaptada para a propriedade 'parentesco'
   applyFilter() {
     const vals = {
       nome: (this.filterNome.value || '').toLowerCase(),

@@ -43,7 +43,6 @@ export class LoginComponent {
           duration: 3000
         });
         this.isLoading = false;
-        console.error('Erro de login', err);
       }
     });
   }

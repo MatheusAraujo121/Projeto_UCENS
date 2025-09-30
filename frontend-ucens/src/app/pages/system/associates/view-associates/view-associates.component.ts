@@ -11,8 +11,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class ViewAssociatesComponent implements OnInit {
 
-  // A lista de associados foi removida daqui.
-  associado: Associate | null = null; // Armazena o associado atual
+  associado: Associate | null = null;
   public associadoIds: number[] = [];
   public currentIndex = 0;
 
@@ -20,11 +19,10 @@ export class ViewAssociatesComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private snackBar: MatSnackBar,
-    private associateService: AssociateService  // Injeta o serviço
+    private associateService: AssociateService  
   ) { }
 
   ngOnInit() {
-    // Usamos switchMap para lidar com mudanças de rota sem múltiplas inscrições
     this.route.paramMap.subscribe(params => {
       const idParam = params.get('id');
       if (idParam) {
@@ -34,7 +32,6 @@ export class ViewAssociatesComponent implements OnInit {
     });
   }
 
-  // Carrega todos os IDs e depois busca os dados do associado atual
   private loadAllIdsAndSetCurrent(currentId: number): void {
     this.associateService.getAssociadoIds().subscribe(ids => {
       this.associadoIds = ids;
@@ -43,7 +40,6 @@ export class ViewAssociatesComponent implements OnInit {
     });
   }
 
-  // Busca os dados de um associado específico na API
   private loadAssociado(id: number): void {
     this.associateService.getAssociado(id).subscribe({
       next: (data) => {
@@ -55,7 +51,6 @@ export class ViewAssociatesComponent implements OnInit {
     });
   }
 
-  // Navega para o associado anterior na lista de IDs
   anterior() {
     if (this.currentIndex > 0) {
       this.currentIndex--;
@@ -64,7 +59,6 @@ export class ViewAssociatesComponent implements OnInit {
     }
   }
 
-  // Navega para o próximo associado na lista de IDs
   proximo() {
     if (this.currentIndex < this.associadoIds.length - 1) {
       this.currentIndex++;
@@ -73,7 +67,6 @@ export class ViewAssociatesComponent implements OnInit {
     }
   }
 
-  // Adiciona a função de exclusão
   excluir() {
     if (this.associado) {
       if (confirm(`Tem certeza que deseja excluir o associado ${this.associado.nome}?`)) {

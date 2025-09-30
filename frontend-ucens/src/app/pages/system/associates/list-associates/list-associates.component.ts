@@ -5,8 +5,6 @@ import { MatPaginator } from '@angular/material/paginator';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
-// Importando o serviço e a interface para comunicar com o backend
 import { AssociateService } from 'src/app/services/associates/associate.service';
 import { Associate } from 'src/app/services/associates/associate.interface';
 
@@ -17,10 +15,8 @@ import { Associate } from 'src/app/services/associates/associate.interface';
 })
 export class ListAssociatesComponent implements AfterViewInit, OnInit {
   displayedColumns = ['nome', 'cognome', 'situacao'];
-  // A tabela agora começa vazia e será preenchida com os dados do backend
   dataSource = new MatTableDataSource<Associate>([]);
 
-  // Seus filtros personalizados permanecem inalterados
   filterNome = new FormControl('');
   filterSituacao = new FormControl('');
   filterGlobal = new FormControl('');
@@ -28,18 +24,13 @@ export class ListAssociatesComponent implements AfterViewInit, OnInit {
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  // Injetando o serviço de associados para buscar os dados
   constructor(private associateService: AssociateService,
     private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
-    // Assim que o componente inicia, buscamos os associados
     this.loadAssociates();
   }
 
-  /**
-   * Busca os dados dos associados no backend e preenche a tabela.
-   */
   loadAssociates(): void {
     this.associateService.getAssociados().subscribe({
       next: (associados) => {
@@ -52,11 +43,8 @@ export class ListAssociatesComponent implements AfterViewInit, OnInit {
   }
 
   ngAfterViewInit() {
-    // A configuração do paginador e da ordenação continua a mesma
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
-
-    // Sua função de filtro personalizada continua exatamente a mesma
     this.dataSource.filterPredicate = (data, filter) => {
       const { nome, cognome, situacao } = data;
       const searchTerms = JSON.parse(filter) as any;
@@ -69,7 +57,6 @@ export class ListAssociatesComponent implements AfterViewInit, OnInit {
       return matchNome && matchSituacao && matchGlobal;
     };
 
-    // A lógica de aplicação dos filtros também permanece inalterada
     this.filterNome.valueChanges.subscribe(() => this.applyFilter());
     this.filterSituacao.valueChanges.subscribe(() => this.applyFilter());
     this.filterGlobal.valueChanges.subscribe(() => this.applyFilter());

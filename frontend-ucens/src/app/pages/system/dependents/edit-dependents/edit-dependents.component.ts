@@ -3,12 +3,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { forkJoin, Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
-
-// Serviços e Interfaces
 import { DependentService } from 'src/app/services/dependents/dependent.service';
 import { AssociateService } from 'src/app/services/associates/associate.service';
 import { Associate } from 'src/app/services/associates/associate.interface';
 import { Dependent } from 'src/app/services/dependents/dependent.interface';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-edit-dependents',
@@ -19,9 +18,7 @@ export class EditDependentsComponent implements OnInit {
   form!: FormGroup;
   id!: number;
   isLoading = true;
-  associateName: string = '';  
-
-  // Propriedades para o autocomplete de associados
+  associateName: string = '';
   associates: Associate[] = [];
   associateFilterCtrl = new FormControl<string | Associate>('');
   filteredAssociates!: Observable<Associate[]>;
@@ -31,13 +28,14 @@ export class EditDependentsComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private dependentService: DependentService,
-    private associateService: AssociateService
+    private associateService: AssociateService,
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
     if (!idParam) {
-      alert('ID do dependente não encontrado!');
+      this.snackBar.open('ID do dependente não encontrado!', 'Fechar', { duration: 3000 });
       this.router.navigate(['/list-dependents']);
       return;
     }
@@ -45,9 +43,6 @@ export class EditDependentsComponent implements OnInit {
     this.loadDataAndBuildForm();
   }
 
-  /**
-   * Carrega os dados do dependente e a lista de associados para preencher o formulário.
-   */
   loadDataAndBuildForm(): void {
     forkJoin({
       dependent: this.dependentService.getDependentById(this.id),
@@ -59,16 +54,12 @@ export class EditDependentsComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Erro ao carregar dados para edição:', err);
-        alert('Não foi possível carregar os dados do dependente.');
+        this.snackBar.open('Não foi possível carregar os dados do dependente.', 'Fechar', { duration: 3000 });
         this.router.navigate(['/list-dependents']);
       }
     });
   }
 
-  /**
-   * Constrói o formulário reativo e o preenche com os dados do dependente.
-   */
   private buildForm(dep: Dependent): void {
     const selectedAssociate = this.associates.find(a => a.id === dep.associadoId);
     this.associateName = selectedAssociate ? selectedAssociate.nome : 'Nenhum associado vinculado';
@@ -106,11 +97,7 @@ export class EditDependentsComponent implements OnInit {
       })
     );
   }
-  
 
-  /**
-   * Formata uma data para o formato YYYY-MM-DD, compatível com input[type=date].
-   */
   private formatDate(date: any): string {
     if (!date) return '';
     try {
@@ -136,9 +123,6 @@ export class EditDependentsComponent implements OnInit {
     this.form.get('associadoId')?.setValue(associate);
   }
 
-  /**
-   * Coleta os dados do formulário, monta o payload e envia para a API para atualização.
-   */
   atualizar(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -172,12 +156,11 @@ export class EditDependentsComponent implements OnInit {
 
     this.dependentService.updateDependent(this.id, payload).subscribe({
       next: () => {
-        alert('Dependente atualizado com sucesso!');
+        this.snackBar.open('Dependente atualizado com sucesso!', 'Fechar', { duration: 3000 });
         this.router.navigate(['/list-dependents']);
       },
       error: (err) => {
-        console.error('Erro ao atualizar dependente:', err);
-        alert('Ocorreu um erro ao tentar atualizar o dependente.');
+        this.snackBar.open('Ocorreu um erro ao tentar atualizar o dependente.', 'Fechar', { duration: 3000 });
       }
     });
   }

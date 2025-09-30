@@ -73,7 +73,6 @@ export class CreateActivityComponent implements OnInit {
           this.cadastrarAtividade();
         },
         error: (err) => {
-          console.error('Erro no upload', err);
           this.snackBar.open('Ocorreu um erro ao enviar a imagem.', 'Fechar', { duration: 3000 });
           this.isLoading = false;
         }
@@ -91,7 +90,6 @@ export class CreateActivityComponent implements OnInit {
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('Erro ao cadastrar atividade', error);
         this.snackBar.open('Erro ao cadastrar. Verifique os dados e se você está logado.', 'Fechar', { duration: 5000 });
         this.isLoading = false;
       }
