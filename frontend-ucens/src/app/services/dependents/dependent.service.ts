@@ -39,5 +39,13 @@ export class DependentService {
   updateDependent(id: number, dependentData: Partial<Dependent>): Observable<Dependent> {
     return this.http.put<Dependent>(`${this.apiUrl}/${id}`, dependentData);
   }
+
+
+  /**
+   * Exclui um dependente pelo seu ID.
+   */
+  deleteDependent(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
 }
 

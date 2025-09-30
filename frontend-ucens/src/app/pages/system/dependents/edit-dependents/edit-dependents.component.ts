@@ -19,6 +19,7 @@ export class EditDependentsComponent implements OnInit {
   form!: FormGroup;
   id!: number;
   isLoading = true;
+  associateName: string = '';  
 
   // Propriedades para o autocomplete de associados
   associates: Associate[] = [];
@@ -70,23 +71,24 @@ export class EditDependentsComponent implements OnInit {
    */
   private buildForm(dep: Dependent): void {
     const selectedAssociate = this.associates.find(a => a.id === dep.associadoId);
+    this.associateName = selectedAssociate ? selectedAssociate.nome : 'Nenhum associado vinculado';
 
     this.form = this.fb.group({
       associadoId: [selectedAssociate, Validators.required],
-      situacao: [dep.situacao, Validators.required],
+      situacao: [dep.situacao],
       grauParentesco: [dep.grauParentesco, Validators.required],
       exames: [dep.exames],
       atividadesProibidas: [dep.atividadesProibidas],
       carteirinha: this.fb.group({
         nome: [dep.nome, Validators.required],
-        cognome: [dep.cognome, Validators.required],
+        cognome: [dep.cognome],
         numero: [dep.numeroCarteirinha],
         categoria: [dep.categoria],
         validade: [this.formatDate(dep.validadeCarteirinha)],
       }),
       sexo: [dep.sexo, Validators.required],
-      cpf: [dep.cpf, [Validators.minLength(14)]],
-      rg: [dep.rg, [Validators.minLength(12)]],
+      cpf: [dep.cpf, [Validators.minLength(11)]],
+      rg: [dep.rg, [Validators.minLength(9)]],
       dataNascimento: [this.formatDate(dep.dataNascimento), Validators.required],
       localNascimento: [dep.localNascimento],
       nacionalidade: [dep.nacionalidade],
@@ -104,6 +106,7 @@ export class EditDependentsComponent implements OnInit {
       })
     );
   }
+  
 
   /**
    * Formata uma data para o formato YYYY-MM-DD, compatível com input[type=date].
