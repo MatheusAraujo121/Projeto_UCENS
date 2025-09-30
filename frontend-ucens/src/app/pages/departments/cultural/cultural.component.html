@@ -11,8 +11,8 @@
         </div>
 
         <div class="frame-wrap">
-            <div class="frame blue-frame">
-                <div class="cards-grid">
+            <div *ngIf="!isLoading" class="frame blue-frame">
+                <div *ngIf="activities.length > 0; else noActivities" class="cards-grid">
                     <article class="activity-card" *ngFor="let a of activities">
                         <div class="card-media">
                             <img [src]="a.image" [alt]="a.title" />
@@ -20,17 +20,23 @@
 
                         <div class="card-body">
                             <h3 class="card-title">{{ a.title }}</h3>
-                            <p class="card-short">{{ a.short }}</p>
+                            <p class="card-short">{{ a.short | slice:0:100 }}{{ (a.short && a.short.length > 100) ? '...' : '' }}</p>
 
                             <div class="card-actions">
                                 <button mat-stroked-button class="btn-know"
-                                    [routerLink]="a.link || ['/departments/view-cultural', a.id]">
+                                    [routerLink]="['/departments/view-cultural', a.id]">
                                     Saiba mais
                                 </button>
                             </div>
                         </div>
                     </article>
                 </div>
+                 <ng-template #noActivities>
+                    <p class="text-center p-4 text-white">Nenhuma atividade cultural encontrada.</p>
+                </ng-template>
+            </div>
+             <div *ngIf="isLoading" class="d-flex justify-content-center p-5">
+                <p>Carregando atividades...</p>
             </div>
         </div>
     </section>

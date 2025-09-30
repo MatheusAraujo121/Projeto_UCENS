@@ -9,7 +9,8 @@
                 <mat-form-field appearance="fill">
                     <mat-label>Associado Responsável</mat-label>
                     <input type="text" placeholder="Digite para pesquisar..." matInput
-                        [formControl]="associateFilterCtrl" [value]="associateName" formControlName="idAssociado" [matAutocomplete]="auto">
+                        [formControl]="associateFilterCtrl" [value]="associateName" formControlName="idAssociado"
+                        [matAutocomplete]="auto">
                     <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayAssociateName">
                         <mat-option *ngFor="let associate of filteredAssociates | async" [value]="associate"
                             (onSelectionChange)="form.get('associadoId')?.setValue(associate)">
@@ -51,9 +52,7 @@
                 </mat-form-field>
                 <mat-form-field appearance="fill">
                     <mat-label>Validade</mat-label>
-                    <input matInput [matDatepicker]="pickerInicio" formControlName="validade">
-                    <mat-datepicker-toggle matSuffix [for]="pickerInicio"></mat-datepicker-toggle>
-                    <mat-datepicker #pickerInicio></mat-datepicker>
+                    <input matInput formControlName="validade">
                 </mat-form-field>
             </div>
 
@@ -81,11 +80,11 @@
             <div class="form-grid">
                 <mat-form-field appearance="fill">
                     <mat-label>Data de Nascimento</mat-label>
-                    <input matInput [matDatepicker]="pickerInicio" formControlName="dataNascimento">
-                    <mat-datepicker-toggle matSuffix [for]="pickerInicio"></mat-datepicker-toggle>
-                    <mat-datepicker #pickerInicio></mat-datepicker>
+                    <input matInput [matDatepicker]="pickerNascimento" formControlName="dataNascimento">
+                    <mat-datepicker-toggle matSuffix [for]="pickerNascimento"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerNascimento></mat-datepicker>
                 </mat-form-field>
-                
+
                 <mat-form-field appearance="fill">
                     <mat-label>Local de Nascimento</mat-label>
                     <input matInput formControlName="localNascimento" />

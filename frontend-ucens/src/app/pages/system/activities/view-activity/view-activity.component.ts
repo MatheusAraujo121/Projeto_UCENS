@@ -1,12 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AtividadeService } from 'src/app/services/activities/activity.service';
-import { Atividade } from 'src/app/services/activities/activity.interface';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { Turma } from 'src/app/services/classes/class.interface'; 
+
+import { AtividadeService } from 'src/app/services/activities/activity.service';
+import { Atividade } from 'src/app/services/activities/activity.interface';
+import { Turma } from 'src/app/services/classes/class.interface';
+import { TurmaService } from 'src/app/services/classes/turma.service';
 
 @Component({
   selector: 'app-view-activity',
@@ -17,8 +19,8 @@ export class ViewActivityComponent implements OnInit {
 
   activity: Atividade | null = null;
   isLoading = true;
-  displayedColumns: string[] = ['id', 'nome', 'professor', 'dia', 'horario', 'alunos'];
-  classesDataSource = new MatTableDataSource<Turma>(); 
+  displayedColumns: string[] = ['nome', 'professor', 'diasHorarios', 'vagas'];
+  classesDataSource = new MatTableDataSource<Turma>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -26,6 +28,7 @@ export class ViewActivityComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private atividadeService: AtividadeService,
+    private turmaService: TurmaService,
     private snackBar: MatSnackBar,
     private sanitizer: DomSanitizer
   ) { }
@@ -35,6 +38,7 @@ export class ViewActivityComponent implements OnInit {
     if (idParam) {
       const id = +idParam;
       this.loadActivityDetails(id);
+      this.loadTurmas(id);
     } else {
       this.snackBar.open('ID da atividade não fornecido.', 'Fechar', { duration: 3000 });
       this.router.navigate(['/list-activities']);
@@ -46,9 +50,6 @@ export class ViewActivityComponent implements OnInit {
     this.atividadeService.getById(id).subscribe({
       next: (data) => {
         this.activity = data;
-        // Futuramente, você preencheria a tabela de turmas aqui.
-        // this.classesDataSource.data = data.turmas;
-        // this.classesDataSource.paginator = this.paginator;
         this.isLoading = false;
       },
       error: (err) => {
@@ -57,6 +58,23 @@ export class ViewActivityComponent implements OnInit {
         this.router.navigate(['/list-activities']);
       }
     });
+  }
+
+  loadTurmas(activityId: number): void {
+    this.turmaService.getTurmasByActivityId(activityId).subscribe({
+      next: (turmas) => {
+        this.classesDataSource.data = turmas;
+        this.classesDataSource.paginator = this.paginator;
+      },
+      error: (err) => {
+        console.error("Erro ao carregar turmas:", err);
+        this.snackBar.open('Não foi possível carregar as turmas.', 'Fechar', { duration: 3000 });
+      }
+    });
+  }
+
+  viewTurma(turma: Turma): void {
+    this.router.navigate(['/view-class', turma.id]);
   }
 
   deleteActivity(): void {
@@ -68,7 +86,7 @@ export class ViewActivityComponent implements OnInit {
           this.router.navigate(['/list-activities']);
         },
         error: (err) => {
-          this.snackBar.open('Erro ao excluir a atividade. Verifique se você está logado.', 'Fechar', { duration: 3000 });
+          this.snackBar.open('Erro ao excluir a atividade.', 'Fechar', { duration: 3000 });
           this.isLoading = false;
         }
       });

@@ -7,14 +7,14 @@ export interface AlunoMatriculado {
 export interface Turma {
   id: number;
   nome: string;
-  professor?: string;
-  diasHorarios?: string;
+  professor: string;
+  diasHorarios: string;
   vagas: number;
   atividadeId: number;
   alunosMatriculados: AlunoMatriculado[];
 }
 
-export interface Matricula {
+export interface MatriculaDTO {
   turmaId: number;
   alunoId: number;
 }

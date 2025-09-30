@@ -8,5 +8,6 @@ namespace Application.Common.Interfaces
     {
         Task<Turma?> GetByIdWithMatriculados(int turmaId);
         Task<List<Turma>> GetAllWithMatriculados();
+        Task<List<Turma>> GetByAtividadeId(int atividadeId); 
     }
 }

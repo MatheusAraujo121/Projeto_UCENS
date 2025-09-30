@@ -1,0 +1,121 @@
+<main class="view-class-page">
+  <button mat-stroked-button color="warn" class="btn-voltar" (click)="goBack()">
+    <mat-icon>arrow_back</mat-icon>
+    <span>Voltar</span>
+  </button>
+
+  <div class="class-detail-container" *ngIf="!isLoading && turma">
+    <img src="assets/carp.jpg" class="bg-carpa" alt="carpa" />
+    <div class="class-header">
+      <h2>{{ turma.nome || 'Nome da Turma' }}</h2>
+    </div>
+
+    <div class="content-section">
+      <div class="class-info-edit card">
+        <h3>Detalhes da Turma</h3>
+        <div class="info-grid">
+          <p><strong>Professor:</strong> {{ turma.professor || 'N/A' }}</p>
+          <p><strong>Vagas:</strong> {{ turma.alunosMatriculados.length || 0 }} / {{ turma.vagas }}</p>
+          <p><strong>Dias da Semana:</strong> {{ diasDaSemana }}</p>
+          <p><strong>Horário:</strong> {{ horario }}</p>
+        </div>
+        <div class="action-buttons">
+          <button mat-stroked-button class="btn-edit" (click)="editTurma()">
+            <mat-icon>edit</mat-icon>
+            <span>Editar</span>
+          </button>
+          <button mat-stroked-button color="warn" class="btn-delete" (click)="deleteTurma()">
+            <mat-icon>delete_outline</mat-icon>
+            <span>Excluir</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="students-list-section card">
+        <div class="students-header">
+          <h3>Alunos Matriculados</h3>
+          <div class="matricula-buttons">
+            <button mat-stroked-button class="btn-new-associado" (click)="openAssociadoModal()">
+              <mat-icon>add</mat-icon>
+              <span>Matricular Associado</span>
+            </button>
+            <button mat-stroked-button class="btn-new-dependente" (click)="openDependenteModal()">
+              <mat-icon>add</mat-icon>
+              <span>Matricular Dependente</span>
+            </button>
+          </div>
+        </div>
+        <div class="table-container">
+          <table mat-table [dataSource]="alunosDataSource" class="mat-elevation-z8">
+            <ng-container matColumnDef="nome">
+              <th mat-header-cell *matHeaderCellDef> Nome do Aluno </th>
+              <td mat-cell *matCellDef="let aluno"> {{aluno.nome}} </td>
+            </ng-container>
+            <ng-container matColumnDef="tipo">
+              <th mat-header-cell *matHeaderCellDef> Tipo </th>
+              <td mat-cell *matCellDef="let aluno"> {{aluno.tipo}} </td>
+            </ng-container>
+            <ng-container matColumnDef="acoes">
+              <th mat-header-cell *matHeaderCellDef> Ações </th>
+              <td mat-cell *matCellDef="let aluno">
+                <button mat-icon-button color="warn" (click)="desmatricularAluno(aluno)" title="Desmatricular Aluno">
+                  <mat-icon>person_remove</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            <tr class="mat-row" *matNoDataRowDef>
+              <td class="mat-cell" [attr.colspan]="displayedColumns.length">Nenhum aluno matriculado nesta turma.</td>
+            </tr>
+          </table>
+          <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="modal-overlay" *ngIf="showAssociadoModal" (click)="showAssociadoModal = false">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Matricular Associado</h2>
+      <button mat-icon-button (click)="showAssociadoModal = false"><mat-icon>close</mat-icon></button>
+    </div>
+    <div class="modal-body">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Buscar associado por nome...</mat-label>
+        <input matInput [(ngModel)]="searchTerm" (keyup)="filterAssociados()">
+      </mat-form-field>
+      <div class="aluno-list">
+        <div *ngFor="let associado of filteredAssociados" class="aluno-item">
+          <span>{{ associado.nome }}</span>
+          <button mat-flat-button color="primary" (click)="matricular(associado.id, 'Associado')">Matricular</button>
+        </div>
+        <p *ngIf="filteredAssociados.length === 0">Nenhum associado encontrado.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="showDependenteModal" (click)="showDependenteModal = false">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Matricular Dependente</h2>
+      <button mat-icon-button (click)="showDependenteModal = false"><mat-icon>close</mat-icon></button>
+    </div>
+    <div class="modal-body">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Buscar dependente por nome...</mat-label>
+        <input matInput [(ngModel)]="searchTerm" (keyup)="filterDependentes()">
+      </mat-form-field>
+      <div class="aluno-list">
+        <div *ngFor="let dependente of filteredDependentes" class="aluno-item">
+          <span>{{ dependente.nome }}</span>
+          <button mat-flat-button color="primary" (click)="matricular(dependente.id, 'Dependente')">Matricular</button>
+        </div>
+        <p *ngIf="filteredDependentes.length === 0">Nenhum dependente encontrado.</p>
+      </div>
+    </div>
+  </div>
+</div>

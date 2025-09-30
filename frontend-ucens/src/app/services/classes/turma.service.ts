@@ -1,51 +1,53 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Turma, Matricula } from './class.interface';
+import { Turma, MatriculaDTO } from './class.interface';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TurmaService {
+  private apiUrl = `api/turma`;
 
-  private apiUrl = '/api/Turma';
+  constructor(private http: HttpClient) {}
 
-  constructor(private http: HttpClient) { }
-
-  getAll(): Observable<Turma[]> {
+  getTurmas(): Observable<Turma[]> {
     return this.http.get<Turma[]>(this.apiUrl);
   }
 
-  getById(id: number): Observable<Turma> {
+  getTurmaById(id: number): Observable<Turma> {
     return this.http.get<Turma>(`${this.apiUrl}/${id}`);
   }
 
-  create(turma: Omit<Turma, 'id' | 'alunosMatriculados'>): Observable<Turma> {
+  getTurmasByActivityId(activityId: number): Observable<Turma[]> {
+    return this.http.get<Turma[]>(`${this.apiUrl}/por-atividade/${activityId}`);
+  }
+
+  createTurma(turma: Omit<Turma, 'id' | 'alunosMatriculados'>): Observable<Turma> {
     return this.http.post<Turma>(this.apiUrl, turma);
   }
 
-  delete(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}`);
-  }
-  
-  // Adicione um método de update se precisar no futuro
-  // update(id: number, turma: Turma): Observable<Turma> {
-  //   return this.http.put<Turma>(`${this.apiUrl}/${id}`, turma);
-  // }
-
-  matricularAssociado(matricula: Matricula): Observable<any> {
-    return this.http.post(`${this.apiUrl}/matricular-associado`, matricula);
+  updateTurma(id: number, turma: Turma): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/${id}`, turma);
   }
 
-  desmatricularAssociado(matricula: Matricula): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/desmatricular-associado`, { body: matricula });
+  deleteTurma(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  matricularDependente(matricula: Matricula): Observable<any> {
-    return this.http.post(`${this.apiUrl}/matricular-dependente`, matricula);
+  matricularAssociado(matricula: MatriculaDTO): Observable<any> {
+    return this.http.post(`${this.apiUrl}/matricular-associado`, matricula, { responseType: 'text' });
   }
 
-  desmatricularDependente(matricula: Matricula): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/desmatricular-dependente`, { body: matricula });
+  matricularDependente(matricula: MatriculaDTO): Observable<any> {
+    return this.http.post(`${this.apiUrl}/matricular-dependente`, matricula, { responseType: 'text' });
+  }
+
+  desmatricularAssociado(matricula: MatriculaDTO): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/desmatricular-associado`, { body: matricula, responseType: 'text' });
+  }
+
+  desmatricularDependente(matricula: MatriculaDTO): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/desmatricular-dependente`, { body: matricula, responseType: 'text' });
   }
 }

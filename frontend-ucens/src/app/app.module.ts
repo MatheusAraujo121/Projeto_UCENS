@@ -4,7 +4,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './pages/home/home.component';
-
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 
@@ -33,7 +32,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { MatDividerModule } from '@angular/material/divider';
 
@@ -103,6 +102,12 @@ import { EventDetailComponent } from './pages/system/events/event-detail/event-d
 import { ViewEventComponent } from './pages/system/events/view-event/view-event.component';
 import { EventInfoComponent } from './pages/events/event-info/event-info.component';
 
+//Turmas
+import { CreateClassComponent } from './pages/system/classes/create-class/create-class.component';
+import { EditClassComponent } from './pages/system/classes/edit-class/edit-class.component';
+import { ViewClassComponent } from './pages/system/classes/view-class/view-class.component';
+import { AuthGuard } from './guards/auth.guard';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -144,7 +149,10 @@ import { EventInfoComponent } from './pages/events/event-info/event-info.compone
     ViewSportyComponent,
     ViewCulturalComponent,
     ViewEventComponent,
-    EventInfoComponent
+    EventInfoComponent,
+    CreateClassComponent,
+    EditClassComponent,
+    ViewClassComponent
   ],
   imports: [
     BrowserModule,
@@ -168,6 +176,7 @@ import { EventInfoComponent } from './pages/events/event-info/event-info.compone
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
+    FormsModule,
     ReactiveFormsModule,
     MatAutocompleteModule,
     MatIconModule,
@@ -201,7 +210,8 @@ import { EventInfoComponent } from './pages/events/event-info/event-info.compone
         };
         return paginatorIntl;
       }
-    }
+    },
+    AuthGuard
   ],
 
   bootstrap: [AppComponent]

@@ -15,7 +15,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./edit-dependents.component.scss']
 })
 export class EditDependentsComponent implements OnInit {
-  form!: FormGroup;
+  form: FormGroup;
   id!: number;
   isLoading = true;
   associateName: string = '';
@@ -30,7 +30,31 @@ export class EditDependentsComponent implements OnInit {
     private dependentService: DependentService,
     private associateService: AssociateService,
     private snackBar: MatSnackBar
-  ) { }
+  ) {
+    this.form = this.fb.group({
+      associadoId: [null, Validators.required],
+      situacao: [''],
+      grauParentesco: ['', Validators.required],
+      exames: [''],
+      atividadesProibidas: [''],
+      carteirinha: this.fb.group({
+        nome: ['', Validators.required],
+        cognome: [''],
+        numero: [''],
+        categoria: [''],
+        validade: [''],
+      }),
+      sexo: ['', Validators.required],
+      cpf: ['', [Validators.minLength(11)]],
+      rg: ['', [Validators.minLength(9)]],
+      dataNascimento: ['', Validators.required],
+      localNascimento: [''],
+      nacionalidade: [''],
+      estadoCivil: [''],
+      grauInstrucao: [''],
+      profissao: [''],
+    });
+  }
 
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
@@ -40,17 +64,17 @@ export class EditDependentsComponent implements OnInit {
       return;
     }
     this.id = +idParam;
-    this.loadDataAndBuildForm();
+    this.loadDataAndPopulateForm();
   }
 
-  loadDataAndBuildForm(): void {
+  loadDataAndPopulateForm(): void {
     forkJoin({
       dependent: this.dependentService.getDependentById(this.id),
       associates: this.associateService.getAssociados()
     }).subscribe({
       next: ({ dependent, associates }) => {
         this.associates = associates;
-        this.buildForm(dependent);
+        this.populateForm(dependent); 
         this.isLoading = false;
       },
       error: (err) => {
@@ -60,32 +84,31 @@ export class EditDependentsComponent implements OnInit {
     });
   }
 
-  private buildForm(dep: Dependent): void {
+  private populateForm(dep: Dependent): void {
     const selectedAssociate = this.associates.find(a => a.id === dep.associadoId);
     this.associateName = selectedAssociate ? selectedAssociate.nome : 'Nenhum associado vinculado';
-
-    this.form = this.fb.group({
-      associadoId: [selectedAssociate, Validators.required],
-      situacao: [dep.situacao],
-      grauParentesco: [dep.grauParentesco, Validators.required],
-      exames: [dep.exames],
-      atividadesProibidas: [dep.atividadesProibidas],
-      carteirinha: this.fb.group({
-        nome: [dep.nome, Validators.required],
-        cognome: [dep.cognome],
-        numero: [dep.numeroCarteirinha],
-        categoria: [dep.categoria],
-        validade: [this.formatDate(dep.validadeCarteirinha)],
-      }),
-      sexo: [dep.sexo, Validators.required],
-      cpf: [dep.cpf, [Validators.minLength(11)]],
-      rg: [dep.rg, [Validators.minLength(9)]],
-      dataNascimento: [this.formatDate(dep.dataNascimento), Validators.required],
-      localNascimento: [dep.localNascimento],
-      nacionalidade: [dep.nacionalidade],
-      estadoCivil: [dep.estadoCivil],
-      grauInstrucao: [dep.grauInstrucao],
-      profissao: [dep.profissao],
+    this.form.patchValue({
+      associadoId: selectedAssociate,
+      situacao: dep.situacao,
+      grauParentesco: dep.grauParentesco,
+      exames: dep.exames,
+      atividadesProibidas: dep.atividadesProibidas,
+      carteirinha: {
+        nome: dep.nome,
+        cognome: dep.cognome,
+        numero: dep.numeroCarteirinha,
+        categoria: dep.categoria,
+        validade: this.formatDate(dep.validadeCarteirinha),
+      },
+      sexo: dep.sexo,
+      cpf: dep.cpf,
+      rg: dep.rg,
+      dataNascimento: this.formatDate(dep.dataNascimento),
+      localNascimento: dep.localNascimento,
+      nacionalidade: dep.nacionalidade,
+      estadoCivil: dep.estadoCivil,
+      grauInstrucao: dep.grauInstrucao,
+      profissao: dep.profissao,
     });
 
     this.associateFilterCtrl.setValue(selectedAssociate || '');
@@ -98,17 +121,16 @@ export class EditDependentsComponent implements OnInit {
     );
   }
 
-  private formatDate(date: any): string {
-    if (!date) return '';
-    try {
-      const d = new Date(date);
-      const month = ('0' + (d.getMonth() + 1)).slice(-2);
-      const day = ('0' + d.getDate()).slice(-2);
-      return `${d.getFullYear()}-${month}-${day}`;
-    } catch (e) {
-      return '';
-    }
+ private formatDate(date: any): string {
+  if (!date) return '';
+  if (typeof date === 'string' && date.length === 10) return date; // já está no formato correto
+  try {
+    const d = new Date(date);
+    return d.toISOString().slice(0, 10);
+  } catch (e) {
+    return '';
   }
+}
 
   private _filterAssociates(name: string): Associate[] {
     const filterValue = name.toLowerCase();
@@ -126,11 +148,13 @@ export class EditDependentsComponent implements OnInit {
   atualizar(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      this.snackBar.open('Por favor, preencha os campos obrigatórios.', 'Fechar', { duration: 3000 });
       return;
     }
 
     const formValue = this.form.getRawValue();
 
+    // Enviando as datas como strings 'YYYY-MM-DD' para evitar problemas de fuso horário
     const payload: Partial<Dependent> = {
       id: this.id,
       nome: formValue.carteirinha.nome,

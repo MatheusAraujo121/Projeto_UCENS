@@ -35,6 +35,10 @@ import { CountryHeadquarterIComponent } from './pages/headquarters/country-headq
 import { CountryHeadquarterIIComponent } from './pages/headquarters/country-headquarter-ii/country-headquarter-ii.component';
 import { ContactComponent } from './pages/contact/contact.component';
 import { ExPresidentsComponent } from './pages/institutional/ex-presidents/ex-presidents.component';
+import { CreateClassComponent } from './pages/system/classes/create-class/create-class.component';
+import { ViewClassComponent } from './pages/system/classes/view-class/view-class.component';
+import { EditClassComponent } from './pages/system/classes/edit-class/edit-class.component';
+import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
   //Rotas site expositivo
@@ -56,32 +60,37 @@ const routes: Routes = [
 
   //Rotas Admin
   { path: 'login', component: LoginComponent },
-  { path: 'dashboard', component: DashboardComponent },
+  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
 
   //Rotas Associados
-  { path: 'list-associates', component: ListAssociatesComponent },
-  { path: 'create-associates', component: CreateAssociatesComponent },
-  { path: 'view-associates/:id', component: ViewAssociatesComponent },
-  { path: 'edit-associates/:id', component: EditAssociatesComponent },
+  { path: 'list-associates', component: ListAssociatesComponent, canActivate: [AuthGuard] },
+  { path: 'create-associates', component: CreateAssociatesComponent, canActivate: [AuthGuard] },
+  { path: 'view-associates/:id', component: ViewAssociatesComponent, canActivate: [AuthGuard] },
+  { path: 'edit-associates/:id', component: EditAssociatesComponent, canActivate: [AuthGuard] },
 
   //Rotas Dependentes
-  { path: 'list-dependents', component: ListDependentsComponent },
-  { path: 'create-dependents', component: CreateDependentsComponent },
-  { path: 'view-dependents/:id', component: ViewDependentsComponent },
-  { path: 'edit-dependents/:id', component: EditDependentsComponent },
+  { path: 'list-dependents', component: ListDependentsComponent, canActivate: [AuthGuard] },
+  { path: 'create-dependents', component: CreateDependentsComponent, canActivate: [AuthGuard] },
+  { path: 'view-dependents/:id', component: ViewDependentsComponent, canActivate: [AuthGuard] },
+  { path: 'edit-dependents/:id', component: EditDependentsComponent, canActivate: [AuthGuard] },
 
   //Rotas Atividades
-  { path: 'list-activities', component: ListActivitiesComponent },
-  { path: 'create-activity', component: CreateActivityComponent },
-  { path: 'view-activity/:id', component: ViewActivityComponent },
-  { path: 'edit-activity/:id', component: EditActivityComponent },
+  { path: 'list-activities', component: ListActivitiesComponent, canActivate: [AuthGuard] },
+  { path: 'create-activity', component: CreateActivityComponent, canActivate: [AuthGuard] },
+  { path: 'view-activity/:id', component: ViewActivityComponent, canActivate: [AuthGuard] },
+  { path: 'edit-activity/:id', component: EditActivityComponent, canActivate: [AuthGuard] },
 
   //Rotas Eventos 
-  { path: 'list-events', component: ListEventsComponent }, 
-  { path: 'create-event', component: CreateEventComponent },
-  { path: 'view-event/:id', component: ViewEventComponent }, 
-  { path: 'edit-event/:id', component: EditEventComponent },
+  { path: 'list-events', component: ListEventsComponent, canActivate: [AuthGuard] }, 
+  { path: 'create-event', component: CreateEventComponent, canActivate: [AuthGuard] },
+  { path: 'view-event/:id', component: ViewEventComponent, canActivate: [AuthGuard] }, 
+  { path: 'edit-event/:id', component: EditEventComponent, canActivate: [AuthGuard] },
   { path: 'event-info/:id', component: EventInfoComponent },
+
+  //Rotas Turmas
+  { path: 'create-class/:id', component: CreateClassComponent, canActivate: [AuthGuard] },
+  { path: 'view-class/:id', component: ViewClassComponent, canActivate: [AuthGuard] },
+  { path: 'edit-class/:id', component: EditClassComponent, canActivate: [AuthGuard] }
 
 ];
 

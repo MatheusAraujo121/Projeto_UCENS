@@ -3,30 +3,35 @@
     <mat-icon>arrow_back</mat-icon>
     <span>Voltar</span>
   </button>
-  <div class="activity-detail-container">
+  <div *ngIf="isLoading" class="text-center p-5">
+    <p>Carregando detalhes da atividade...</p>
+  </div>
+  <div *ngIf="!isLoading && activity" class="activity-detail-container">
     <img src="assets/carp.jpg" class="bg-carpa" alt="carpa" />
     <div class="activity-header">
-      <h2>{{ activity?.nome || 'Nome da Atividade' }}</h2>
-      <span class="activity-code">Cód: {{ activity?.codigo || 'N/A' }}</span>
+      <h2>{{ activity.nome }}</h2>
+      <span class="activity-code">Cód: {{ activity.codigo }}</span>
     </div>
     <div class="top-section">
       <div class="image-placeholder card">
-        <img [src]="activity?.imageUrl || 'assets/default-activity.jpg'" alt="Imagem da Atividade"
+        <img [src]="activity.imagemUrl || 'assets/placeholder-image.jpg'" [alt]="activity.nome"
           class="activity-image">
       </div>
 
       <div class="info-group card">
         <div class="category-identification">
-          <p><strong>Categoria:</strong> {{ activity?.categoria || 'Não Informado' }}</p>
+          <p><strong>Categoria:</strong> {{ activity.categoria }}</p>
         </div>
 
         <div class="location-time-age">
-          <p><strong>Local:</strong> {{ activity?.local || 'N/A' }}</p>
-          <p><strong>Dias:</strong> {{ activity?.dias || 'N/A' }}</p>
+           <p><strong>Local:</strong> {{ activity.local.join(', ') || 'N/A' }}</p>
+          <p><strong>Dias:</strong> {{ activity.diasDisponiveis.join(', ') || 'N/A' }}</p>
+          <p><strong>Professor:</strong> {{ activity.professorResponsavel || 'N/A' }}</p>
+           <p><strong>Idade:</strong> {{ activity.idadeMinima || 'N/A' }} a {{ activity.idadeMaxima || 'N/A' }} anos</p>
           <br>
           <div class="activity-description">
             <h3>Detalhes da Atividade</h3>
-            <p>{{ activity?.descricao || 'Nenhuma descrição disponível.' }}</p>
+            <p>{{ activity.descricao || 'Nenhuma descrição disponível.' }}</p>
           </div>
         </div>
 

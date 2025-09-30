@@ -54,7 +54,7 @@
       <div class="classes-list-section card">
         <h3>
           Lista de Turmas
-          <button mat-stroked-button class="btn-new-class" routerLink="/create-turma/{{ activity.id }}">
+          <button mat-stroked-button class="btn-new-class" routerLink="/create-class/{{ activity.id }}">
             <mat-icon>add</mat-icon>
             <span>Nova Turma</span>
           </button>
@@ -73,21 +73,18 @@
               <th mat-header-cell *matHeaderCellDef> Professor </th>
               <td mat-cell *matCellDef="let turma"> {{turma.professor}} </td>
             </ng-container>
-            <ng-container matColumnDef="dia">
-              <th mat-header-cell *matHeaderCellDef> Dia </th>
-              <td mat-cell *matCellDef="let turma"> {{turma.dia}} </td>
-            </ng-container>
-            <ng-container matColumnDef="horario">
-              <th mat-header-cell *matHeaderCellDef> Horário </th>
-              <td mat-cell *matCellDef="let turma"> {{turma.horario}} </td>
-            </ng-container>
-            <ng-container matColumnDef="alunos">
-              <th mat-header-cell *matHeaderCellDef> Alunos </th>
-              <td mat-cell *matCellDef="let turma"> {{turma.alunos}} / {{turma.capacidade}} </td>
-            </ng-container>
+            <ng-container matColumnDef="diasHorarios">
+        <th mat-header-cell *matHeaderCellDef> Dias e Horários </th>
+        <td mat-cell *matCellDef="let turma"> {{turma.diasHorarios || 'N/A'}} </td>
+      </ng-container>
+            
+            <ng-container matColumnDef="vagas">
+        <th mat-header-cell *matHeaderCellDef> Vagas </th>
+        <td mat-cell *matCellDef="let turma"> {{turma.alunosMatriculados.length|| 0}} / {{turma.vagas}} </td>
+      </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            <tr mat-row (click)="viewTurma(row)" *matRowDef="let row; columns: displayedColumns;"></tr>
 
             <tr class="mat-row" *matNoDataRowDef>
               <td class="mat-cell" colspan="6">Nenhuma turma encontrada para esta atividade.</td>
