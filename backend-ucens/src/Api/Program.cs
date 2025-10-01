@@ -13,6 +13,7 @@ using Application.Features.Atividades;
 using Application.Features.Turmas;
 using Application.Features.Relatorios;
 using Application.Features.Contato;
+using Application.Features.Financeiro; 
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -47,6 +48,7 @@ builder.Services.AddScoped<AtividadeService>();
 builder.Services.AddScoped<TurmaService>();
 builder.Services.AddScoped<RelatorioService>();
 builder.Services.AddScoped<EmailService>();
+builder.Services.AddScoped<FinanceiroService>(); 
 
 builder.Services.AddControllers();
 

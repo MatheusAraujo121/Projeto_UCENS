@@ -27,7 +27,7 @@ export class EditAssociatesComponent implements OnInit {
     this.form = this.fb.group({
       nome: ['', Validators.required],
       cognome: [''],
-      cpf: ['', [Validators.minLength(11)]],
+      cpf: ['', [Validators.required, Validators.minLength(11)]],
       rg: ['', [Validators.minLength(9)]],
       dataNascimento: ['', Validators.required],
       sexo: ['', Validators.required],

@@ -16,6 +16,7 @@ namespace Infrastructure.Persistence
         public DbSet<Turma> Turmas { get; set; } = null!;
         public DbSet<MatriculaAssociado> MatriculasAssociados { get; set; } = null!;
         public DbSet<MatriculaDependente> MatriculasDependentes { get; set; } = null!;
+         public DbSet<Boleto> Boletos { get; set; } = null!;
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -144,6 +145,18 @@ namespace Infrastructure.Persistence
                 .HasOne(md => md.Turma)
                 .WithMany(t => t.MatriculasDependentes)
                 .HasForeignKey(md => md.TurmaId);
+
+            modelBuilder.Entity<Boleto>(entity =>
+            {
+                entity.HasKey(b => b.Id);
+                entity.Property(b => b.Valor).HasColumnType("decimal(18, 2)");
+                entity.Property(b => b.ValorPago).HasColumnType("decimal(18, 2)");
+                entity.Property(b => b.JurosMora).HasColumnType("decimal(18, 2)");
+                entity.Property(b => b.PercentualMulta).HasColumnType("decimal(18, 2)");
+                entity.HasOne(b => b.Associado)
+                      .WithMany()
+                      .HasForeignKey(b => b.AssociadoId);
+            });
         }
     }
 }
