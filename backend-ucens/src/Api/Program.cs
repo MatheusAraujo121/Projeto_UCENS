@@ -35,6 +35,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAssociadoRepository, AssociadoRepository>();
+builder.Services.AddScoped<IBoletoRepository, BoletoRepository>();
 builder.Services.AddScoped<IMatriculaAssociadoRepository, MatriculaAssociadoRepository>();
 builder.Services.AddScoped<IMatriculaDependenteRepository, MatriculaDependenteRepository>();
 builder.Services.AddScoped<ITurmaRepository, TurmaRepository>();

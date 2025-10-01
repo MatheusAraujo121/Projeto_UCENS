@@ -1,0 +1,32 @@
+<div class="container mt-4">
+  <h2>Gerar Boletos e Arquivo de Remessa (CNAB 400 - Sicredi)</h2>
+
+  <form [formGroup]="boletoForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label for="associadoIds" class="form-label">Associados</label>
+      <select multiple class="form-control" id="associadoIds" formControlName="associadoIds">
+        <option *ngFor="let associate of associates" [value]="associate.id">
+          {{ associate.nome }} ({{ associate.cpf }})
+        </option>
+      </select>
+      <div *ngIf="boletoForm.get('associadoIds')?.invalid && boletoForm.get('associadoIds')?.touched" class="text-danger">
+        Selecione pelo menos um associado.
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="valor" class="form-label">Valor do Boleto</label>
+      <input type="number" class="form-control" id="valor" formControlName="valor" placeholder="Ex: 150.00">
+    </div>
+
+    <div class="mb-3">
+      <label for="dataVencimento" class="form-label">Data de Vencimento</label>
+      <input type="date" class="form-control" id="dataVencimento" formControlName="dataVencimento">
+    </div>
+
+    <button type="submit" class="btn btn-primary" [disabled]="boletoForm.invalid || isLoading">
+      <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+      {{ isLoading ? 'Gerando...' : 'Gerar Remessa' }}
+    </button>
+  </form>
+</div>

@@ -1,0 +1,53 @@
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Dashboard Financeiro</h2>
+        <a routerLink="/generate-boleto" class="btn btn-success">
+            <i class="fas fa-plus-circle"></i> Gerar Novo Boleto
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Boletos Gerados</h5>
+                    <p class="card-text fs-4">150</p>
+                </div>
+            </div>
+        </div>
+        </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Filtros</h5>
+            </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Lista de Boletos</h5>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Associado</th>
+                        <th>Valor</th>
+                        <th>Vencimento</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Nome do Associado</td>
+                        <td>R$ 150,00</td>
+                        <td>10/10/2025</td>
+                        <td><span class="badge bg-warning text-dark">Pendente</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-info">Detalhes</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

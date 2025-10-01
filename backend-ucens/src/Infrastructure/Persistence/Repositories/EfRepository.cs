@@ -1,5 +1,5 @@
-using Microsoft.EntityFrameworkCore;
 using Application.Common.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -7,45 +7,52 @@ namespace Infrastructure.Persistence.Repositories
 {
     public class EfRepository<T> : IRepository<T> where T : class
     {
-        private readonly AppDbContext _context;
-        private readonly DbSet<T> _set;
+        protected readonly AppDbContext _dbContext;
 
-        public EfRepository(AppDbContext context)
+        public EfRepository(AppDbContext dbContext)
         {
-            _context = context;
-            _set = _context.Set<T>();
+            _dbContext = dbContext;
+        }
+
+        // --- MÉTODOS CORRIGIDOS PARA BATER COM A INTERFACE ---
+
+        public async Task<T?> GetById(int id)
+        {
+            return await _dbContext.Set<T>().FindAsync(id);
+        }
+
+        public async Task<IEnumerable<T>> GetAll()
+        {
+            return await _dbContext.Set<T>().ToListAsync();
         }
 
         public async Task<T> Add(T entity)
         {
-            _set.Add(entity);
-            await _context.SaveChangesAsync();
+            await _dbContext.Set<T>().AddAsync(entity);
+            await _dbContext.SaveChangesAsync();
+            return entity;
+        }
+
+        public async Task<T> Update(T entity)
+        {
+            _dbContext.Entry(entity).State = EntityState.Modified;
+            await _dbContext.SaveChangesAsync();
             return entity;
         }
 
         public async Task Delete(int id)
         {
-            var entity = await _set.FindAsync(id);
-            if (entity is null) return;
-            _set.Remove(entity);
-            await _context.SaveChangesAsync();
+            var entity = await GetById(id);
+            if (entity != null)
+            {
+                _dbContext.Set<T>().Remove(entity);
+                await _dbContext.SaveChangesAsync();
+            }
         }
 
-        public async Task<IEnumerable<T>> GetAll()
+        public async Task<int> SaveChangesAsync()
         {
-            return await _set.AsNoTracking().ToListAsync();
-        }
-
-        public async Task<T?> GetById(int id)
-        {
-            return await _set.FindAsync(id);
-        }
-
-        public async Task<T> Update(T entity)
-        {
-            _set.Update(entity);
-            await _context.SaveChangesAsync();
-            return entity;
+            return await _dbContext.SaveChangesAsync();
         }
     }
 }

@@ -1,9 +1,8 @@
-using Microsoft.EntityFrameworkCore;
-using Domain;
 using Application.Common.Interfaces;
-using System.Threading.Tasks;
+using Domain;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using Infrastructure.Persistence;
+using System.Threading.Tasks;
 
 namespace Infrastructure.Persistence.Repositories
 {
@@ -16,40 +15,50 @@ namespace Infrastructure.Persistence.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<User>> GetAll() =>
-            await _context.Users.ToListAsync();
-
-        public async Task<User?> GetById(int id) =>
-            await _context.Users.FindAsync(id);
+        // --- MÉTODOS CORRIGIDOS PARA CUMPRIR AS INTERFACES ---
 
         public async Task<User?> GetByEmail(string email)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            return await _context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Email == email);
         }
 
-
-        public async Task<User> Add(User user)
+        public async Task<User?> GetById(int id)
         {
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-            return user;
+            return await _context.Users.FindAsync(id);
         }
 
-        public async Task<User> Update(User user)
+        public async Task<IEnumerable<User>> GetAll()
         {
-            _context.Entry(user).State = EntityState.Modified;
+            return await _context.Users.AsNoTracking().ToListAsync();
+        }
+
+        public async Task<User> Add(User entity)
+        {
+            await _context.Users.AddAsync(entity);
             await _context.SaveChangesAsync();
-            return user;
+            return entity;
+        }
+
+        public async Task<User> Update(User entity)
+        {
+            _context.Users.Update(entity);
+            await _context.SaveChangesAsync();
+            return entity;
         }
 
         public async Task Delete(int id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = await GetById(id);
             if (user != null)
             {
                 _context.Users.Remove(user);
                 await _context.SaveChangesAsync();
             }
+        }
+
+        public async Task<int> SaveChangesAsync()
+        {
+            return await _context.SaveChangesAsync();
         }
     }
 }

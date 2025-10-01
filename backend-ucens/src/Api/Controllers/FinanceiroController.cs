@@ -29,14 +29,16 @@ namespace Api.Controllers
 
             try
             {
-                var conteudoArquivo = await _financeiroService.GerarArquivoRemessa(
+                var resultado = await _financeiroService.GerarArquivoRemessa(
                     request.AssociadoIds,
                     request.Valor,
                     request.DataVencimento
                 );
 
-                var bytesArquivo = Encoding.UTF8.GetBytes(conteudoArquivo);
-                var nomeArquivo = $"REMESSA_{DateTime.Now:yyyyMMdd_HHmmss}.txt";
+                var bytesArquivo = Encoding.UTF8.GetBytes(resultado.ConteudoArquivo);
+                
+                // --- LÓGICA DO NOME DO ARQUIVO CORRIGIDA ---
+                var nomeArquivo = resultado.NomeArquivo;
 
                 return File(bytesArquivo, "text/plain", nomeArquivo);
             }
@@ -49,7 +51,7 @@ namespace Api.Controllers
 
     public class GerarRemessaRequest
     {
-        public int[] AssociadoIds { get; set; }
+        public int[] AssociadoIds { get; set; } = [];
         public decimal Valor { get; set; }
         public DateTime DataVencimento { get; set; }
     }

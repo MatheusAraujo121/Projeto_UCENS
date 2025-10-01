@@ -1,54 +1,58 @@
-using Microsoft.EntityFrameworkCore;
 using Application.Common.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Infrastructure.Persistence;
 
 namespace Infrastructure.Persistence.Repositories
 {
     public class Repository<T> : IRepository<T> where T : class
     {
         private readonly AppDbContext _context;
-        private readonly DbSet<T> _dbSet;
 
         public Repository(AppDbContext context)
         {
             _context = context;
-            _dbSet = _context.Set<T>();
+        }
+
+        // --- MÉTODOS CORRIGIDOS PARA BATER COM A INTERFACE ---
+
+        public async Task<T?> GetById(int id)
+        {
+            return await _context.Set<T>().FindAsync(id);
         }
 
         public async Task<IEnumerable<T>> GetAll()
         {
-            return await _dbSet.ToListAsync();
-        }
-
-        public async Task<T?> GetById(int id)
-        {
-            return await _dbSet.FindAsync(id);
+            return await _context.Set<T>().ToListAsync();
         }
 
         public async Task<T> Add(T entity)
         {
-            await _dbSet.AddAsync(entity);
+            await _context.Set<T>().AddAsync(entity);
             await _context.SaveChangesAsync();
-            return entity; 
+            return entity;
         }
 
         public async Task<T> Update(T entity)
         {
-            _dbSet.Update(entity);
+            _context.Entry(entity).State = EntityState.Modified;
             await _context.SaveChangesAsync();
-            return entity; 
+            return entity;
         }
 
         public async Task Delete(int id)
         {
-            var entity = await _dbSet.FindAsync(id);
+            var entity = await GetById(id);
             if (entity != null)
             {
-                _dbSet.Remove(entity);
+                _context.Set<T>().Remove(entity);
                 await _context.SaveChangesAsync();
             }
+        }
+
+        public async Task<int> SaveChangesAsync()
+        {
+            return await _context.SaveChangesAsync();
         }
     }
 }
