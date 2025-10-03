@@ -23,6 +23,8 @@ public class Associado
     [MaxLength(100)]
     public string NomeMae { get; set; } = string.Empty;
     [MaxLength(100)]
+    public string Cep { get; set; } = string.Empty;
+    [MaxLength(100)]
     public string Endereco { get; set; } = string.Empty;
     [MaxLength(100)]
     public string Numero { get; set; } = string.Empty;

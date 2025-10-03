@@ -31,6 +31,7 @@ namespace Application.Features.Associados
                 EstadoCivil = a.EstadoCivil,
                 NomePai = a.NomePai,
                 NomeMae = a.NomeMae,
+                Cep = a.Cep,
                 Endereco = a.Endereco,
                 Numero = a.Numero,
                 Complemento = a.Complemento,
@@ -68,6 +69,7 @@ namespace Application.Features.Associados
                 EstadoCivil = a.EstadoCivil,
                 NomePai = a.NomePai,
                 NomeMae = a.NomeMae,
+                Cep = a.Cep,
                 Endereco = a.Endereco,
                 Numero = a.Numero,
                 Complemento = a.Complemento,
@@ -100,6 +102,7 @@ namespace Application.Features.Associados
                 EstadoCivil = dto.EstadoCivil,
                 NomePai = dto.NomePai,
                 NomeMae = dto.NomeMae,
+                Cep = dto.Cep,
                 Endereco = dto.Endereco,
                 Numero = dto.Numero,
                 Complemento = dto.Complemento,
@@ -132,6 +135,7 @@ namespace Application.Features.Associados
             associado.EstadoCivil = dto.EstadoCivil;
             associado.NomePai = dto.NomePai;
             associado.NomeMae = dto.NomeMae;
+            associado.Cep = dto.Cep;
             associado.Endereco = dto.Endereco;
             associado.Numero = dto.Numero;
             associado.Complemento = dto.Complemento;

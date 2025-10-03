@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Application.Features.Financeiro;
 using Microsoft.AspNetCore.Authorization;
+using System.Collections.Generic;
 
 namespace Api.Controllers
 {
@@ -20,24 +21,18 @@ namespace Api.Controllers
         }
 
         [HttpPost("gerar-remessa")]
-        public async Task<IActionResult> GerarRemessa([FromBody] GerarRemessaRequest request)
+        public async Task<IActionResult> GerarRemessa([FromBody] List<BoletoParaGeracaoDto> boletos)
         {
-            if (request.AssociadoIds == null || request.AssociadoIds.Length == 0)
-            {
-                return BadRequest("Selecione ao menos um associado.");
-            }
-
             try
             {
-                var resultado = await _financeiroService.GerarArquivoRemessa(
-                    request.AssociadoIds,
-                    request.Valor,
-                    request.DataVencimento
-                );
+                var resultado = await _financeiroService.GerarArquivoRemessa(boletos);
+
+                if (string.IsNullOrEmpty(resultado.ConteudoArquivo))
+                {
+                    return NoContent(); // Retorna 204 se nenhum boleto foi gerado
+                }
 
                 var bytesArquivo = Encoding.UTF8.GetBytes(resultado.ConteudoArquivo);
-                
-                // --- LÓGICA DO NOME DO ARQUIVO CORRIGIDA ---
                 var nomeArquivo = resultado.NomeArquivo;
 
                 return File(bytesArquivo, "text/plain", nomeArquivo);
@@ -47,12 +42,5 @@ namespace Api.Controllers
                 return StatusCode(500, $"Erro ao gerar arquivo de remessa: {ex.Message}");
             }
         }
-    }
-
-    public class GerarRemessaRequest
-    {
-        public int[] AssociadoIds { get; set; } = [];
-        public decimal Valor { get; set; }
-        public DateTime DataVencimento { get; set; }
     }
 }

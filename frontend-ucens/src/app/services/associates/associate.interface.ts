@@ -8,6 +8,7 @@ export interface Associate {
   email: string;
   nomePai: string;
   nomeMae: string;
+  cep: string;
   dataNascimento: string;
   sexo: string;
   estadoCivil: string;

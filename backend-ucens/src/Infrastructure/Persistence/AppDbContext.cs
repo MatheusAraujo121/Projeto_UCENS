@@ -68,6 +68,9 @@ namespace Infrastructure.Persistence
                    entity.Property(a => a.NomeMae)
                        .HasMaxLength(100);
 
+                   entity.Property(a => a.Cep)
+                       .HasMaxLength(100);
+
                    entity.Property(a => a.Endereco)
                        .HasMaxLength(100);
 

@@ -41,7 +41,11 @@ namespace Infrastructure.Persistence.Repositories
                                  .ToListAsync();
         }
 
-        // Os métodos GetAll(), GetById(), Add(), Update(), Delete() e SaveChangesAsync()
-        // foram removidos porque já são herdados de EfRepository<Associado>.
+        public async Task<IEnumerable<Associado>> GetAssociadosAtivosAsync()
+        {
+            return await _dbContext.Associados
+                .Where(a => a.Situacao == "Regular")
+                .ToListAsync();
+        }
     }
 }

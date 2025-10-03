@@ -38,6 +38,9 @@ namespace Application.Features.Associados
         [JsonPropertyName("nomeMae")]
         public string NomeMae { get; set; } = string.Empty;
 
+        [JsonPropertyName("cep")]
+        public string Cep { get; set; } = string.Empty;
+
         [JsonPropertyName("endereco")]
         public string Endereco { get; set; } = string.Empty;
 

@@ -31,6 +31,7 @@ export class CreateAssociatesComponent implements OnInit {
       estadoCivil: ['', Validators.required],
       nomePai: [''],
       nomeMae: [''],
+      cep: ['', Validators.required],
       endereco: ['', Validators.required],
       numero: ['', Validators.required],
       complemento: [''],

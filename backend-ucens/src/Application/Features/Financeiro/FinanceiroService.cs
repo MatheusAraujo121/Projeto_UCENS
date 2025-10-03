@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Application.Common.Interfaces;
 using Domain;
-using System.Globalization; // Necessário para formatação de valores
 using BoletoEntidade = Domain.Boleto;
 
 namespace Application.Features.Financeiro
@@ -19,6 +20,7 @@ namespace Application.Features.Financeiro
     {
         private readonly IAssociadoRepository _associadoRepo;
         private readonly IBoletoRepository _boletoRepo;
+        private const decimal VALOR_PADRAO_MENSALIDADE = 90.00M; // Defina o valor padrão aqui
 
         public FinanceiroService(IAssociadoRepository associadoRepo, IBoletoRepository boletoRepo)
         {
@@ -26,12 +28,24 @@ namespace Application.Features.Financeiro
             _boletoRepo = boletoRepo;
         }
 
-        public async Task<ResultadoRemessa> GerarArquivoRemessa(int[] associadoIds, decimal valor, DateTime dataVencimento)
+        public async Task<ResultadoRemessa> GerarArquivoRemessa(List<BoletoParaGeracaoDto> boletosParaGerar)
         {
+            // Se a lista de boletos estiver vazia, busca todos os associados ativos
+            if (boletosParaGerar == null || !boletosParaGerar.Any())
+            {
+                var todosAssociadosAtivos = await _associadoRepo.GetAssociadosAtivosAsync(); 
+                boletosParaGerar = todosAssociadosAtivos.Select(a => new BoletoParaGeracaoDto { AssociadoId = a.Id }).ToList();
+            }
+
+            if (!boletosParaGerar.Any())
+            {
+                return new ResultadoRemessa(); // Retorna vazio se não houver associados para gerar boleto
+            }
+            
+            var associadoIds = boletosParaGerar.Select(b => b.AssociadoId).Distinct().ToArray();
             var associados = await _associadoRepo.GetAssociadosByIds(associadoIds);
             var boletos = new List<BoletoEntidade>();
 
-            // Usando os dados do seu arquivo de exemplo
             var cedente = new
             {
                 Codigo = "57118",
@@ -43,99 +57,140 @@ namespace Application.Features.Financeiro
             var sb = new StringBuilder();
             var dataGeracao = DateTime.Now;
 
-            // --- HEADER IDÊNTICO AO EXEMPLO ---
-            sb.Append("01REMESSA01COBRANCA       "); // 0-26
-            sb.Append(cedente.Codigo); // 27-31
-            sb.Append(cedente.CPFCNPJ); // 32-45
-            sb.Append("".PadRight(31)); // 46-76 (Filler, sem nome do cedente)
-            sb.Append("748SICREDI       "); // 77-94
-            sb.Append(dataGeracao.ToString("yyyyMMdd")); // 95-102
-            sb.Append("".PadRight(8)); // 103-110
-            sb.Append("1".PadLeft(7, '0')); // 111-117 (Número da remessa)
-            sb.Append("".PadRight(273)); // 118-390
-            sb.Append("2.00"); // 391-394
-            sb.Append("1".PadLeft(6, '0')); // 395-400
+            // --- HEADER (REGISTRO TIPO 0) ---
+            sb.Append("01REMESSA01COBRANCA       ");
+            sb.Append(cedente.Codigo.PadLeft(5, '0'));
+            sb.Append(cedente.CPFCNPJ.PadLeft(14, '0'));
+            sb.Append(new string(' ', 31));
+            sb.Append("748SICREDI".PadRight(15));
+            sb.Append(new string(' ', 3));
+            sb.Append(dataGeracao.ToString("yyyyMMdd"));
+            sb.Append(new string(' ', 8));
+            sb.Append("1".PadLeft(7, '0'));
+            sb.Append(new string(' ', 273));
+            sb.Append("2.00");
+            sb.Append("000001");
             sb.AppendLine();
 
             int sequencialRegistro = 2;
-            foreach (var associado in associados)
+            foreach (var boletoInfo in boletosParaGerar)
             {
-                var sequencialNossoNumero = sequencialRegistro - 1;
-                var nossoNumeroCompleto = GerarNossoNumero(cedente.Agencia, cedente.Posto, cedente.Codigo, sequencialNossoNumero);
+                var associado = associados.FirstOrDefault(a => a.Id == boletoInfo.AssociadoId);
+                if (associado == null)
+                {
+                    continue;
+                }
+
+                // Define o valor do boleto: usa o valor específico se fornecido, senão, usa o padrão.
+                var valorBoleto = boletoInfo.Valor.HasValue && boletoInfo.Valor > 0 ? boletoInfo.Valor.Value : VALOR_PADRAO_MENSALIDADE;
+
+                var nossoNumeroSequencial = (sequencialRegistro / 2);
+                var nossoNumeroCompleto = GerarNossoNumero(cedente.Agencia, cedente.Posto, cedente.Codigo, nossoNumeroSequencial);
 
                 var boleto = new BoletoEntidade
                 {
                     AssociadoId = associado.Id,
-                    Valor = valor,
-                    DataVencimento = dataVencimento,
+                    Valor = valorBoleto,
+                    DataVencimento = new DateTime(dataGeracao.Year, dataGeracao.Month, DateTime.DaysInMonth(dataGeracao.Year, dataGeracao.Month)), // Vencimento no último dia do mês corrente
                     DataEmissao = dataGeracao,
                     NossoNumero = nossoNumeroCompleto,
                     Status = Domain.BoletoStatus.Gerado,
-                    JurosMora = 0.20M, // Valor por dia
+                    JurosMora = 0.20M,
                     PercentualMulta = 2.00M
                 };
                 boletos.Add(boleto);
+                
+                // --- MENSAGEM PADRÃO E DINÂMICA ---
+                var valorFormatado = boleto.Valor.ToString("N2", new CultureInfo("pt-BR"));
 
-                // --- REGISTRO DETALHE (TIPO 1) IDÊNTICO AO EXEMPLO ---
-                sb.Append("1"); // 1
-                sb.Append("AAA            AAA                            "); // 2-47
-                sb.Append(boleto.NossoNumero); // 48-56
-                sb.Append("      "); // 57-62
-                sb.Append(boleto.DataEmissao.ToString("ddMMyy")); // 63-68
-                sb.Append(" N B  00    "); // 69-82
-                sb.Append("0".PadLeft(13, '0')); // 83-95 (Valor por dia de antecipação)
-                sb.Append("".PadLeft(4, '0')); // 96-99 (Multa)
-                sb.Append("".PadRight(9)); // 100-108
-                sb.Append("01"); // 109-110 (Instrução)
-                sb.Append(boleto.Id.ToString().PadRight(10)); // 111-120 (Seu Número)
-                sb.Append(boleto.DataVencimento.ToString("ddMMyy")); // 121-126
-                sb.Append(boleto.Valor.ToString("F2", CultureInfo.InvariantCulture).Replace(".", "").PadLeft(13, '0')); // 127-139
-                sb.Append("".PadRight(3)); // 140-142
-                sb.Append("".PadLeft(5,'0')); // 143-147
-                sb.Append(" J"); // 148-149 (Espécie)
-                sb.Append("N"); // 150 (Aceite)
-                sb.Append(boleto.DataEmissao.ToString("ddMMyy")); // 151-156
-                sb.Append("0000"); // 157-160 (Instrução protesto)
-                var jurosFormatado = boleto.JurosMora.HasValue ? boleto.JurosMora.Value.ToString("F2", CultureInfo.InvariantCulture).Replace(".", "").PadLeft(13, '0') : "".PadLeft(13, '0');
-                sb.Append(jurosFormatado); // 161-173 (Juros)
-                sb.Append("000000"); // 174-179
-                sb.Append("".PadLeft(13, '0')); // 180-192 (Desconto)
-                sb.Append("0000"); // 193-196
-                sb.Append("".PadLeft(9, '0')); // 197-205
-                sb.Append("".PadLeft(13, '0')); // 206-218 (Abatimento)
-                sb.Append(associado.CPF.Length == 11 ? "1" : "2"); // 219
-                sb.Append("".PadLeft(1, '0')); // 220
-                sb.Append(associado.CPF.Replace(".", "").Replace("-", "").Replace("/", "").PadLeft(14, '0')); // 221-234
-                sb.Append(associado.Nome.PadRight(40)); // 235-274
-                sb.Append(associado.Endereco.PadRight(40)); // 275-314
-                sb.Append("".PadLeft(11, '0')); // 315-325
-                sb.Append(" "); // 326
-                sb.Append((associado.Numero + "00000000").Substring(0,8)); // 327-334 (CEP, apenas números)
-                sb.Append("".PadLeft(5,'0')); // 335-339
-                sb.Append("".PadRight(55)); // 340-394
-                sb.Append(sequencialRegistro.ToString().PadLeft(6, '0')); // 395-400
+                var mensagens = new List<string>
+                {
+                    // Linha 1: Cabeçalho fixo, conforme o arquivo .txt
+                    "Dependente      Descricao      Ref.       Data Venc       Valor",
+                    
+                    // Linha 2: Dados dinâmicos com o espaçamento do arquivo .txt
+                    $"                01.01-MENSALID {boleto.DataVencimento:MM/yyyy}    {boleto.DataVencimento:dd/MM/yyyy}      {valorFormatado}"
+                };
+
+                // --- REGISTRO DETALHE (TIPO 1) ---
+                sb.Append("1");
+                sb.Append("A");
+                sb.Append("A");
+                sb.Append("A"); // Tipo de Impressão Normal
+                sb.Append(" ");
+                sb.Append(" ");
+                sb.Append(new string(' ', 10));
+                sb.Append("A");
+                sb.Append("A"); // Juros em Valor
+                sb.Append("A"); // Multa em Percentual
+                sb.Append(new string(' ', 28));
+                sb.Append(boleto.NossoNumero);
+                sb.Append(new string(' ', 6));
+                sb.Append(dataGeracao.ToString("yyyyMMdd"));
+                sb.Append(" ");
+                sb.Append("N");
+                sb.Append(" ");
+                sb.Append("B");
+                sb.Append("00");
+                sb.Append("00");
+                sb.Append(new string(' ', 4));
+                sb.Append("0".PadLeft(10, '0'));
+                sb.Append(((long)(boleto.PercentualMulta * 100)).ToString().PadLeft(4, '0'));
+                sb.Append(new string(' ', 12));
+                sb.Append("01");
+                sb.Append(boleto.AssociadoId.ToString().PadRight(10)); // Usando o ID do associado como "Seu Número"
+                sb.Append(boleto.DataVencimento.ToString("ddMMyy"));
+                sb.Append(((long)(boleto.Valor * 100)).ToString().PadLeft(13, '0'));
+                sb.Append("   ");
+                sb.Append("     ");
+                sb.Append("J");
+                sb.Append("N");
+                sb.Append(boleto.DataEmissao.ToString("ddMMyy"));
+                sb.Append("00");
+                sb.Append("00");
+                sb.Append(((long)(boleto.JurosMora * 100)).ToString().PadLeft(13, '0'));
+                sb.Append("0".PadLeft(6, '0'));
+                sb.Append("0".PadLeft(13, '0'));
+                sb.Append("00");
+                sb.Append("00");
+                sb.Append(new string(' ', 9));
+                sb.Append("0".PadLeft(13, '0'));
+                sb.Append(associado.CPF.Length == 11 ? "1" : "2");
+                sb.Append("0");
+                sb.Append(associado.CPF.Replace(".", "").Replace("-", "").Replace("/", "").PadLeft(14, '0'));
+                sb.Append(associado.Nome.PadRight(40).Substring(0, 40));
+                sb.Append(associado.Endereco.PadRight(40).Substring(0, 40));
+                sb.Append("".PadLeft(12, ' '));
+                sb.Append((associado.Cep + "00000000").Substring(0, 8));
+                sb.Append("".PadLeft(5, '0'));
+                sb.Append(new string(' ', 55));
+                sb.Append(sequencialRegistro.ToString().PadLeft(6, '0'));
                 sb.AppendLine();
 
                 sequencialRegistro++;
 
-                // --- REGISTRO MENSAGEM (TIPO 2) IDÊNTICO AO EXEMPLO ---
-                sb.Append("2           "); // 1-12
-                sb.Append(boleto.NossoNumero); // 13-21
-                sb.Append("Dependente      Descricao      Ref.       Data Venc       Valor".PadRight(80)); // 22-101
-                sb.Append("                                 01.01-MENSALID 10/2024    10/06/2025      90,00".PadRight(80)); // 102-181
-                sb.Append("".PadRight(161)); // 182-342
-                sb.Append("".PadRight(52)); // 343-394
-                sb.Append(sequencialRegistro.ToString().PadLeft(6, '0')); // 395-400
-                sb.AppendLine();
+                // --- REGISTRO MENSAGEM (TIPO 2) ---
+                if (mensagens.Any())
+                {
+                    sb.Append("2");
+                    sb.Append(new string(' ', 11));
+                    sb.Append(boleto.NossoNumero);
+                    sb.Append((mensagens.ElementAtOrDefault(0) ?? "").PadRight(80));
+                    sb.Append((mensagens.ElementAtOrDefault(1) ?? "").PadRight(80));
+                    sb.Append(new string(' ', 161));
+                    sb.Append(new string(' ', 52));
+                    sb.Append(sequencialRegistro.ToString().PadLeft(6, '0'));
+                    sb.AppendLine();
 
-                sequencialRegistro++;
+                    sequencialRegistro++;
+                }
             }
 
-            // --- TRAILER IDÊNTICO AO EXEMPLO ---
-            sb.Append("91748"); // 1-5
-            sb.Append(cedente.Codigo); // 6-10
-            sb.Append("".PadRight(384)); // 11-394
-            sb.Append(sequencialRegistro.ToString().PadLeft(6, '0')); // 395-400
+            // --- TRAILER (REGISTRO TIPO 9) ---
+            sb.Append("91748");
+            sb.Append(cedente.Codigo.PadLeft(5, '0'));
+            sb.Append(new string(' ', 384));
+            sb.Append(sequencialRegistro.ToString().PadLeft(6, '0'));
             sb.AppendLine();
 
             await _boletoRepo.AddRangeAsync(boletos);
@@ -158,7 +213,7 @@ namespace Application.Features.Financeiro
                 12 => "D",
                 _ => data.Month.ToString()
             };
-            return $"{codigoCedente}{mesCodigo}{data.Day:D2}.CRM"; // Usando .CRM como no exemplo
+            return $"{codigoCedente}{mesCodigo}{data.Day:D2}.CRM";
         }
 
         private string GerarNossoNumero(string agencia, string posto, string cedente, int sequencial)
@@ -167,7 +222,7 @@ namespace Application.Features.Financeiro
             string byteGeracao = "2";
             string numeroSequencial = sequencial.ToString().PadLeft(5, '0');
             string baseCalculo = $"{agencia}{posto}{cedente}{ano}{byteGeracao}{numeroSequencial}";
-            
+
             int soma = 0;
             int peso = 2;
             for (int i = baseCalculo.Length - 1; i >= 0; i--)

@@ -8,6 +8,7 @@ namespace Application.Common.Interfaces
     {
         Task<Associado?> GetByCPF(string cpf);
         Task<List<Associado>> GetAllWithDependentes(); 
-                Task<List<Associado>> GetAssociadosByIds(int[] associadoIds); 
+        Task<List<Associado>> GetAssociadosByIds(int[] associadoIds); 
+        Task<IEnumerable<Associado>> GetAssociadosAtivosAsync();
     }
 }
