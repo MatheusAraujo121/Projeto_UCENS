@@ -44,6 +44,15 @@ namespace Application.Features.Associados
         [JsonPropertyName("endereco")]
         public string Endereco { get; set; } = string.Empty;
 
+        [JsonPropertyName("bairro")]
+        public string Bairro { get; set; } = "";
+
+        [JsonPropertyName("cidade")]
+        public string Cidade { get; set; } = "";
+
+        [JsonPropertyName("uf")]
+        public string UF { get; set; } = ""; 
+
         [JsonPropertyName("numero")]
         public string Numero { get; set; } = string.Empty;
 

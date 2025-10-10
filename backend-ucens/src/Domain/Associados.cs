@@ -27,6 +27,12 @@ public class Associado
     [MaxLength(100)]
     public string Endereco { get; set; } = string.Empty;
     [MaxLength(100)]
+    public string Bairro { get; set; } = "";
+    [MaxLength(100)] // Adicionado
+    public string Cidade { get; set; } = "";
+    [MaxLength(100)] // Adicionado
+    public string UF { get; set; } = "";
+    [MaxLength(2)] 
     public string Numero { get; set; } = string.Empty;
     [MaxLength(50)]
     public string Complemento { get; set; } = string.Empty;

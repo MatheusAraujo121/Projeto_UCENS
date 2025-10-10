@@ -18,5 +18,9 @@ namespace Infrastructure.Persistence.Repositories
         {
             await _context.Boletos.AddRangeAsync(boletos);
         }
+        public IQueryable<Boleto> GetQueryable()
+        {
+            return _context.Boletos.AsQueryable();
+        }
     }
 }

@@ -1,209 +1,195 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Application.Common.Interfaces;
+using BNet = BoletoNetCore;
 using Domain;
+using Microsoft.EntityFrameworkCore;
 using BoletoEntidade = Domain.Boleto;
 
 namespace Application.Features.Financeiro
 {
-    public class ResultadoRemessa
+    public class ResultadoArquivoRemessa
     {
-        public string ConteudoArquivo { get; set; } = "";
+        public byte[] ConteudoArquivo { get; set; } = Array.Empty<byte>();
         public string NomeArquivo { get; set; } = "";
+        public List<BoletoGeradoDto> BoletosGerados { get; set; } = new List<BoletoGeradoDto>();
     }
 
     public class FinanceiroService
     {
         private readonly IAssociadoRepository _associadoRepo;
         private readonly IBoletoRepository _boletoRepo;
-        private const decimal VALOR_PADRAO_MENSALIDADE = 90.00M; // Defina o valor padrão aqui
+        private const decimal VALOR_PADRAO_MENSALIDADE = 90.00M;
 
         public FinanceiroService(IAssociadoRepository associadoRepo, IBoletoRepository boletoRepo)
         {
-            _associadoRepo = associadoRepo;
-            _boletoRepo = boletoRepo;
+            _associadoRepo = associadoRepo ?? throw new ArgumentNullException(nameof(associadoRepo));
+            _boletoRepo = boletoRepo ?? throw new ArgumentNullException(nameof(boletoRepo));
         }
 
-        public async Task<ResultadoRemessa> GerarArquivoRemessa(List<BoletoParaGeracaoDto> boletosParaGerar)
+        public async Task<ResultadoArquivoRemessa> GerarArquivoRemessaAsync(List<BoletoParaGeracaoDto> boletosParaGerar)
         {
-            // Se a lista de boletos estiver vazia, busca todos os associados ativos
             if (boletosParaGerar == null || !boletosParaGerar.Any())
             {
-                var todosAssociadosAtivos = await _associadoRepo.GetAssociadosAtivosAsync(); 
-                boletosParaGerar = todosAssociadosAtivos.Select(a => new BoletoParaGeracaoDto { AssociadoId = a.Id }).ToList();
+                throw new InvalidOperationException("A lista de boletos para geração não pode estar vazia.");
             }
 
-            if (!boletosParaGerar.Any())
-            {
-                return new ResultadoRemessa(); // Retorna vazio se não houver associados para gerar boleto
-            }
-            
             var associadoIds = boletosParaGerar.Select(b => b.AssociadoId).Distinct().ToArray();
-            var associados = await _associadoRepo.GetAssociadosByIds(associadoIds);
-            var boletos = new List<BoletoEntidade>();
+            var associados = (await _associadoRepo.GetAssociadosByIds(associadoIds))
+                .ToDictionary(a => a.Id);
 
-            var cedente = new
+            var idsNaoEncontrados = associadoIds.Where(id => !associados.ContainsKey(id)).ToList();
+            if (idsNaoEncontrados.Any())
             {
-                Codigo = "57118",
-                CPFCNPJ = "48388334000100",
-                Agencia = "0718",
-                Posto = "05"
-            };
+                throw new InvalidOperationException($"Associados não encontrados para os seguintes IDs: [{string.Join(", ", idsNaoEncontrados)}].");
+            }
 
-            var sb = new StringBuilder();
             var dataGeracao = DateTime.Now;
 
-            // --- HEADER (REGISTRO TIPO 0) ---
-            sb.Append("01REMESSA01COBRANCA       ");
-            sb.Append(cedente.Codigo.PadLeft(5, '0'));
-            sb.Append(cedente.CPFCNPJ.PadLeft(14, '0'));
-            sb.Append(new string(' ', 31));
-            sb.Append("748SICREDI".PadRight(15));
-            sb.Append(new string(' ', 3));
-            sb.Append(dataGeracao.ToString("yyyyMMdd"));
-            sb.Append(new string(' ', 8));
-            sb.Append("1".PadLeft(7, '0'));
-            sb.Append(new string(' ', 273));
-            sb.Append("2.00");
-            sb.Append("000001");
-            sb.AppendLine();
+            var ultimoNumeroRemessa = await _boletoRepo.GetQueryable()
+                                          .MaxAsync(b => (int?)b.NumeroArquivoRemessa) ?? 0;
+            var novoNumeroRemessa = ultimoNumeroRemessa + 1;
 
-            int sequencialRegistro = 2;
+            const string postoBeneficiario = "01";
+
+            var beneficiario = new BNet.Beneficiario
+            {
+                CPFCNPJ = "48388334000100",
+                Nome = "UCENS",
+                Codigo = "57118",
+                ContaBancaria = new BNet.ContaBancaria
+                {
+                    Agencia = "0718",
+                    DigitoAgencia = "",
+                    Conta = "57118",
+                    DigitoConta = "8",
+                    CarteiraPadrao = "1",
+                    VariacaoCarteiraPadrao = "A",
+                    TipoFormaCadastramento = BNet.TipoFormaCadastramento.ComRegistro,
+                    TipoImpressaoBoleto = BNet.TipoImpressaoBoleto.Empresa,
+                }
+            };
+
+            var banco = BNet.Banco.Instancia(BNet.Bancos.Sicredi);
+            banco.Beneficiario = beneficiario;
+
+            var boletos = new BNet.Boletos();
+            var boletosParaSalvar = new List<BoletoEntidade>();
+            var boletosGeradosInfo = new List<BoletoGeradoDto>();
+            
+            var ultimoSequencial = await _boletoRepo.GetQueryable()
+                                     .MaxAsync(b => (int?)b.SequencialNossoNumero) ?? 0;
+
             foreach (var boletoInfo in boletosParaGerar)
             {
-                var associado = associados.FirstOrDefault(a => a.Id == boletoInfo.AssociadoId);
-                if (associado == null)
+                ultimoSequencial++;
+                var associado = associados[boletoInfo.AssociadoId];
+                var valorBoleto = boletoInfo.Valor.GetValueOrDefault(VALOR_PADRAO_MENSALIDADE);
+                var dataVencimento = boletoInfo.DataVencimento.GetValueOrDefault(new DateTime(dataGeracao.Year, dataGeracao.Month, DateTime.DaysInMonth(dataGeracao.Year, dataGeracao.Month)));
+
+                if (valorBoleto <= 0)
+                    throw new InvalidOperationException($"Valor do boleto para o associado {associado.Id} deve ser positivo.");
+
+                var nossoNumeroCompleto = GerarNossoNumero(beneficiario, postoBeneficiario, ultimoSequencial);
+
+                // Garantindo que ambas as linhas da mensagem tenham exatamente 80 caracteres.
+                string linha1 = ("Dependente".PadRight(15) + "Descricao".PadRight(15) + "Ref.".PadRight(12) + "Data Venc".PadRight(16) + "Valor").PadRight(80);
+                string referencia = $"01.01-MENSALID {dataVencimento:MM/yyyy}";
+                string vencimento = dataVencimento.ToString("dd/MM/yyyy");
+                string valorFormatado = valorBoleto.ToString("F2", new CultureInfo("pt-BR"));
+                string linha2 = (referencia.PadRight(42) + vencimento.PadRight(16) + valorFormatado).PadRight(80);
+                
+                string enderecoCompleto = $"{associado.Endereco}, {associado.Numero}";
+
+                var boleto = new BNet.Boleto(banco)
                 {
-                    continue;
-                }
+                    Pagador = new BNet.Pagador
+                    {
+                        CPFCNPJ = associado.CPF.Replace(".", "").Replace("-", ""),
+                        Nome = associado.Nome,
+                        Endereco = new BNet.Endereco
+                        {
+                            LogradouroEndereco = enderecoCompleto,
+                            Bairro = associado.Bairro,
+                            Cidade = associado.Cidade,
+                            UF = associado.UF,
+                            CEP = associado.Cep.Replace("-", "")
+                        }
+                    },
+                    // Garantindo que o "Seu Número" tenha sempre 10 caracteres.
+                    NumeroDocumento = ultimoSequencial.ToString("D10"),
+                    NossoNumero = nossoNumeroCompleto,
+                    ValorTitulo = valorBoleto,
+                    DataVencimento = dataVencimento,
+                    DataEmissao = dataGeracao,
+                    DataProcessamento = dataGeracao,
+                    PercentualMulta = 2.00M,
+                    ValorJurosDia = 0.10M, 
+                    EspecieDocumento = BNet.TipoEspecieDocumento.DSI, 
+                    Aceite = "N",
+                    CodigoInstrucao1 = "01",
+                    
+                    // Usando as propriedades corretas que você descobriu
+                    MensagemProtesto = linha1,
+                    MensagemLivre = linha2
+                };
+                
+                boletos.Add(boleto);
 
-                // Define o valor do boleto: usa o valor específico se fornecido, senão, usa o padrão.
-                var valorBoleto = boletoInfo.Valor.HasValue && boletoInfo.Valor > 0 ? boletoInfo.Valor.Value : VALOR_PADRAO_MENSALIDADE;
-
-                var nossoNumeroSequencial = (sequencialRegistro / 2);
-                var nossoNumeroCompleto = GerarNossoNumero(cedente.Agencia, cedente.Posto, cedente.Codigo, nossoNumeroSequencial);
-
-                var boleto = new BoletoEntidade
+                boletosParaSalvar.Add(new BoletoEntidade
                 {
                     AssociadoId = associado.Id,
                     Valor = valorBoleto,
-                    DataVencimento = new DateTime(dataGeracao.Year, dataGeracao.Month, DateTime.DaysInMonth(dataGeracao.Year, dataGeracao.Month)), // Vencimento no último dia do mês corrente
+                    DataVencimento = dataVencimento,
                     DataEmissao = dataGeracao,
-                    NossoNumero = nossoNumeroCompleto,
+                    NossoNumero = boleto.NossoNumero,
                     Status = Domain.BoletoStatus.Gerado,
-                    JurosMora = 0.20M,
-                    PercentualMulta = 2.00M
-                };
-                boletos.Add(boleto);
-                
-                // --- MENSAGEM PADRÃO E DINÂMICA ---
-                var valorFormatado = boleto.Valor.ToString("N2", new CultureInfo("pt-BR"));
+                    JurosMora = 0.10M,
+                    PercentualMulta = 2.00M,
+                    NumeroArquivoRemessa = novoNumeroRemessa,
+                    SequencialNossoNumero = ultimoSequencial
+                });
 
-                var mensagens = new List<string>
+                boletosGeradosInfo.Add(new BoletoGeradoDto
                 {
-                    // Linha 1: Cabeçalho fixo, conforme o arquivo .txt
-                    "Dependente      Descricao      Ref.       Data Venc       Valor",
-                    
-                    // Linha 2: Dados dinâmicos com o espaçamento do arquivo .txt
-                    $"                01.01-MENSALID {boleto.DataVencimento:MM/yyyy}    {boleto.DataVencimento:dd/MM/yyyy}      {valorFormatado}"
-                };
-
-                // --- REGISTRO DETALHE (TIPO 1) ---
-                sb.Append("1");
-                sb.Append("A");
-                sb.Append("A");
-                sb.Append("A"); // Tipo de Impressão Normal
-                sb.Append(" ");
-                sb.Append(" ");
-                sb.Append(new string(' ', 10));
-                sb.Append("A");
-                sb.Append("A"); // Juros em Valor
-                sb.Append("A"); // Multa em Percentual
-                sb.Append(new string(' ', 28));
-                sb.Append(boleto.NossoNumero);
-                sb.Append(new string(' ', 6));
-                sb.Append(dataGeracao.ToString("yyyyMMdd"));
-                sb.Append(" ");
-                sb.Append("N");
-                sb.Append(" ");
-                sb.Append("B");
-                sb.Append("00");
-                sb.Append("00");
-                sb.Append(new string(' ', 4));
-                sb.Append("0".PadLeft(10, '0'));
-                sb.Append(((long)(boleto.PercentualMulta * 100)).ToString().PadLeft(4, '0'));
-                sb.Append(new string(' ', 12));
-                sb.Append("01");
-                sb.Append(boleto.AssociadoId.ToString().PadRight(10)); // Usando o ID do associado como "Seu Número"
-                sb.Append(boleto.DataVencimento.ToString("ddMMyy"));
-                sb.Append(((long)(boleto.Valor * 100)).ToString().PadLeft(13, '0'));
-                sb.Append("   ");
-                sb.Append("     ");
-                sb.Append("J");
-                sb.Append("N");
-                sb.Append(boleto.DataEmissao.ToString("ddMMyy"));
-                sb.Append("00");
-                sb.Append("00");
-                sb.Append(((long)(boleto.JurosMora * 100)).ToString().PadLeft(13, '0'));
-                sb.Append("0".PadLeft(6, '0'));
-                sb.Append("0".PadLeft(13, '0'));
-                sb.Append("00");
-                sb.Append("00");
-                sb.Append(new string(' ', 9));
-                sb.Append("0".PadLeft(13, '0'));
-                sb.Append(associado.CPF.Length == 11 ? "1" : "2");
-                sb.Append("0");
-                sb.Append(associado.CPF.Replace(".", "").Replace("-", "").Replace("/", "").PadLeft(14, '0'));
-                sb.Append(associado.Nome.PadRight(40).Substring(0, 40));
-                sb.Append(associado.Endereco.PadRight(40).Substring(0, 40));
-                sb.Append("".PadLeft(12, ' '));
-                sb.Append((associado.Cep + "00000000").Substring(0, 8));
-                sb.Append("".PadLeft(5, '0'));
-                sb.Append(new string(' ', 55));
-                sb.Append(sequencialRegistro.ToString().PadLeft(6, '0'));
-                sb.AppendLine();
-
-                sequencialRegistro++;
-
-                // --- REGISTRO MENSAGEM (TIPO 2) ---
-                if (mensagens.Any())
-                {
-                    sb.Append("2");
-                    sb.Append(new string(' ', 11));
-                    sb.Append(boleto.NossoNumero);
-                    sb.Append((mensagens.ElementAtOrDefault(0) ?? "").PadRight(80));
-                    sb.Append((mensagens.ElementAtOrDefault(1) ?? "").PadRight(80));
-                    sb.Append(new string(' ', 161));
-                    sb.Append(new string(' ', 52));
-                    sb.Append(sequencialRegistro.ToString().PadLeft(6, '0'));
-                    sb.AppendLine();
-
-                    sequencialRegistro++;
-                }
+                    AssociadoId = associado.Id,
+                    NomeAssociado = associado.Nome,
+                    NossoNumero = boleto.NossoNumero,
+                    Valor = boleto.ValorTitulo,
+                    DataVencimento = boleto.DataVencimento,
+                    LinhaDigitavel = boleto.CodigoBarra.LinhaDigitavel,
+                    CodigoDeBarras = boleto.CodigoBarra.CodigoDeBarras
+                });
             }
 
-            // --- TRAILER (REGISTRO TIPO 9) ---
-            sb.Append("91748");
-            sb.Append(cedente.Codigo.PadLeft(5, '0'));
-            sb.Append(new string(' ', 384));
-            sb.Append(sequencialRegistro.ToString().PadLeft(6, '0'));
-            sb.AppendLine();
-
-            await _boletoRepo.AddRangeAsync(boletos);
-            await _boletoRepo.SaveChangesAsync();
-
-            return new ResultadoRemessa
+            if (!boletos.Any())
             {
-                ConteudoArquivo = sb.ToString(),
-                NomeArquivo = GerarNomeArquivo(cedente.Codigo)
-            };
+                return new ResultadoArquivoRemessa();
+            }
+
+            using (var memoryStream = new MemoryStream())
+            {
+                var arquivoRemessa = new BNet.ArquivoRemessa(banco, BNet.TipoArquivo.CNAB400, novoNumeroRemessa);
+                arquivoRemessa.GerarArquivoRemessa(boletos, memoryStream);
+
+                await _boletoRepo.AddRangeAsync(boletosParaSalvar);
+                await _boletoRepo.SaveChangesAsync();
+
+                return new ResultadoArquivoRemessa
+                {
+                    ConteudoArquivo = memoryStream.ToArray(),
+                    NomeArquivo = GerarNomeArquivo(beneficiario.Codigo, novoNumeroRemessa),
+                    BoletosGerados = boletosGeradosInfo
+                };
+            }
         }
 
-        private string GerarNomeArquivo(string codigoCedente)
+        private string GerarNomeArquivo(string codigoCedente, int numeroRemessa)
         {
             var data = DateTime.Now;
             var mesCodigo = data.Month switch
@@ -211,17 +197,21 @@ namespace Application.Features.Financeiro
                 10 => "O",
                 11 => "N",
                 12 => "D",
-                _ => data.Month.ToString()
+                _ => data.Month.ToString("X")
             };
-            return $"{codigoCedente}{mesCodigo}{data.Day:D2}.CRM";
+            return $"{codigoCedente}{mesCodigo}{data.Day:D2}.txt";
         }
-
-        private string GerarNossoNumero(string agencia, string posto, string cedente, int sequencial)
+        
+        private string GerarNossoNumero(BNet.Beneficiario beneficiario, string posto, int sequencial)
         {
             string ano = DateTime.Now.ToString("yy");
             string byteGeracao = "2";
-            string numeroSequencial = sequencial.ToString().PadLeft(5, '0');
-            string baseCalculo = $"{agencia}{posto}{cedente}{ano}{byteGeracao}{numeroSequencial}";
+            string numeroSequencial = sequencial.ToString("D5");
+
+            string agencia = beneficiario.ContaBancaria.Agencia;
+            string codigoCedente = beneficiario.Codigo.PadLeft(5, '0');
+            
+            string baseCalculo = $"{agencia}{posto.PadLeft(2, '0')}{codigoCedente}{ano}{byteGeracao}{numeroSequencial}";
 
             int soma = 0;
             int peso = 2;
@@ -231,11 +221,15 @@ namespace Application.Features.Financeiro
                 peso = (peso == 9) ? 2 : peso + 1;
             }
 
-            int resto = soma % 11;
-            int dv = 11 - resto;
-            if (dv >= 10) dv = 0;
+            int restoDaDivisao = soma % 11;
+            int digitoVerificador = 11 - restoDaDivisao;
+            
+            if (digitoVerificador >= 10)
+            {
+                digitoVerificador = 0;
+            }
 
-            return $"{ano}{byteGeracao}{numeroSequencial}{dv}";
+            return $"{ano}{byteGeracao}{numeroSequencial}{digitoVerificador}"; 
         }
     }
 }

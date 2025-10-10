@@ -16,7 +16,7 @@ namespace Infrastructure.Persistence
         public DbSet<Turma> Turmas { get; set; } = null!;
         public DbSet<MatriculaAssociado> MatriculasAssociados { get; set; } = null!;
         public DbSet<MatriculaDependente> MatriculasDependentes { get; set; } = null!;
-         public DbSet<Boleto> Boletos { get; set; } = null!;
+        public DbSet<Boleto> Boletos { get; set; } = null!;
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -73,6 +73,15 @@ namespace Infrastructure.Persistence
 
                    entity.Property(a => a.Endereco)
                        .HasMaxLength(100);
+
+                   entity.Property(a => a.Bairro)
+                     .HasMaxLength(100);
+
+                   entity.Property(a => a.Cidade)
+                     .HasMaxLength(100);
+                     
+                   entity.Property(a => a.UF)
+                     .HasMaxLength(2);
 
                    entity.Property(a => a.Numero)
                        .HasMaxLength(10);
