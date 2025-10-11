@@ -22,8 +22,9 @@ namespace Domain
 
     public enum BoletoStatus
     {
-        Gerado,
+        Pendente,
         Pago,
+        Vencido,
         Cancelado
     }
 }

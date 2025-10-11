@@ -6,8 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Application.Common.Interfaces;
-using BNet = BoletoNetCore;
+using Application.Features.Cnab;
 using Domain;
+using Microsoft.Extensions.Logging;
+using BNet = BoletoNetCore;
 using Microsoft.EntityFrameworkCore;
 using BoletoEntidade = Domain.Boleto;
 
@@ -24,12 +26,38 @@ namespace Application.Features.Financeiro
     {
         private readonly IAssociadoRepository _associadoRepo;
         private readonly IBoletoRepository _boletoRepo;
+        private readonly ICnab400SicrediParser _cnabParser;
+        private readonly ILogger<FinanceiroService> _logger;
+        private readonly IRepository<CnabRetorno> _cnabRetornoRepository;
         private const decimal VALOR_PADRAO_MENSALIDADE = 90.00M;
 
-        public FinanceiroService(IAssociadoRepository associadoRepo, IBoletoRepository boletoRepo)
+        public FinanceiroService(IAssociadoRepository associadoRepo, IBoletoRepository boletoRepo, ICnab400SicrediParser cnabParser, ILogger<FinanceiroService> logger, IRepository<CnabRetorno> cnabRetornoRepository)
         {
             _associadoRepo = associadoRepo ?? throw new ArgumentNullException(nameof(associadoRepo));
             _boletoRepo = boletoRepo ?? throw new ArgumentNullException(nameof(boletoRepo));
+            _cnabParser = cnabParser;
+            _logger = logger;
+            _cnabRetornoRepository = cnabRetornoRepository;
+        }
+
+        public async Task<IEnumerable<BoletoDTO>> GetBoletosAsync()
+        {
+            return await _boletoRepo.GetQueryable()
+                .Include(b => b.Associado) // Inclui os dados do associado
+                .OrderByDescending(b => b.DataEmissao)
+                .Select(b => new BoletoDTO
+                {
+                    Id = b.Id,
+                    AssociadoId = b.AssociadoId,
+                    Valor = b.Valor,
+                    Vencimento = b.DataVencimento,
+                    Status = b.Status.ToString(), // Converte o enum para string
+                    Associado = new AssociadoBoletoDto
+                    {
+                        Nome = b.Associado != null ? b.Associado.Nome : string.Empty
+                    }
+                })
+                .ToListAsync();
         }
 
         public async Task<ResultadoArquivoRemessa> GerarArquivoRemessaAsync(List<BoletoParaGeracaoDto> boletosParaGerar)
@@ -148,7 +176,7 @@ namespace Application.Features.Financeiro
                     DataVencimento = dataVencimento,
                     DataEmissao = dataGeracao,
                     NossoNumero = boleto.NossoNumero,
-                    Status = Domain.BoletoStatus.Gerado,
+                    Status = Domain.BoletoStatus.Pendente,
                     JurosMora = 0.10M,
                     PercentualMulta = 2.00M,
                     NumeroArquivoRemessa = novoNumeroRemessa,
@@ -201,7 +229,7 @@ namespace Application.Features.Financeiro
             };
             return $"{codigoCedente}{mesCodigo}{data.Day:D2}.txt";
         }
-        
+
         private string GerarNossoNumero(BNet.Beneficiario beneficiario, string posto, int sequencial)
         {
             string ano = DateTime.Now.ToString("yy");
@@ -210,7 +238,7 @@ namespace Application.Features.Financeiro
 
             string agencia = beneficiario.ContaBancaria.Agencia;
             string codigoCedente = beneficiario.Codigo.PadLeft(5, '0');
-            
+
             string baseCalculo = $"{agencia}{posto.PadLeft(2, '0')}{codigoCedente}{ano}{byteGeracao}{numeroSequencial}";
 
             int soma = 0;
@@ -223,13 +251,82 @@ namespace Application.Features.Financeiro
 
             int restoDaDivisao = soma % 11;
             int digitoVerificador = 11 - restoDaDivisao;
-            
+
             if (digitoVerificador >= 10)
             {
                 digitoVerificador = 0;
             }
 
-            return $"{ano}{byteGeracao}{numeroSequencial}{digitoVerificador}"; 
+            return $"{ano}{byteGeracao}{numeroSequencial}{digitoVerificador}";
         }
+        
+        public async Task ProcessarArquivoRetornoAsync(Stream arquivoStream)
+        {
+            _logger.LogInformation("Iniciando processamento do arquivo de retorno CNAB400 Sicredi.");
+
+            CnabParseResultDto resultadoParse = await _cnabParser.ParseAsync(arquivoStream);
+
+            if (resultadoParse.HasErrors)
+            {
+                _logger.LogWarning("Ocorreram erros durante o parse do arquivo de retorno: {ErrorCount} erros.", resultadoParse.Errors.Count);
+                resultadoParse.Errors.ForEach(e => _logger.LogWarning(e));
+            }
+
+            var todosOsRetornos = await _cnabRetornoRepository.GetAll();
+            
+            // Carrega todos os boletos pendentes em memória para evitar múltiplas chamadas ao banco
+            var boletosPendentes = (await _boletoRepo.GetAll()).Where(b => b.Status == BoletoStatus.Pendente).ToList();
+
+            foreach (var detalhe in resultadoParse.Details)
+            {
+                // Verifica se a ocorrência é de liquidação (pagamento)
+                if (detalhe.CodigoOcorrencia == "06") // "06" = Liquidação Normal
+                {
+                    // --- INÍCIO DA NOVA LÓGICA ---
+                    // Extrai o ID do boleto a partir do NossoNumero (ex: de "250000065" extrai "65")
+                    if (int.TryParse(detalhe.NossoNumero.Substring(7), out int boletoId))
+                    {
+                        // Encontra o boleto correspondente na lista de boletos pendentes
+                        var boletoParaAtualizar = boletosPendentes.FirstOrDefault(b => b.Id == boletoId);
+
+                        if (boletoParaAtualizar != null)
+                        {
+                            // Atualiza o status do boleto para "Pago"
+                            boletoParaAtualizar.Status = BoletoStatus.Pago;
+                            await _boletoRepo.Update(boletoParaAtualizar);
+                            _logger.LogInformation("Boleto ID {BoletoId} atualizado para 'Pago'.", boletoId);
+                        }
+                        else
+                        {
+                            _logger.LogWarning("Boleto com ID {BoletoId} não encontrado ou já estava com status 'Pago'.", boletoId);
+                        }
+                    }
+                    else
+                    {
+                        _logger.LogError("Não foi possível extrair o ID do Boleto a partir do NossoNumero: {NossoNumero}", detalhe.NossoNumero);
+                    }
+                    // --- FIM DA NOVA LÓGICA ---
+                }
+
+                // A lógica para salvar o histórico do retorno continua a mesma
+                var chaveUnica = detalhe.GetUniqueKey();
+                if (!todosOsRetornos.Any(r => r.ChaveUnica == chaveUnica))
+                {
+                    var novoRetorno = new CnabRetorno
+                    {
+                        ChaveUnica = chaveUnica,
+                        NossoNumero = detalhe.NossoNumero,
+                        DataOcorrencia = detalhe.DataOcorrencia,
+                        ValorPago = detalhe.ValorPago,
+                        CodigoOcorrencia = detalhe.CodigoOcorrencia,
+                    };
+                    await _cnabRetornoRepository.Add(novoRetorno);
+                }
+            }
+            
+            _logger.LogInformation("Processamento do arquivo de retorno finalizado.");
+        }
+        
     }
+    
 }

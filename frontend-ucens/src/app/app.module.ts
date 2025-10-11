@@ -31,6 +31,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatChipsModule } from '@angular/material/chips'; 
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatPaginatorIntl } from '@angular/material/paginator';
@@ -108,6 +109,10 @@ import { EditClassComponent } from './pages/system/classes/edit-class/edit-class
 import { ViewClassComponent } from './pages/system/classes/view-class/view-class.component';
 import { AuthGuard } from './guards/auth.guard';
 
+//Financeiro
+import { GenerateBoletoComponent } from './pages/system/financial/generate-boleto/generate-boleto.component';
+import { FinancialDashboardComponent } from './pages/system/financial/financial-dashboard/financial-dashboard.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -152,7 +157,9 @@ import { AuthGuard } from './guards/auth.guard';
     EventInfoComponent,
     CreateClassComponent,
     EditClassComponent,
-    ViewClassComponent
+    ViewClassComponent,
+    GenerateBoletoComponent,
+    FinancialDashboardComponent
   ],
   imports: [
     BrowserModule,
@@ -180,6 +187,7 @@ import { AuthGuard } from './guards/auth.guard';
     ReactiveFormsModule,
     MatAutocompleteModule,
     MatIconModule,
+    MatChipsModule,
     HttpClientModule,
     MatDividerModule,
     NgxMaskModule.forRoot()

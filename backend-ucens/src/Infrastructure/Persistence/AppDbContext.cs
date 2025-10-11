@@ -17,6 +17,7 @@ namespace Infrastructure.Persistence
         public DbSet<MatriculaAssociado> MatriculasAssociados { get; set; } = null!;
         public DbSet<MatriculaDependente> MatriculasDependentes { get; set; } = null!;
         public DbSet<Boleto> Boletos { get; set; } = null!;
+        public DbSet<CnabRetorno> CnabRetornos { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

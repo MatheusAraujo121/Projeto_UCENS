@@ -97,7 +97,6 @@ const routes: Routes = [
   // Rotas Financeiro
   { path: 'financial-dashboard', component: FinancialDashboardComponent, canActivate: [AuthGuard] },
   { path: 'generate-boleto', component: GenerateBoletoComponent, canActivate: [AuthGuard] },
-  { path: 'financial', loadChildren: () => import('./pages/system/financial/financial.module').then(m => m.FinancialModule) }
 
 ];
 
