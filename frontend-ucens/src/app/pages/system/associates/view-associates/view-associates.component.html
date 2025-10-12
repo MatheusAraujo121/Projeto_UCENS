@@ -63,6 +63,10 @@
 
       <p class="section-label"><em>Endereço</em></p>
       <mat-form-field appearance="fill">
+        <mat-label>CEP</mat-label>
+        <input matInput [value]="associado.cep" disabled />
+      </mat-form-field>
+      <mat-form-field appearance="fill">
         <mat-label>Endereço</mat-label>
         <input matInput [value]="associado.endereco" disabled />
       </mat-form-field>

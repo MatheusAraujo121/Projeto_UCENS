@@ -31,7 +31,11 @@ namespace Application.Features.Associados
                 EstadoCivil = a.EstadoCivil,
                 NomePai = a.NomePai,
                 NomeMae = a.NomeMae,
+                Cep = a.Cep,
                 Endereco = a.Endereco,
+                Bairro = a.Bairro,
+                Cidade = a.Cidade,
+                UF = a.UF,
                 Numero = a.Numero,
                 Complemento = a.Complemento,
                 Telefone = a.Telefone,
@@ -68,7 +72,11 @@ namespace Application.Features.Associados
                 EstadoCivil = a.EstadoCivil,
                 NomePai = a.NomePai,
                 NomeMae = a.NomeMae,
+                Cep = a.Cep,
                 Endereco = a.Endereco,
+                Bairro = a.Bairro,
+                Cidade = a.Cidade,
+                UF = a.UF,
                 Numero = a.Numero,
                 Complemento = a.Complemento,
                 Telefone = a.Telefone,
@@ -100,7 +108,11 @@ namespace Application.Features.Associados
                 EstadoCivil = dto.EstadoCivil,
                 NomePai = dto.NomePai,
                 NomeMae = dto.NomeMae,
+                Cep = dto.Cep,
                 Endereco = dto.Endereco,
+                Bairro = dto.Bairro,
+                Cidade = dto.Cidade,
+                UF = dto.UF,
                 Numero = dto.Numero,
                 Complemento = dto.Complemento,
                 LocalNascimento = dto.LocalNascimento,
@@ -132,7 +144,11 @@ namespace Application.Features.Associados
             associado.EstadoCivil = dto.EstadoCivil;
             associado.NomePai = dto.NomePai;
             associado.NomeMae = dto.NomeMae;
+            associado.Cep = dto.Cep;
             associado.Endereco = dto.Endereco;
+            associado.Bairro = dto.Bairro;
+            associado.Cidade = dto.Cidade;
+            associado.UF = dto.UF;
             associado.Numero = dto.Numero;
             associado.Complemento = dto.Complemento;
             associado.LocalNascimento = dto.LocalNascimento;

@@ -7,12 +7,14 @@ using Application.Features.Usuarios;
 using Application.Features.Associados;
 using Application.Common.Interfaces;
 using Infrastructure.Persistence.Repositories;
+using Infrastructure.Cnab;
 using Domain;
 using Application.Features.Eventos;
 using Application.Features.Atividades;
 using Application.Features.Turmas;
 using Application.Features.Relatorios;
 using Application.Features.Contato;
+using Application.Features.Financeiro; 
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,11 +36,15 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAssociadoRepository, AssociadoRepository>();
+builder.Services.AddScoped<IBoletoRepository, BoletoRepository>();
 builder.Services.AddScoped<IMatriculaAssociadoRepository, MatriculaAssociadoRepository>();
 builder.Services.AddScoped<IMatriculaDependenteRepository, MatriculaDependenteRepository>();
 builder.Services.AddScoped<ITurmaRepository, TurmaRepository>();
+builder.Services.AddScoped<ICnab400SicrediParser, Cnab400SicrediParser>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 
+
+builder.Services.AddScoped<FinanceiroService>(); 
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AssociadoService>();
 builder.Services.AddScoped<DependentesService>();
@@ -47,6 +53,7 @@ builder.Services.AddScoped<AtividadeService>();
 builder.Services.AddScoped<TurmaService>();
 builder.Services.AddScoped<RelatorioService>();
 builder.Services.AddScoped<EmailService>();
+builder.Services.AddScoped<FinanceiroService>(); 
 
 builder.Services.AddControllers();
 

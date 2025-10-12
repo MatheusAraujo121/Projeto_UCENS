@@ -39,6 +39,8 @@ import { CreateClassComponent } from './pages/system/classes/create-class/create
 import { ViewClassComponent } from './pages/system/classes/view-class/view-class.component';
 import { EditClassComponent } from './pages/system/classes/edit-class/edit-class.component';
 import { AuthGuard } from './guards/auth.guard';
+import { FinancialDashboardComponent } from './pages/system/financial/financial-dashboard/financial-dashboard.component';
+import { GenerateBoletoComponent } from './pages/system/financial/generate-boleto/generate-boleto.component';
 
 const routes: Routes = [
   //Rotas site expositivo
@@ -81,16 +83,20 @@ const routes: Routes = [
   { path: 'edit-activity/:id', component: EditActivityComponent, canActivate: [AuthGuard] },
 
   //Rotas Eventos 
-  { path: 'list-events', component: ListEventsComponent, canActivate: [AuthGuard] }, 
+  { path: 'list-events', component: ListEventsComponent, canActivate: [AuthGuard] },
   { path: 'create-event', component: CreateEventComponent, canActivate: [AuthGuard] },
-  { path: 'view-event/:id', component: ViewEventComponent, canActivate: [AuthGuard] }, 
+  { path: 'view-event/:id', component: ViewEventComponent, canActivate: [AuthGuard] },
   { path: 'edit-event/:id', component: EditEventComponent, canActivate: [AuthGuard] },
   { path: 'event-info/:id', component: EventInfoComponent },
 
   //Rotas Turmas
   { path: 'create-class/:id', component: CreateClassComponent, canActivate: [AuthGuard] },
   { path: 'view-class/:id', component: ViewClassComponent, canActivate: [AuthGuard] },
-  { path: 'edit-class/:id', component: EditClassComponent, canActivate: [AuthGuard] }
+  { path: 'edit-class/:id', component: EditClassComponent, canActivate: [AuthGuard] },
+
+  // Rotas Financeiro
+  { path: 'financial-dashboard', component: FinancialDashboardComponent, canActivate: [AuthGuard] },
+  { path: 'generate-boleto', component: GenerateBoletoComponent, canActivate: [AuthGuard] },
 
 ];
 
