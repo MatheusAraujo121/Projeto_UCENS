@@ -50,9 +50,8 @@
                   "maximumWarning": "8kb",
                   "maximumError": "100mb"
                 }
-              ]
-      
-              ,"outputHashing": "all"
+              ],
+              "outputHashing": "all"
             },
             "development": {
               "buildOptimizer": false,
