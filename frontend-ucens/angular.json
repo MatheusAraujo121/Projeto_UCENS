@@ -39,8 +39,20 @@
           },
           "configurations": {
             "production": {
+                "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "10kb",
+                  "maximumError": "100mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "8kb",
+                  "maximumError": "100mb"
+                }
+              ]
       
-              "outputHashing": "all"
+              ,"outputHashing": "all"
             },
             "development": {
               "buildOptimizer": false,
