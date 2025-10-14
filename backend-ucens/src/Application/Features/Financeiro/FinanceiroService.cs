@@ -43,7 +43,7 @@ namespace Application.Features.Financeiro
         public async Task<IEnumerable<BoletoDTO>> GetBoletosAsync()
         {
             return await _boletoRepo.GetQueryable()
-                .Include(b => b.Associado) // Inclui os dados do associado
+                .Include(b => b.Associado)
                 .OrderByDescending(b => b.DataEmissao)
                 .Select(b => new BoletoDTO
                 {
@@ -51,7 +51,7 @@ namespace Application.Features.Financeiro
                     AssociadoId = b.AssociadoId,
                     Valor = b.Valor,
                     Vencimento = b.DataVencimento,
-                    Status = b.Status.ToString(), // Converte o enum para string
+                    Status = b.Status.ToString(),
                     Associado = new AssociadoBoletoDto
                     {
                         Nome = b.Associado != null ? b.Associado.Nome : string.Empty
@@ -60,14 +60,47 @@ namespace Application.Features.Financeiro
                 .ToListAsync();
         }
 
-        public async Task<ResultadoArquivoRemessa> GerarArquivoRemessaAsync(List<BoletoParaGeracaoDto> boletosParaGerar)
+        public async Task<bool> SolicitarCancelamentoBoletoAsync(int boletoId, string motivo)
         {
-            if (boletosParaGerar == null || !boletosParaGerar.Any())
+            var boleto = await _boletoRepo.GetQueryable().FirstOrDefaultAsync(b => b.Id == boletoId);
+
+            if (boleto == null || boleto.Status != BoletoStatus.Pendente)
             {
-                throw new InvalidOperationException("A lista de boletos para geração não pode estar vazia.");
+                return false;
             }
 
-            var associadoIds = boletosParaGerar.Select(b => b.AssociadoId).Distinct().ToArray();
+            boleto.Status = BoletoStatus.CancelamentoSolicitado;
+            // SALVA O MOTIVO NO NOVO CAMPO
+            boleto.MotivoCancelamento = motivo; 
+
+            await _boletoRepo.Update(boleto);
+            _logger.LogInformation("Solicitação de cancelamento para o Boleto ID {BoletoId} registrada. Motivo: {Motivo}", boletoId, motivo);
+
+            return true;
+        }
+
+        public async Task<ResultadoArquivoRemessa> GerarArquivoRemessaAsync(List<BoletoParaGeracaoDto> boletosParaGerar)
+        {
+            if (boletosParaGerar == null)
+            {
+                boletosParaGerar = new List<BoletoParaGeracaoDto>();
+            }
+
+            var boletosParaCancelar = await _boletoRepo.GetQueryable()
+                .Include(b => b.Associado)
+                .Where(b => b.Status == BoletoStatus.CancelamentoSolicitado)
+                .ToListAsync();
+
+            if (!boletosParaGerar.Any() && !boletosParaCancelar.Any())
+            {
+                throw new InvalidOperationException("Não há boletos para gerar nem para cancelar.");
+            }
+
+            var associadoIds = boletosParaGerar.Select(b => b.AssociadoId)
+                                               .Union(boletosParaCancelar.Select(b => b.AssociadoId))
+                                               .Distinct()
+                                               .ToArray();
+            
             var associados = (await _associadoRepo.GetAssociadosByIds(associadoIds))
                 .ToDictionary(a => a.Id);
 
@@ -80,7 +113,7 @@ namespace Application.Features.Financeiro
             var dataGeracao = DateTime.Now;
 
             var ultimoNumeroRemessa = await _boletoRepo.GetQueryable()
-                                          .MaxAsync(b => (int?)b.NumeroArquivoRemessa) ?? 0;
+                                     .MaxAsync(b => (int?)b.NumeroArquivoRemessa) ?? 0;
             var novoNumeroRemessa = ultimoNumeroRemessa + 1;
 
             const string postoBeneficiario = "01";
@@ -113,6 +146,7 @@ namespace Application.Features.Financeiro
             var ultimoSequencial = await _boletoRepo.GetQueryable()
                                      .MaxAsync(b => (int?)b.SequencialNossoNumero) ?? 0;
 
+            // 1. PROCESSAR NOVOS BOLETOS PARA REGISTRO
             foreach (var boletoInfo in boletosParaGerar)
             {
                 ultimoSequencial++;
@@ -125,7 +159,6 @@ namespace Application.Features.Financeiro
 
                 var nossoNumeroCompleto = GerarNossoNumero(beneficiario, postoBeneficiario, ultimoSequencial);
 
-                // Garantindo que ambas as linhas da mensagem tenham exatamente 80 caracteres.
                 string linha1 = ("Dependente".PadRight(15) + "Descricao".PadRight(15) + "Ref.".PadRight(12) + "Data Venc".PadRight(16) + "Valor").PadRight(80);
                 string referencia = $"01.01-MENSALID {dataVencimento:MM/yyyy}";
                 string vencimento = dataVencimento.ToString("dd/MM/yyyy");
@@ -149,7 +182,6 @@ namespace Application.Features.Financeiro
                             CEP = associado.Cep.Replace("-", "")
                         }
                     },
-                    // Garantindo que o "Seu Número" tenha sempre 10 caracteres.
                     NumeroDocumento = ultimoSequencial.ToString("D10"),
                     NossoNumero = nossoNumeroCompleto,
                     ValorTitulo = valorBoleto,
@@ -160,9 +192,8 @@ namespace Application.Features.Financeiro
                     ValorJurosDia = 0.10M, 
                     EspecieDocumento = BNet.TipoEspecieDocumento.DSI, 
                     Aceite = "N",
-                    CodigoInstrucao1 = "01",
-                    
-                    // Usando as propriedades corretas que você descobriu
+                    // CORREÇÃO 2: Propriedade corrigida conforme a biblioteca
+                    CodigoMovimentoRetorno = "01", // "01" = Registro de Título
                     MensagemProtesto = linha1,
                     MensagemLivre = linha2
                 };
@@ -195,6 +226,43 @@ namespace Application.Features.Financeiro
                 });
             }
 
+            // 2. PROCESSAR BOLETOS PARA CANCELAMENTO (BAIXA)
+            foreach (var boletoParaCancelar in boletosParaCancelar)
+            {
+                var associado = associados[boletoParaCancelar.AssociadoId];
+                string enderecoCompleto = $"{associado.Endereco}, {associado.Numero}";
+
+                var boletoCancelamento = new BNet.Boleto(banco)
+                {
+                    // CORREÇÃO 3: Propriedade corrigida conforme a biblioteca
+                    CodigoMovimentoRetorno = "02", // Ocorrência "02" significa "Pedido de Baixa"
+                    NossoNumero = boletoParaCancelar.NossoNumero,
+                    NumeroDocumento = boletoParaCancelar.SequencialNossoNumero.ToString("D10"),
+                    ValorTitulo = boletoParaCancelar.Valor,
+                    DataVencimento = boletoParaCancelar.DataVencimento,
+                    EspecieDocumento = BNet.TipoEspecieDocumento.DSI,
+                    Pagador = new BNet.Pagador
+                    {
+                        CPFCNPJ = associado.CPF.Replace(".", "").Replace("-", ""),
+                        Nome = associado.Nome,
+                        Endereco = new BNet.Endereco
+                        {
+                            LogradouroEndereco = enderecoCompleto,
+                            Bairro = associado.Bairro,
+                            Cidade = associado.Cidade,
+                            UF = associado.UF,
+                            CEP = associado.Cep.Replace("-", "")
+                        }
+                    }
+                };
+                boletos.Add(boletoCancelamento);
+                
+                boletoParaCancelar.Status = BoletoStatus.Cancelado;
+                
+                _logger.LogInformation("Incluindo pedido de baixa para o Boleto ID {BoletoId} na remessa.", boletoParaCancelar.Id);
+            }
+
+
             if (!boletos.Any())
             {
                 return new ResultadoArquivoRemessa();
@@ -205,7 +273,19 @@ namespace Application.Features.Financeiro
                 var arquivoRemessa = new BNet.ArquivoRemessa(banco, BNet.TipoArquivo.CNAB400, novoNumeroRemessa);
                 arquivoRemessa.GerarArquivoRemessa(boletos, memoryStream);
 
-                await _boletoRepo.AddRangeAsync(boletosParaSalvar);
+                if (boletosParaSalvar.Any())
+                {
+                    await _boletoRepo.AddRangeAsync(boletosParaSalvar);
+                }
+                
+                if (boletosParaCancelar.Any())
+                {
+                    foreach (var boletoCancelado in boletosParaCancelar)
+                    {
+                        await _boletoRepo.Update(boletoCancelado);
+                    }
+                }
+
                 await _boletoRepo.SaveChangesAsync();
 
                 return new ResultadoArquivoRemessa
@@ -274,24 +354,18 @@ namespace Application.Features.Financeiro
 
             var todosOsRetornos = await _cnabRetornoRepository.GetAll();
             
-            // Carrega todos os boletos pendentes em memória para evitar múltiplas chamadas ao banco
             var boletosPendentes = (await _boletoRepo.GetAll()).Where(b => b.Status == BoletoStatus.Pendente).ToList();
 
             foreach (var detalhe in resultadoParse.Details)
             {
-                // Verifica se a ocorrência é de liquidação (pagamento)
                 if (detalhe.CodigoOcorrencia == "06") // "06" = Liquidação Normal
                 {
-                    // --- INÍCIO DA NOVA LÓGICA ---
-                    // Extrai o ID do boleto a partir do NossoNumero (ex: de "250000065" extrai "65")
                     if (int.TryParse(detalhe.NossoNumero.Substring(7), out int boletoId))
                     {
-                        // Encontra o boleto correspondente na lista de boletos pendentes
                         var boletoParaAtualizar = boletosPendentes.FirstOrDefault(b => b.Id == boletoId);
 
                         if (boletoParaAtualizar != null)
                         {
-                            // Atualiza o status do boleto para "Pago"
                             boletoParaAtualizar.Status = BoletoStatus.Pago;
                             await _boletoRepo.Update(boletoParaAtualizar);
                             _logger.LogInformation("Boleto ID {BoletoId} atualizado para 'Pago'.", boletoId);
@@ -305,10 +379,8 @@ namespace Application.Features.Financeiro
                     {
                         _logger.LogError("Não foi possível extrair o ID do Boleto a partir do NossoNumero: {NossoNumero}", detalhe.NossoNumero);
                     }
-                    // --- FIM DA NOVA LÓGICA ---
                 }
 
-                // A lógica para salvar o histórico do retorno continua a mesma
                 var chaveUnica = detalhe.GetUniqueKey();
                 if (!todosOsRetornos.Any(r => r.ChaveUnica == chaveUnica))
                 {
@@ -326,7 +398,5 @@ namespace Application.Features.Financeiro
             
             _logger.LogInformation("Processamento do arquivo de retorno finalizado.");
         }
-        
     }
-    
 }

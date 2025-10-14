@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 using Application.Features.Financeiro;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using System.IO;
+using System;
 
 namespace Api.Controllers
 {
@@ -26,6 +29,26 @@ namespace Api.Controllers
             return Ok(boletos);
         }
 
+        // --- NOVO ENDPOINT ADICIONADO ---
+        [HttpPost("solicitar-cancelamento/{id}")]
+        [Authorize]
+        public async Task<IActionResult> SolicitarCancelamento(int id, [FromBody] SolicitarCancelamentoDto dto)
+        {
+            // O [FromBody] faz com que o `dto` seja populado com o JSON enviado na requisição
+            // A validação do DTO (Required, MinLength) é feita automaticamente pelo ASP.NET Core
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var sucesso = await _financeiroService.SolicitarCancelamentoBoletoAsync(id, dto.Motivo);
+            if (!sucesso)
+            {
+                return NotFound(new { message = $"Boleto com ID {id} não encontrado ou não pode ser cancelado (status inválido)." });
+            }
+            return Ok(new { message = $"Solicitação de cancelamento para o boleto {id} registrada com sucesso." });
+        }
+
         [HttpPost("gerar-remessa")]
         [Authorize]
         [ProducesResponseType(typeof(FileContentResult), 200)]
@@ -42,7 +65,6 @@ namespace Api.Controllers
                     return NotFound("Nenhum boleto foi gerado para a solicitação.");
                 }
                 return File(resultado.ConteudoArquivo, "application/octet-stream", resultado.NomeArquivo);
-
             }
             catch (System.InvalidOperationException ex)
             {
@@ -50,12 +72,12 @@ namespace Api.Controllers
             }
             catch (System.Exception ex)
             {
-                // Log a exceção (ex.InnerException) para depuração
                 return StatusCode(500, new { message = "Ocorreu um erro inesperado ao gerar o arquivo de remessa.", error = ex.Message });
             }
         }
 
         [HttpPost("importar-retorno")]
+        [Authorize]
         public async Task<IActionResult> ImportarRetorno(IFormFile file)
         {
             if (file == null || file.Length == 0)
@@ -67,12 +89,7 @@ namespace Api.Controllers
             {
                 await _financeiroService.ProcessarArquivoRetornoAsync(stream);
             }
-
-            // Adicione aqui a chamada para salvar as mudanças (Unit of Work)
-            // await _unitOfWork.SaveChangesAsync();
-
             return Ok("Arquivo de retorno processado com sucesso.");
         }
-
     }
 }
