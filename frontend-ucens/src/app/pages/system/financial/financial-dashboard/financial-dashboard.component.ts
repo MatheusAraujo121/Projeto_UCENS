@@ -6,6 +6,7 @@ import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FinancialService } from '../../../../services/financial/financial.service';
 import { Boleto } from '../../../../services/financial/boleto.interface';
+import { MatSnackBar } from '@angular/material/snack-bar'; // Importe o MatSnackBar
 
 @Component({
   selector: 'app-financial-dashboard',
@@ -13,7 +14,8 @@ import { Boleto } from '../../../../services/financial/boleto.interface';
   styleUrls: ['./financial-dashboard.component.scss']
 })
 export class FinancialDashboardComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['id', 'nome', 'valor', 'vencimento', 'status'];
+  // Adicionada a coluna 'acoes'
+  displayedColumns: string[] = ['id', 'nome', 'valor', 'vencimento', 'status', 'acoes'];
   dataSource = new MatTableDataSource<Boleto>([]);
 
   filterNome = new FormControl('');
@@ -25,7 +27,8 @@ export class FinancialDashboardComponent implements OnInit, AfterViewInit {
 
   constructor(
     private financialService: FinancialService,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar // Injete o MatSnackBar
   ) { }
 
   ngOnInit(): void {
@@ -44,10 +47,9 @@ export class FinancialDashboardComponent implements OnInit, AfterViewInit {
       const status = data.status || '';
       const valor = data.valor?.toString() || '';
       
-      // A data já é um objeto Date, então podemos formatá-la com segurança
       let vencimento = '';
-      if (data.vencimento && !isNaN(data.vencimento.getTime())) {
-          vencimento = data.vencimento.toLocaleDateString('pt-BR');
+      if (data.vencimento && !isNaN(new Date(data.vencimento).getTime())) {
+          vencimento = new Date(data.vencimento).toLocaleDateString('pt-BR');
       }
 
       const globalFilter = (searchTerms.global || '').toLowerCase();
@@ -60,26 +62,21 @@ export class FinancialDashboardComponent implements OnInit, AfterViewInit {
       ].some(field => field.toLowerCase().includes(globalFilter));
 
       const matchNome = nome.toLowerCase().includes((searchTerms.nome || '').toLowerCase());
-      const matchStatus = searchTerms.status ? status === searchTerms.status : true;
+      // Ajuste para permitir múltiplos status
+      const matchStatus = searchTerms.status ? status.toLowerCase() === searchTerms.status.toLowerCase() : true;
       
       return matchNome && matchStatus && matchGlobal;
     };
   }
 
-  // MÉTODO ATUALIZADO PARA CONVERTER A DATA
   loadBoletos(): void {
-    // Usamos <any[]> para receber os dados, pois a data ainda virá como string
     this.financialService.getBoletos().subscribe((data: any[]) => {
-      
-      // Mapeamos cada boleto e convertemos a string da data para um objeto Date
       const boletosComDataCorrigida = data.map(boleto => {
         return {
           ...boleto,
           vencimento: new Date(boleto.vencimento)
         };
       });
-      
-      // Populamos a tabela com os dados já convertidos
       this.dataSource.data = boletosComDataCorrigida;
     });
   }
@@ -97,7 +94,7 @@ export class FinancialDashboardComponent implements OnInit, AfterViewInit {
   }
   
   navigateToGenerateBoleto(): void {
-    this.router.navigate(['/system/finantial/generate-boleto']);
+    this.router.navigate(['/generate-boleto']);
   }
 
   getStatusClass(status: string): string {
@@ -105,7 +102,45 @@ export class FinancialDashboardComponent implements OnInit, AfterViewInit {
       case 'Pago': return 'status-paid';
       case 'Pendente': return 'status-pending';
       case 'Cancelado': return 'status-cancelled';
+      case 'CancelamentoSolicitado': return 'status-pendingcancelled'; // Reutilizando a cor de pendente
       default: return 'status-default';
+    }
+  }
+
+  // NOVA FUNÇÃO PARA CANCELAR BOLETO
+  cancelarBoleto(boleto: Boleto): void {
+    const motivo = prompt('Por favor, insira o motivo do cancelamento:');
+    if (motivo && motivo.trim().length > 5) {
+      this.financialService.solicitarCancelamento(boleto.id, motivo).subscribe({
+        next: () => {
+          this.snackBar.open('Solicitação de cancelamento enviada com sucesso!', 'Fechar', { duration: 3000 });
+          this.loadBoletos(); // Recarrega a lista para atualizar o status
+        },
+        error: (err) => {
+          this.snackBar.open('Erro ao solicitar o cancelamento.', 'Fechar', { duration: 3000 });
+        }
+      });
+    } else if (motivo !== null) { // Verifica se o usuário não clicou em 'Cancelar' no prompt
+      this.snackBar.open('O motivo do cancelamento é obrigatório e deve ter mais de 5 caracteres.', 'Fechar', { duration: 4000 });
+    }
+  }
+
+  // NOVA FUNÇÃO PARA IMPORTAR ARQUIVO DE RETORNO
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      this.financialService.importarRetorno(file).subscribe({
+        next: () => {
+          this.snackBar.open('Arquivo de retorno importado e processado com sucesso!', 'Fechar', { duration: 3000 });
+          this.loadBoletos(); // Recarrega a lista para refletir os pagamentos
+        },
+        error: (err) => {
+          this.snackBar.open('Erro ao importar o arquivo de retorno.', 'Fechar', { duration: 3000 });
+        }
+      });
+      // Limpa o input para permitir selecionar o mesmo arquivo novamente
+      input.value = '';
     }
   }
 }

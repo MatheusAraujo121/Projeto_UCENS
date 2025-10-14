@@ -70,7 +70,6 @@ namespace Application.Features.Financeiro
             }
 
             boleto.Status = BoletoStatus.CancelamentoSolicitado;
-            // SALVA O MOTIVO NO NOVO CAMPO
             boleto.MotivoCancelamento = motivo; 
 
             await _boletoRepo.Update(boleto);
@@ -192,8 +191,7 @@ namespace Application.Features.Financeiro
                     ValorJurosDia = 0.10M, 
                     EspecieDocumento = BNet.TipoEspecieDocumento.DSI, 
                     Aceite = "N",
-                    // CORREÇÃO 2: Propriedade corrigida conforme a biblioteca
-                    CodigoMovimentoRetorno = "01", // "01" = Registro de Título
+                    CodigoMovimentoRetorno = "01", 
                     MensagemProtesto = linha1,
                     MensagemLivre = linha2
                 };
@@ -234,7 +232,6 @@ namespace Application.Features.Financeiro
 
                 var boletoCancelamento = new BNet.Boleto(banco)
                 {
-                    // CORREÇÃO 3: Propriedade corrigida conforme a biblioteca
                     CodigoMovimentoRetorno = "02", // Ocorrência "02" significa "Pedido de Baixa"
                     NossoNumero = boletoParaCancelar.NossoNumero,
                     NumeroDocumento = boletoParaCancelar.SequencialNossoNumero.ToString("D10"),
@@ -257,9 +254,11 @@ namespace Application.Features.Financeiro
                 };
                 boletos.Add(boletoCancelamento);
                 
-                boletoParaCancelar.Status = BoletoStatus.Cancelado;
+                // *** ALTERAÇÃO PRINCIPAL ***
+                // Altera o status para indicar que o pedido de cancelamento FOI ENVIADO ao banco.
+                boletoParaCancelar.Status = BoletoStatus.CancelamentoEnviado; 
                 
-                _logger.LogInformation("Incluindo pedido de baixa para o Boleto ID {BoletoId} na remessa.", boletoParaCancelar.Id);
+                _logger.LogInformation("Incluindo pedido de baixa para o Boleto ID {BoletoId} e alterando status para CancelamentoEnviado.", boletoParaCancelar.Id);
             }
 
 
@@ -278,11 +277,12 @@ namespace Application.Features.Financeiro
                     await _boletoRepo.AddRangeAsync(boletosParaSalvar);
                 }
                 
+                // Atualiza o status dos boletos que foram enviados para cancelamento
                 if (boletosParaCancelar.Any())
                 {
-                    foreach (var boletoCancelado in boletosParaCancelar)
+                    foreach (var boletoEmCancelamento in boletosParaCancelar)
                     {
-                        await _boletoRepo.Update(boletoCancelado);
+                        await _boletoRepo.Update(boletoEmCancelamento);
                     }
                 }
 
@@ -343,7 +343,6 @@ namespace Application.Features.Financeiro
         public async Task ProcessarArquivoRetornoAsync(Stream arquivoStream)
         {
             _logger.LogInformation("Iniciando processamento do arquivo de retorno CNAB400 Sicredi.");
-
             CnabParseResultDto resultadoParse = await _cnabParser.ParseAsync(arquivoStream);
 
             if (resultadoParse.HasErrors)
@@ -354,30 +353,37 @@ namespace Application.Features.Financeiro
 
             var todosOsRetornos = await _cnabRetornoRepository.GetAll();
             
-            var boletosPendentes = (await _boletoRepo.GetAll()).Where(b => b.Status == BoletoStatus.Pendente).ToList();
+            var boletosPendentes = await _boletoRepo.GetQueryable().Where(b => b.Status == BoletoStatus.Pendente).ToListAsync();
+            
+            var boletosAguardandoConfirmacaoCancelamento = await _boletoRepo.GetQueryable().Where(b => b.Status == BoletoStatus.CancelamentoEnviado).ToListAsync();
 
             foreach (var detalhe in resultadoParse.Details)
             {
                 if (detalhe.CodigoOcorrencia == "06") // "06" = Liquidação Normal
                 {
-                    if (int.TryParse(detalhe.NossoNumero.Substring(7), out int boletoId))
+                    if (int.TryParse(detalhe.NossoNumero.Substring(7), out int sequencial))
                     {
-                        var boletoParaAtualizar = boletosPendentes.FirstOrDefault(b => b.Id == boletoId);
-
+                        var boletoParaAtualizar = boletosPendentes.FirstOrDefault(b => b.SequencialNossoNumero == sequencial);
                         if (boletoParaAtualizar != null)
                         {
                             boletoParaAtualizar.Status = BoletoStatus.Pago;
                             await _boletoRepo.Update(boletoParaAtualizar);
-                            _logger.LogInformation("Boleto ID {BoletoId} atualizado para 'Pago'.", boletoId);
-                        }
-                        else
-                        {
-                            _logger.LogWarning("Boleto com ID {BoletoId} não encontrado ou já estava com status 'Pago'.", boletoId);
+                            _logger.LogInformation("Boleto ID {BoletoId} atualizado para 'Pago'.", boletoParaAtualizar.Id);
                         }
                     }
-                    else
+                }
+                else if (detalhe.CodigoOcorrencia == "09") // "09" = Baixado automaticamente via arquivo
+                {
+                    if (int.TryParse(detalhe.NossoNumero.Substring(7), out int sequencial))
                     {
-                        _logger.LogError("Não foi possível extrair o ID do Boleto a partir do NossoNumero: {NossoNumero}", detalhe.NossoNumero);
+                        var boletoParaConfirmarCancelamento = boletosAguardandoConfirmacaoCancelamento.FirstOrDefault(b => b.SequencialNossoNumero == sequencial);
+                        if (boletoParaConfirmarCancelamento != null)
+                        {
+                            boletoParaConfirmarCancelamento.Status = BoletoStatus.Cancelado;
+                            boletoParaConfirmarCancelamento.MotivoCancelamento += " (Baixa confirmada pelo banco.)";
+                            await _boletoRepo.Update(boletoParaConfirmarCancelamento);
+                            _logger.LogInformation("Boleto ID {BoletoId} confirmado como 'Cancelado' pelo banco.", boletoParaConfirmarCancelamento.Id);
+                        }
                     }
                 }
 

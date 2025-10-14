@@ -21,4 +21,15 @@ export class FinancialService {
   getBoletos(): Observable<Boleto[]> {
     return this.http.get<Boleto[]>(`${this.apiUrl}/boletos`);
   }
+
+  solicitarCancelamento(id: number, motivo: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/solicitar-cancelamento/${id}`, { motivo });
+  }
+
+  // NOVO MÉTODO PARA IMPORTAR ARQUIVO DE RETORNO
+  importarRetorno(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file, file.name);
+    return this.http.post(`${this.apiUrl}/importar-retorno`, formData);
+  }
 }

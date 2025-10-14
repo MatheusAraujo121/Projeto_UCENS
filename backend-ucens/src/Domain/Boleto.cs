@@ -27,6 +27,7 @@ namespace Domain
         Pago,
         Vencido,
         Cancelado,
-        CancelamentoSolicitado // NOVO STATUS ADICIONADO
+        CancelamentoSolicitado,
+        CancelamentoEnviado // NOVO STATUS ADICIONADO
     }
 }

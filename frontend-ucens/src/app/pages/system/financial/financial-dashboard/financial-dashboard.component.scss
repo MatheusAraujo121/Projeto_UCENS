@@ -56,7 +56,8 @@
 
 /* BOTÃO ESTILIZADO IGUAL AO DE 'CADASTRAR ASSOCIADO' */
 .btn-custom-style {
-    background-color: #fff;       // Fundo branco
+    background-color: #fff;
+    margin-left: 16px;
     color: #28a745;             // Cor do texto verde
     height: 3.5rem;
     border: 1px solid #28a745;   // Borda verde
@@ -77,7 +78,8 @@
     text-transform: uppercase;
 }
 .status-paid { background-color: #4CAF50; }
-.status-pending { background-color: #ff9800; }
+.status-pending { background-color: #ead202; }
+.status-pendingcancelled { background-color: #ffaa00; }
 .status-cancelled { background-color: #f44336; }
 .status-default { background-color: #808080; }
 .btn-voltar {
