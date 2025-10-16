@@ -6,7 +6,7 @@ import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FinancialService } from '../../../../services/financial/financial.service';
 import { Boleto } from '../../../../services/financial/boleto.interface';
-import { MatSnackBar } from '@angular/material/snack-bar'; // Importe o MatSnackBar
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-financial-dashboard',
@@ -14,13 +14,13 @@ import { MatSnackBar } from '@angular/material/snack-bar'; // Importe o MatSnack
   styleUrls: ['./financial-dashboard.component.scss']
 })
 export class FinancialDashboardComponent implements OnInit, AfterViewInit {
-  // Adicionada a coluna 'acoes'
   displayedColumns: string[] = ['id', 'nome', 'valor', 'vencimento', 'status', 'acoes'];
   dataSource = new MatTableDataSource<Boleto>([]);
 
   filterNome = new FormControl('');
   filterStatus = new FormControl('');
   filterGlobal = new FormControl('');
+  filterId = new FormControl('');
 
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -28,7 +28,7 @@ export class FinancialDashboardComponent implements OnInit, AfterViewInit {
   constructor(
     private financialService: FinancialService,
     private router: Router,
-    private snackBar: MatSnackBar // Injete o MatSnackBar
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
@@ -36,6 +36,7 @@ export class FinancialDashboardComponent implements OnInit, AfterViewInit {
     this.filterNome.valueChanges.subscribe(() => this.applyFilter());
     this.filterStatus.valueChanges.subscribe(() => this.applyFilter());
     this.filterGlobal.valueChanges.subscribe(() => this.applyFilter());
+    this.filterId.valueChanges.subscribe(() => this.applyFilter());
   }
 
   ngAfterViewInit() {
@@ -43,6 +44,7 @@ export class FinancialDashboardComponent implements OnInit, AfterViewInit {
     this.dataSource.sort = this.sort;
     this.dataSource.filterPredicate = (data: Boleto, filter: string): boolean => {
       const searchTerms = JSON.parse(filter);
+      const id = data.id.toString();
       const nome = data.associado?.nome || '';
       const status = data.status || '';
       const valor = data.valor?.toString() || '';
@@ -55,17 +57,18 @@ export class FinancialDashboardComponent implements OnInit, AfterViewInit {
       const globalFilter = (searchTerms.global || '').toLowerCase();
       
       const matchGlobal = [
+        id,
         nome,
         status,
         valor,
         vencimento
       ].some(field => field.toLowerCase().includes(globalFilter));
 
+      const matchId = searchTerms.id ? id.includes(searchTerms.id) : true;
       const matchNome = nome.toLowerCase().includes((searchTerms.nome || '').toLowerCase());
-      // Ajuste para permitir múltiplos status
       const matchStatus = searchTerms.status ? status.toLowerCase() === searchTerms.status.toLowerCase() : true;
       
-      return matchNome && matchStatus && matchGlobal;
+      return matchId && matchNome && matchStatus && matchGlobal;
     };
   }
 
@@ -83,6 +86,7 @@ export class FinancialDashboardComponent implements OnInit, AfterViewInit {
 
   applyFilter() {
     const filterValues = {
+      id: this.filterId.value || '',
       nome: (this.filterNome.value || '').toLowerCase(),
       status: this.filterStatus.value || '',
       global: (this.filterGlobal.value || '').toLowerCase()
@@ -102,30 +106,40 @@ export class FinancialDashboardComponent implements OnInit, AfterViewInit {
       case 'Pago': return 'status-paid';
       case 'Pendente': return 'status-pending';
       case 'Cancelado': return 'status-cancelled';
-      case 'CancelamentoSolicitado': return 'status-pendingcancelled'; // Reutilizando a cor de pendente
+      case 'CancelamentoSolicitado': return 'status-pendingcancelled';
+      case 'CancelamentoEnviado': return 'status-sent-for-cancellation';
       default: return 'status-default';
     }
   }
+  
+  formatStatus(status: string): string {
+    if (!status) {
+        return '';
+    }
+    const formatted = status.replace(/([A-Z])/g, ' $1').trim();
+    return formatted.charAt(0).toUpperCase() + formatted.slice(1);
+  }
 
-  // NOVA FUNÇÃO PARA CANCELAR BOLETO
-  cancelarBoleto(boleto: Boleto): void {
+  // MÉTODO ATUALIZADO PARA ACEITAR O SEGUNDO ARGUMENTO (event)
+  cancelarBoleto(boleto: Boleto, event: MouseEvent): void {
+    event.stopPropagation(); // Impede que o clique se propague para a linha da tabela
+
     const motivo = prompt('Por favor, insira o motivo do cancelamento:');
     if (motivo && motivo.trim().length > 5) {
       this.financialService.solicitarCancelamento(boleto.id, motivo).subscribe({
         next: () => {
           this.snackBar.open('Solicitação de cancelamento enviada com sucesso!', 'Fechar', { duration: 3000 });
-          this.loadBoletos(); // Recarrega a lista para atualizar o status
+          this.loadBoletos();
         },
         error: (err) => {
           this.snackBar.open('Erro ao solicitar o cancelamento.', 'Fechar', { duration: 3000 });
         }
       });
-    } else if (motivo !== null) { // Verifica se o usuário não clicou em 'Cancelar' no prompt
+    } else if (motivo !== null) {
       this.snackBar.open('O motivo do cancelamento é obrigatório e deve ter mais de 5 caracteres.', 'Fechar', { duration: 4000 });
     }
   }
 
-  // NOVA FUNÇÃO PARA IMPORTAR ARQUIVO DE RETORNO
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
@@ -133,14 +147,18 @@ export class FinancialDashboardComponent implements OnInit, AfterViewInit {
       this.financialService.importarRetorno(file).subscribe({
         next: () => {
           this.snackBar.open('Arquivo de retorno importado e processado com sucesso!', 'Fechar', { duration: 3000 });
-          this.loadBoletos(); // Recarrega a lista para refletir os pagamentos
+          this.loadBoletos();
         },
         error: (err) => {
-          this.snackBar.open('Erro ao importar o arquivo de retorno.', 'Fechar', { duration: 3000 });
+          const errorMessage = err.error?.message || 'Erro ao importar o arquivo de retorno.';
+          this.snackBar.open(errorMessage, 'Fechar', { duration: 5000 });
         }
       });
-      // Limpa o input para permitir selecionar o mesmo arquivo novamente
       input.value = '';
     }
+  }
+  
+  viewHistory(boleto: Boleto): void {
+    this.router.navigate(['/payment-history', boleto.associadoId]);
   }
 }

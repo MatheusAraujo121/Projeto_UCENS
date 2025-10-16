@@ -30,6 +30,14 @@ export class FinancialService {
   importarRetorno(file: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', file, file.name);
-    return this.http.post(`${this.apiUrl}/importar-retorno`, formData);
+    return this.http.post(`${this.apiUrl}/importar-retorno`, formData, { responseType: 'text' });
+  }
+
+  getHistorico(associadoId: number): Observable<Boleto[]> {
+    return this.http.get<Boleto[]>(`${this.apiUrl}/historico/${associadoId}`);
+  }
+
+  getBoletoById(id: number): Observable<Boleto> {
+    return this.http.get<Boleto>(`${this.apiUrl}/boleto/${id}`);
   }
 }

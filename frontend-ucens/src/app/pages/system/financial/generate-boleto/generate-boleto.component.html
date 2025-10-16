@@ -19,20 +19,28 @@
         </mat-form-field>
 
         <p class="section-label full-width"><em>2. Adicione os associados</em></p>
-        <mat-form-field class="full-width" appearance="fill">
-          <mat-label>Pesquisar e adicionar associado</mat-label>
-          <input type="text"
-                 placeholder="Digite o nome para buscar..."
-                 matInput
-                 [formControl]="associateCtrl"
-                 [matAutocomplete]="auto"
-                 #associateInput>
-          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-            <mat-option *ngFor="let associate of filteredAssociates | async" [value]="associate">
-              {{associate.nome}}
-            </mat-option>
-          </mat-autocomplete>
-        </mat-form-field>
+        
+        <div class="search-actions full-width">
+          <mat-form-field class="search-field" appearance="fill">
+            <mat-label>Pesquisar e adicionar associado</mat-label>
+            <input type="text"
+                   placeholder="Digite o nome para buscar..."
+                   matInput
+                   [formControl]="associateCtrl"
+                   [matAutocomplete]="auto"
+                   #associateInput>
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+              <mat-option *ngFor="let associate of filteredAssociates | async" [value]="associate">
+                {{associate.nome}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+
+          <button mat-stroked-button type="button" class="btn-select-all" (click)="selectAllAssociates()">
+            <mat-icon>select_all</mat-icon>
+            Selecionar Todos
+          </button>
+        </div>
 
         <div class="full-width associate-list-container" *ngIf="boletosIndividuais.length > 0">
            <p class="section-label"><em>3. Ajuste os valores individuais (se necessário)</em></p>
