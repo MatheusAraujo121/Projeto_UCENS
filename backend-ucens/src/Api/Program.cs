@@ -14,7 +14,8 @@ using Application.Features.Atividades;
 using Application.Features.Turmas;
 using Application.Features.Relatorios;
 using Application.Features.Contato;
-using Application.Features.Financeiro; 
+using Application.Features.Financeiro;
+using Application.Features.Fornecedores;  
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -41,9 +42,10 @@ builder.Services.AddScoped<IMatriculaAssociadoRepository, MatriculaAssociadoRepo
 builder.Services.AddScoped<IMatriculaDependenteRepository, MatriculaDependenteRepository>();
 builder.Services.AddScoped<ITurmaRepository, TurmaRepository>();
 builder.Services.AddScoped<ICnab400SicrediParser, Cnab400SicrediParser>();
+builder.Services.AddScoped<IFornecedorRepository, FornecedorRepository>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 
-
+builder.Services.AddScoped<FornecedorService>();
 builder.Services.AddScoped<FinanceiroService>(); 
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AssociadoService>();

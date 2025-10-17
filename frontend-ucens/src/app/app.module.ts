@@ -24,6 +24,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatDatepickerModule } from '@angular/material/datepicker'; 
 import { MatNativeDateModule } from '@angular/material/core'; 
 import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule }     from '@angular/material/radio';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
@@ -114,6 +115,10 @@ import { GenerateBoletoComponent } from './pages/system/financial/generate-bolet
 import { FinancialDashboardComponent } from './pages/system/financial/financial-dashboard/financial-dashboard.component';
 import { PaymentHistoryComponent } from './pages/system/financial/payment-history/payment-history.component';
 import { BoletoDetailComponent } from './pages/system/financial/boleto-detail/boleto-detail.component';
+import { ListSuppliersComponent } from './pages/system/suppliers/list-suppliers/list-suppliers.component';
+import { EditSuppliersComponent } from './pages/system/suppliers/edit-suppliers/edit-suppliers.component';
+import { CreateSuppliersComponent } from './pages/system/suppliers/create-suppliers/create-suppliers.component';
+import { ViewSuppliersComponent } from './pages/system/suppliers/view-suppliers/view-suppliers.component';
 
 @NgModule({
   declarations: [
@@ -163,7 +168,11 @@ import { BoletoDetailComponent } from './pages/system/financial/boleto-detail/bo
     GenerateBoletoComponent,
     FinancialDashboardComponent,
     PaymentHistoryComponent,
-    BoletoDetailComponent
+    BoletoDetailComponent,
+    ListSuppliersComponent,
+    EditSuppliersComponent,
+    CreateSuppliersComponent,
+    ViewSuppliersComponent
   ],
   imports: [
     BrowserModule,
@@ -185,6 +194,7 @@ import { BoletoDetailComponent } from './pages/system/financial/boleto-detail/bo
     MatPaginatorModule,
     MatSortModule,
     MatFormFieldModule,
+    MatProgressSpinnerModule,
     MatInputModule,
     MatSelectModule,
     FormsModule,

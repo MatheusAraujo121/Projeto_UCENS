@@ -1,0 +1,115 @@
+<main class="cadastro-page">
+  <div *ngIf="isLoading" class="loading-spinner">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <div *ngIf="!isLoading && supplier" class="cadastro-container visualizar-fornecedor">
+    <img src="assets/carp.jpg" class="bg-carpa" alt="carpa" />
+    <h6>Visualizar Fornecedor</h6>
+    <button mat-stroked-button color="warn" class="btn-voltar" routerLink="/list-suppliers">
+      <mat-icon>arrow_back</mat-icon>
+      <span>Voltar</span>
+    </button>
+    <div class="barra-divisoria"></div>
+    <div class="navegacao">
+      <button mat-stroked-button (click)="anterior()" [disabled]="currentIndex === 0">
+        <mat-icon>arrow_back</mat-icon>
+        Fornecedor Anterior
+      </button>
+      <h2>{{ supplier.nome }}</h2>
+      <button mat-stroked-button (click)="proximo()" [disabled]="currentIndex >= supplierIds.length - 1">
+        Próx. Fornecedor
+        <mat-icon>arrow_forward</mat-icon>
+      </button>
+    </div>
+    <div class="barra-divisoria"></div>
+    <h6>Dados do Fornecedor</h6>
+    <form class="form-grid">
+      <p class="section-label"><em>Dados Básicos</em></p>
+      <mat-form-field appearance="fill">
+        <mat-label>Nome</mat-label>
+        <input matInput [value]="supplier.nome" disabled />
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Responsável</mat-label>
+        <input matInput [value]="supplier.responsavel" disabled />
+      </mat-form-field>
+
+      <p class="section-label"><em>Contato</em></p>
+      <mat-form-field appearance="fill">
+        <mat-label>Telefone</mat-label>
+        <input matInput [value]="supplier.telefone" disabled/>
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>E-mail</mat-label>
+        <input matInput type="email" [value]="supplier.email" disabled />
+      </mat-form-field>
+
+      <p class="section-label"><em>Detalhes Financeiros</em></p>
+      <mat-form-field appearance="fill">
+          <mat-label>Limite de Crédito</mat-label>
+          <input matInput [value]="supplier.limiteCredito ? (supplier.limiteCredito | currency:'BRL') : 'Não definido'" disabled />
+      </mat-form-field>
+       <mat-form-field appearance="fill">
+          <mat-label>Status</mat-label>
+          <input matInput [value]="supplier.ativo ? 'Ativo' : 'Inativo'" disabled />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Observações</mat-label>
+        <textarea matInput [value]="supplier.observacoes || 'Nenhuma'" disabled cdkTextareaAutosize></textarea>
+      </mat-form-field>
+
+      <div class="action-buttons">
+        <button mat-stroked-button class="btn-submit" [routerLink]="['/edit-suppliers', supplier.id]">
+          <mat-icon>edit</mat-icon>
+          <span>Editar</span>
+        </button>
+        <button mat-stroked-button color="warn" class="btn-delete" (click)="excluir()">
+          <mat-icon>delete_outline</mat-icon>
+          <span>Excluir</span>
+        </button>
+      </div>
+    </form>
+    <div class="barra-divisoria"></div>
+    <h2>Histórico de Despesas: {{ supplier.nome }}</h2>
+    <div class="barra-divisoria"></div>
+    <div class="financial-history-container">
+      <table mat-table [dataSource]="despesasDataSource" matSort class="styled-table">
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+          <td mat-cell *matCellDef="let despesa">{{ despesa.id }}</td>
+        </ng-container>
+        <ng-container matColumnDef="descricao">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Descrição</th>
+          <td mat-cell *matCellDef="let despesa">{{ despesa.descricao }}</td>
+        </ng-container>
+        <ng-container matColumnDef="valor">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Valor</th>
+          <td mat-cell *matCellDef="let despesa">{{ despesa.valor | currency:'BRL' }}</td>
+        </ng-container>
+        <ng-container matColumnDef="dataVencimento">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Vencimento</th>
+          <td mat-cell *matCellDef="let despesa">{{ despesa.dataVencimento | date:'dd/MM/yyyy' }}</td>
+        </ng-container>
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+          <td mat-cell *matCellDef="let despesa">
+            <span class="status" [ngClass]="getStatusClass(despesa.status)">
+              {{ formatStatus(despesa.status) }}
+            </span>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="clickable-row"></tr>
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="5">Nenhuma despesa encontrada para este fornecedor.</td>
+        </tr>
+      </table>
+
+      <mat-paginator [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons
+                     aria-label="Itens por página"></mat-paginator>
+    </div>
+  </div>
+</main>

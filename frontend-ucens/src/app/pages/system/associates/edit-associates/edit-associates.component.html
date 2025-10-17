@@ -9,6 +9,7 @@
                 <mat-form-field appearance="fill">
                     <mat-label>Nome</mat-label>
                     <input matInput formControlName="nome" />
+                    <mat-error *ngIf="form.get('nome')?.hasError('required')">O nome é obrigatório.</mat-error>
                 </mat-form-field>
                 <mat-form-field appearance="fill">
                     <mat-label>Cognome</mat-label>
@@ -19,20 +20,27 @@
                 <mat-form-field appearance="fill">
                     <mat-label>CPF</mat-label>
                     <input matInput formControlName="cpf" mask="000.000.000-00" />
+                    <mat-error *ngIf="form.get('cpf')?.hasError('required')">O CPF é obrigatório.</mat-error>
+                    <mat-error *ngIf="form.get('cpf')?.hasError('cpfInvalido')">Este CPF é inválido.</mat-error>
                 </mat-form-field>
                 <mat-form-field appearance="fill">
                     <mat-label>RG</mat-label>
-                    <input matInput formControlName="rg" mask="00.000.000-0" />
+                    <input matInput type="tel" formControlName="rg" placeholder="Apenas números" />
+                     <mat-error *ngIf="form.get('rg')?.hasError('required')">O RG é obrigatório.</mat-error>
+                    <mat-error *ngIf="form.get('rg')?.hasError('pattern')">Apenas números são permitidos.</mat-error>
                 </mat-form-field>
 
                 <p class="section-label full-width"><em>Contato</em></p>
                 <mat-form-field appearance="fill">
                     <mat-label>Celular</mat-label>
-                    <input matInput formControlName="telefone" mask="(00) 00000-0000" />
+                    <input matInput type="tel" formControlName="telefone" mask="(00) 00000-0000" />
+                     <mat-error *ngIf="form.get('telefone')?.hasError('required')">O telefone é obrigatório.</mat-error>
                 </mat-form-field>
                 <mat-form-field appearance="fill" class="full-width">
                     <mat-label>E‑mail</mat-label>
                     <input matInput type="email" formControlName="email" />
+                    <mat-error *ngIf="form.get('email')?.hasError('required')">O e-mail é obrigatório.</mat-error>
+                    <mat-error *ngIf="form.get('email')?.hasError('email')">Formato de e-mail inválido.</mat-error>
                 </mat-form-field>
 
                 <p class="section-label full-width"><em>Família</em></p>
@@ -46,23 +54,37 @@
                 </mat-form-field>
 
                 <p class="section-label full-width"><em>Endereço</em></p>
-
                 <mat-form-field appearance="fill">
                     <mat-label>CEP</mat-label>
-                    <input matInput formControlName="cep" />
+                    <input matInput formControlName="cep" mask="00000-000" (blur)="buscarCep()" />
+                     <mat-error *ngIf="form.get('cep')?.hasError('required')">O CEP é obrigatório.</mat-error>
+                    <mat-error *ngIf="form.get('cep')?.hasError('pattern')">Formato de CEP inválido.</mat-error>
                 </mat-form-field>
-
                 <mat-form-field appearance="fill">
                     <mat-label>Endereço</mat-label>
                     <input matInput formControlName="endereco" placeholder="Rua, Avenida, etc." />
                 </mat-form-field>
                 <mat-form-field appearance="fill">
                     <mat-label>Número</mat-label>
-                    <input matInput formControlName="numero" placeholder="123" />
+                    <input matInput type="tel" formControlName="numero" placeholder="123" />
+                     <mat-error *ngIf="form.get('numero')?.hasError('required')">O número é obrigatório.</mat-error>
+                    <mat-error *ngIf="form.get('numero')?.hasError('pattern')">Apenas números.</mat-error>
                 </mat-form-field>
                 <mat-form-field appearance="fill" class="full-width">
                     <mat-label>Complemento</mat-label>
                     <input matInput formControlName="complemento" placeholder="Apto, Bloco, etc." />
+                </mat-form-field>
+                 <mat-form-field appearance="fill">
+                    <mat-label>Bairro</mat-label>
+                    <input matInput formControlName="bairro" />
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Cidade</mat-label>
+                    <input matInput formControlName="cidade" />
+                </mat-form-field>
+                 <mat-form-field appearance="fill">
+                    <mat-label>UF</mat-label>
+                    <input matInput formControlName="uf" />
                 </mat-form-field>
 
                 <p class="section-label full-width"><em>Outros Dados</em></p>
@@ -71,8 +93,9 @@
                     <input matInput [matDatepicker]="pickerInicio" formControlName="dataNascimento">
                     <mat-datepicker-toggle matSuffix [for]="pickerInicio"></mat-datepicker-toggle>
                     <mat-datepicker #pickerInicio></mat-datepicker>
+                    <mat-error *ngIf="form.get('dataNascimento')?.hasError('required')">A data é obrigatória.</mat-error>
+                    <mat-error *ngIf="form.get('dataNascimento')?.hasError('idadeMinima')">O associado deve ter no mínimo 1 ano.</mat-error>
                 </mat-form-field>
-
                 <mat-form-field appearance="fill">
                     <mat-label>Sexo</mat-label>
                     <mat-select formControlName="sexo">

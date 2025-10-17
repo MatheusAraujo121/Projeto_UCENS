@@ -1,0 +1,67 @@
+<main class="cadastro-page">
+    <div class="cadastro-container">
+        <img src="assets/carp.jpg" class="bg-carpa" alt="carpa" />
+        <h2>Editar Fornecedor #{{ id }}</h2>
+
+        <form [formGroup]="form" (ngSubmit)="atualizar()">
+            <p class="section-label full-width"><em>Dados Básicos</em></p>
+            <div class="form-grid">
+                <mat-form-field appearance="fill">
+                    <mat-label>Nome</mat-label>
+                    <input matInput formControlName="nome" />
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Responsável</mat-label>
+                    <input matInput formControlName="responsavel" />
+                </mat-form-field>
+            </div>
+
+            <p class="section-label full-width"><em>Contato</em></p>
+            <div class="form-grid">
+                <mat-form-field appearance="fill">
+                    <mat-label>Telefone</mat-label>
+                    <input matInput formControlName="telefone" />
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>E‑mail</mat-label>
+                    <input matInput type="email" formControlName="email" />
+                </mat-form-field>
+            </div>
+            
+            <p class="section-label full-width"><em>Detalhes Financeiros e Status</em></p>
+            <div class="form-grid">
+                <mat-form-field appearance="fill">
+                    <mat-label>Limite de Crédito</mat-label>
+                    <input matInput type="number" formControlName="limiteCredito" />
+                </mat-form-field>
+                
+                <mat-form-field appearance="fill">
+                    <mat-label>Status</mat-label>
+                    <mat-select formControlName="ativo">
+                        <mat-option [value]="true">Ativo</mat-option>
+                        <mat-option [value]="false">Inativo</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <p class="section-label full-width"><em>Observações</em></p>
+            <div class="form-grid">
+                 <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Observações</mat-label>
+                    <textarea matInput formControlName="observacoes" cdkTextareaAutosize></textarea>
+                </mat-form-field>
+            </div>
+
+            <div class="btns-bottom">
+                <button mat-stroked-button class="btn-cancel" [routerLink]="['/view-suppliers', id]" type="button">
+                    <mat-icon>close</mat-icon>
+                    <span>Cancelar</span>
+                </button>
+                <button mat-stroked-button class="btn-submit" type="submit">
+                    <mat-icon>radio_button_unchecked</mat-icon> 
+                    <span>Atualizar Cadastro</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</main>
