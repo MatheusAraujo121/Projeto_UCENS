@@ -112,6 +112,8 @@ import { AuthGuard } from './guards/auth.guard';
 //Financeiro
 import { GenerateBoletoComponent } from './pages/system/financial/generate-boleto/generate-boleto.component';
 import { FinancialDashboardComponent } from './pages/system/financial/financial-dashboard/financial-dashboard.component';
+import { PaymentHistoryComponent } from './pages/system/financial/payment-history/payment-history.component';
+import { BoletoDetailComponent } from './pages/system/financial/boleto-detail/boleto-detail.component';
 
 @NgModule({
   declarations: [
@@ -159,7 +161,9 @@ import { FinancialDashboardComponent } from './pages/system/financial/financial-
     EditClassComponent,
     ViewClassComponent,
     GenerateBoletoComponent,
-    FinancialDashboardComponent
+    FinancialDashboardComponent,
+    PaymentHistoryComponent,
+    BoletoDetailComponent
   ],
   imports: [
     BrowserModule,

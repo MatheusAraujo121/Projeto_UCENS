@@ -41,6 +41,8 @@ import { EditClassComponent } from './pages/system/classes/edit-class/edit-class
 import { AuthGuard } from './guards/auth.guard';
 import { FinancialDashboardComponent } from './pages/system/financial/financial-dashboard/financial-dashboard.component';
 import { GenerateBoletoComponent } from './pages/system/financial/generate-boleto/generate-boleto.component';
+import { PaymentHistoryComponent } from './pages/system/financial/payment-history/payment-history.component';
+import { BoletoDetailComponent } from './pages/system/financial/boleto-detail/boleto-detail.component';
 
 const routes: Routes = [
   //Rotas site expositivo
@@ -97,7 +99,8 @@ const routes: Routes = [
   // Rotas Financeiro
   { path: 'financial-dashboard', component: FinancialDashboardComponent, canActivate: [AuthGuard] },
   { path: 'generate-boleto', component: GenerateBoletoComponent, canActivate: [AuthGuard] },
-
+  { path: 'payment-history/:associadoId', component: PaymentHistoryComponent, canActivate: [AuthGuard] },
+  { path: 'boleto-detail/:boletoId', component: BoletoDetailComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({

@@ -1,0 +1,59 @@
+<div class="header">
+  <h2 mat-dialog-title>Detalhes do Boleto #{{ boleto.id }}</h2>
+  <button mat-icon-button class="close-button" (click)="close()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<mat-dialog-content class="mat-typography" *ngIf="boleto">
+  <div class="details-grid">
+    <div class="detail-item">
+      <strong>Associado:</strong>
+      <span>{{ boleto.associado.nome }}</span>
+    </div>
+    <div class="detail-item">
+      <strong>Status:</strong>
+      <span>{{ formatStatus(boleto.status) }}</span>
+    </div>
+    <div class="detail-item">
+      <strong>Valor:</strong>
+      <span>{{ boleto.valor | currency:'BRL' }}</span>
+    </div>
+    <div class="detail-item">
+      <strong>Vencimento:</strong>
+      <span>{{ boleto.vencimento | date:'dd/MM/yyyy' }}</span>
+    </div>
+    <div class="detail-item">
+      <strong>Nosso Número:</strong>
+      <span>{{ boleto.nossoNumero || 'Não informado' }}</span>
+    </div>
+    <div class="detail-item">
+      <strong>Data de Emissão:</strong>
+      <span>{{ boleto.dataEmissao | date:'dd/MM/yyyy' }}</span>
+    </div>
+    
+    <ng-container *ngIf="boleto.status === 'Pago'">
+      <div class="detail-item">
+        <strong>Data de Pagamento:</strong>
+        <span>{{ boleto.dataPagamento | date:'dd/MM/yyyy' }}</span>
+      </div>
+      <div class="detail-item">
+        <strong>Valor Pago:</strong>
+        <span>{{ boleto.valorPago | currency:'BRL' }}</span>
+      </div>
+    </ng-container>
+  </div>
+
+  <ng-container *ngIf="boleto.motivoCancelamento">
+    <mat-divider></mat-divider>
+    <div class="cancellation-reason">
+      <strong>Motivo do Cancelamento:</strong>
+      <p>{{ boleto.motivoCancelamento }}</p>
+    </div>
+  </ng-container>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-stroked-button class="btn-custom btn-cancel" (click)="close()">Fechar</button>
+</mat-dialog-actions>

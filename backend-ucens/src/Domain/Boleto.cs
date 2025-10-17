@@ -11,8 +11,9 @@ namespace Domain
         public DateTime DataVencimento { get; set; }
         public DateTime DataEmissao { get; set; }
         public DateTime? DataPagamento { get; set; } // Adicionado
-        public decimal? ValorPago { get; set; }       // Adicionado
+        public decimal? ValorPago { get; set; }      // Adicionado
         public string NossoNumero { get; set; } = "";
+        public string? MotivoCancelamento { get; set; }
         public BoletoStatus Status { get; set; }
         public decimal JurosMora { get; set; }
         public decimal PercentualMulta { get; set; }
@@ -25,6 +26,8 @@ namespace Domain
         Pendente,
         Pago,
         Vencido,
-        Cancelado
+        Cancelado,
+        CancelamentoSolicitado,
+        CancelamentoEnviado // NOVO STATUS ADICIONADO
     }
 }

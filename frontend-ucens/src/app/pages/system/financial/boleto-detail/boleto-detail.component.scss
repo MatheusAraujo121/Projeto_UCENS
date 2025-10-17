@@ -1,0 +1,75 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1.5rem;
+    border-bottom: 1px solid #ccc;
+}
+
+mat-dialog-title {
+    margin-bottom: 0;
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+.close-button {
+    min-width: auto;
+    padding: 0;
+}
+
+mat-dialog-content {
+    padding: 1.5rem;
+    
+    .details-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem 1.5rem;
+        
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            
+            strong {
+                font-weight: 500;
+                color: #555;
+                margin-bottom: 4px;
+            }
+            span {
+                color: #000;
+            }
+        }
+    }
+
+    mat-divider {
+        margin: 1.5rem 0;
+    }
+
+    .cancellation-reason {
+        strong {
+            font-weight: 500;
+            color: #d32f2f;
+        }
+        p {
+            margin-top: 8px;
+            background-color: #ffebee;
+            padding: 1rem;
+            border-radius: 4px;
+            border-left: 4px solid #d32f2f;
+        }
+    }
+}
+
+mat-dialog-actions {
+    padding: 0 1.5rem 1rem;
+}
+
+.btn-custom {
+    &.btn-cancel {
+        border-color: #d32f2f;
+        color: #d32f2f;
+        &:hover {
+            background-color: #d32f2f;
+            color: white;
+        }
+    }
+}

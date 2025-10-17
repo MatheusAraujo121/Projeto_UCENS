@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core'; // 1. Importe ViewEncapsulation
+import { Component, OnInit, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -15,7 +15,7 @@ import { PageEvent } from '@angular/material/paginator';
   selector: 'app-generate-boleto',
   templateUrl: './generate-boleto.component.html',
   styleUrls: ['./generate-boleto.component.scss'],
-  encapsulation: ViewEncapsulation.None // 2. Adicione esta linha
+  encapsulation: ViewEncapsulation.None
 })
 export class GenerateBoletoComponent implements OnInit {
   boletoForm: FormGroup;
@@ -26,11 +26,9 @@ export class GenerateBoletoComponent implements OnInit {
   boletosIndividuais: { associate: Associate, valor: number }[] = [];
   paginatedBoletos: { associate: Associate, valor: number }[] = [];
 
-  // Paginação
   pageSize = 5;
   currentPage = 0;
   totalSize = 0;
-
   isLoading = false;
 
   @ViewChild('associateInput') associateInput!: ElementRef<HTMLInputElement>;
@@ -49,9 +47,17 @@ export class GenerateBoletoComponent implements OnInit {
 
     this.filteredAssociates = this.associateCtrl.valueChanges.pipe(
       startWith(null),
-      map((associateName: string | null) => 
-        associateName ? this._filter(associateName) : this.allAssociates.slice()
-      ),
+      map((associateName: string | null) => {
+        // Se o usuário digitou algo, filtra com base no nome
+        if (associateName) {
+          return this._filter(associateName);
+        } else {
+          // Se a barra estiver vazia, retorna os 5 primeiros da lista completa que ainda não foram adicionados
+          return this.allAssociates
+            .filter(a => !this.boletosIndividuais.some(b => b.associate.id === a.id))
+            .slice(0, 5);
+        }
+      })
     );
   }
 
@@ -63,15 +69,42 @@ export class GenerateBoletoComponent implements OnInit {
   loadAssociates(): void {
     this.associateService.getAssociados().subscribe(data => {
       this.allAssociates = data;
+      // Força a atualização do autocomplete após carregar os associados
+      this.associateCtrl.setValue('');
     });
   }
 
+  // MÉTODO DE FILTRO ATUALIZADO PARA LIMITAR OS RESULTADOS
   private _filter(value: string): Associate[] {
     const filterValue = value.toLowerCase();
     return this.allAssociates.filter(associate => 
+      // Filtra por nome
       associate.nome.toLowerCase().includes(filterValue) &&
+      // Garante que o associado já não está na lista de boletos a serem gerados
       !this.boletosIndividuais.some(b => b.associate.id === associate.id)
-    );
+    )
+    .slice(0, 5); // AQUI ESTÁ A MUDANÇA: Retorna apenas os 5 primeiros resultados
+  }
+
+  selectAllAssociates(): void {
+    const valorPadrao = this.boletoForm.get('valorPadrao')?.value;
+    let adicionados = 0;
+
+    this.allAssociates.forEach(associate => {
+      const jaAdicionado = this.boletosIndividuais.some(b => b.associate.id === associate.id);
+      if (!jaAdicionado) {
+        this.boletosIndividuais.push({ associate: associate, valor: valorPadrao });
+        adicionados++;
+      }
+    });
+
+    if (adicionados > 0) {
+      this.snackBar.open(`${adicionados} associado(s) adicionado(s) à lista.`, 'Fechar', { duration: 3000 });
+    } else {
+      this.snackBar.open('Todos os associados já estão na lista.', 'Fechar', { duration: 3000 });
+    }
+
+    this.updatePage();
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
@@ -143,7 +176,7 @@ export class GenerateBoletoComponent implements OnInit {
 
         this.isLoading = false;
         this.snackBar.open('Arquivo de remessa gerado com sucesso!', 'Fechar', { duration: 3000 });
-        this.router.navigate(['/system/finantial-dashboard']);
+        this.router.navigate(['/financial-dashboard']);
       },
       error: (err) => {
         console.error('Erro ao gerar remessa:', err);
