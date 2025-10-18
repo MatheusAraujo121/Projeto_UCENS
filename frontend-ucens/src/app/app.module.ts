@@ -119,6 +119,10 @@ import { ListSuppliersComponent } from './pages/system/suppliers/list-suppliers/
 import { EditSuppliersComponent } from './pages/system/suppliers/edit-suppliers/edit-suppliers.component';
 import { CreateSuppliersComponent } from './pages/system/suppliers/create-suppliers/create-suppliers.component';
 import { ViewSuppliersComponent } from './pages/system/suppliers/view-suppliers/view-suppliers.component';
+import { ExpensesDashboardComponent } from './pages/system/expenses/expenses-dashboard/expenses-dashboard.component';
+import { CreateExpenseComponent } from './pages/system/expenses/create-expense/create-expense.component';
+import { EditExpenseComponent } from './pages/system/expenses/edit-expense/edit-expense.component';
+import { ExpenseDetailComponent } from './pages/system/expenses/expense-detail/expense-detail.component';
 
 @NgModule({
   declarations: [
@@ -172,7 +176,11 @@ import { ViewSuppliersComponent } from './pages/system/suppliers/view-suppliers/
     ListSuppliersComponent,
     EditSuppliersComponent,
     CreateSuppliersComponent,
-    ViewSuppliersComponent
+    ViewSuppliersComponent,
+    ExpensesDashboardComponent,
+    CreateExpenseComponent,
+    EditExpenseComponent,
+    ExpenseDetailComponent
   ],
   imports: [
     BrowserModule,

@@ -38,7 +38,7 @@
       <p class="section-label"><em>Contato</em></p>
       <mat-form-field appearance="fill">
         <mat-label>Telefone</mat-label>
-        <input matInput [value]="supplier.telefone" disabled/>
+        <input matInput [value]="supplier.telefone" disabled />
       </mat-form-field>
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>E-mail</mat-label>
@@ -47,12 +47,13 @@
 
       <p class="section-label"><em>Detalhes Financeiros</em></p>
       <mat-form-field appearance="fill">
-          <mat-label>Limite de Crédito</mat-label>
-          <input matInput [value]="supplier.limiteCredito ? (supplier.limiteCredito | currency:'BRL') : 'Não definido'" disabled />
+        <mat-label>Limite de Crédito</mat-label>
+        <input matInput [value]="supplier.limiteCredito ? (supplier.limiteCredito | currency:'BRL') : 'Não definido'"
+          disabled />
       </mat-form-field>
-       <mat-form-field appearance="fill">
-          <mat-label>Status</mat-label>
-          <input matInput [value]="supplier.ativo ? 'Ativo' : 'Inativo'" disabled />
+      <mat-form-field appearance="fill">
+        <mat-label>Status</mat-label>
+        <input matInput [value]="supplier.ativo ? 'Ativo' : 'Inativo'" disabled />
       </mat-form-field>
 
       <mat-form-field appearance="fill" class="full-width">
@@ -108,8 +109,7 @@
         </tr>
       </table>
 
-      <mat-paginator [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons
-                     aria-label="Itens por página"></mat-paginator>
+      <mat-paginator [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons aria-label="Itens por página"></mat-paginator>
     </div>
   </div>
 </main>

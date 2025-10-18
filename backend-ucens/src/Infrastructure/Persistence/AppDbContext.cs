@@ -19,7 +19,7 @@ namespace Infrastructure.Persistence
         public DbSet<Boleto> Boletos { get; set; } = null!;
         public DbSet<CnabRetorno> CnabRetornos { get; set; }
         public DbSet<Fornecedor> Fornecedores { get; set; } = null!;
-public DbSet<Despesa> Despesas { get; set; } = null!;
+        public DbSet<Despesa> Despesas { get; set; } = null!;
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -82,7 +82,7 @@ public DbSet<Despesa> Despesas { get; set; } = null!;
 
                    entity.Property(a => a.Cidade)
                      .HasMaxLength(100);
-                     
+
                    entity.Property(a => a.UF)
                      .HasMaxLength(2);
 
@@ -118,32 +118,32 @@ public DbSet<Despesa> Despesas { get; set; } = null!;
                });
 
             modelBuilder.Entity<Fornecedor>(entity =>
-{
-    entity.HasKey(f => f.Id);
-    entity.Property(f => f.Nome).IsRequired().HasMaxLength(150);
-    entity.Property(f => f.Telefone).HasMaxLength(20);
-    entity.Property(f => f.Email).HasMaxLength(100);
-    entity.Property(f => f.Responsavel).HasMaxLength(100);
-    entity.Property(f => f.LimiteCredito).HasColumnType("decimal(18, 2)");
+            {
+                entity.HasKey(f => f.Id);
+                entity.Property(f => f.Nome).IsRequired().HasMaxLength(150);
+                entity.Property(f => f.Telefone).HasMaxLength(20);
+                entity.Property(f => f.Email).HasMaxLength(100);
+                entity.Property(f => f.Responsavel).HasMaxLength(100);
+                entity.Property(f => f.LimiteCredito).HasColumnType("decimal(18, 2)");
 
-    entity.HasMany(f => f.Despesas)
-        .WithOne(d => d.Fornecedor)
-        .HasForeignKey(d => d.FornecedorId)
-        .OnDelete(DeleteBehavior.Cascade);
-});
+                entity.HasMany(f => f.Despesas)
+                    .WithOne(d => d.Fornecedor)
+                    .HasForeignKey(d => d.FornecedorId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
 
-modelBuilder.Entity<Despesa>(entity =>
-{
-    entity.HasKey(d => d.Id);
-    entity.Property(d => d.Descricao).IsRequired().HasMaxLength(200);
-    entity.Property(d => d.Categoria).HasMaxLength(100);
-    entity.Property(d => d.Status).HasMaxLength(50);
-    entity.Property(d => d.Valor).HasColumnType("decimal(18, 2)").IsRequired();
-    entity.Property(d => d.FormaPagamento).HasMaxLength(100);
-    entity.Property(d => d.NumeroFatura).HasMaxLength(100);
-    entity.Property(d => d.MultaJuros).HasColumnType("decimal(18, 2)");
-    entity.Property(d => d.AnexoUrl).HasMaxLength(500);
-});
+            modelBuilder.Entity<Despesa>(entity =>
+            {
+                entity.HasKey(d => d.Id);
+                entity.Property(d => d.Descricao).IsRequired().HasMaxLength(200);
+                entity.Property(d => d.Categoria).HasMaxLength(100);
+                entity.Property(d => d.Status).HasMaxLength(50);
+                entity.Property(d => d.Valor).HasColumnType("decimal(18, 2)").IsRequired();
+                entity.Property(d => d.FormaPagamento).HasMaxLength(100);
+                entity.Property(d => d.NumeroFatura).HasMaxLength(100);
+                entity.Property(d => d.MultaJuros).HasColumnType("decimal(18, 2)");
+                entity.Property(d => d.AnexoUrl).HasMaxLength(500);
+            });
 
             modelBuilder.Entity<Dependente>(entity =>
             {

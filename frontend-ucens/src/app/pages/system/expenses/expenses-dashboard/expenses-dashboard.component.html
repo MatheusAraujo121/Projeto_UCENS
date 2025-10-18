@@ -1,0 +1,79 @@
+<main class="list-page">
+  <button mat-stroked-button color="warn" class="btn-voltar" routerLink="/dashboard">
+    <mat-icon>arrow_back</mat-icon>
+    <span>Voltar</span>
+  </button>
+  <div class="toolbar">
+    <h2>Dashboard de Despesas</h2>
+    <p>Acompanhe e gerencie as despesas da associação.</p>
+    <div class="filters">
+      <mat-form-field appearance="outline">
+        <mat-label>Filtrar por Categoria</mat-label>
+        <input matInput [formControl]="filterCategoria" placeholder="Categoria da despesa">
+      </mat-form-field>
+       <mat-form-field appearance="outline">
+        <mat-label>Filtrar por ID</mat-label>
+        <input matInput [formControl]="filterId" placeholder="ID da despesa" type="number">
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Filtrar por Status</mat-label>
+        <mat-select [formControl]="filterStatus" placeholder="Situação">
+          <mat-option value="">Todos</mat-option>
+          <mat-option value="Pendente">Pendente</mat-option>
+          <mat-option value="Paga">Paga</mat-option>
+          <mat-option value="Atrasada">Atrasada</mat-option>
+          <mat-option value="Cancelada">Cancelada</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="flex-grow">
+        <mat-label>Pesquisar</mat-label>
+        <input matInput [formControl]="filterGlobal" placeholder="Buscar em todos os campos...">
+      </mat-form-field>
+    </div>
+
+    <div class="action-buttons">
+      <button mat-raised-button class="btn-custom-style" (click)="navigateToCreateExpense()">
+        Lançar Despesa
+      </button>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table mat-table [dataSource]="dataSource" matSort class="styled-table">
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+        <td mat-cell *matCellDef="let row">{{row.id}}</td>
+      </ng-container>
+      <ng-container matColumnDef="descricao">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Descrição</th>
+        <td mat-cell *matCellDef="let row">{{row.descricao}}</td>
+      </ng-container>
+      <ng-container matColumnDef="categoria">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Categoria</th>
+        <td mat-cell *matCellDef="let row">{{row.categoria}}</td>
+      </ng-container>
+      <ng-container matColumnDef="valor">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Valor</th>
+        <td mat-cell *matCellDef="let row">{{row.valor | currency:'BRL'}}</td>
+      </ng-container>
+      <ng-container matColumnDef="dataVencimento">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Vencimento</th>
+        <td mat-cell *matCellDef="let row">{{row.dataVencimento | date:'dd/MM/yyyy'}}</td>
+      </ng-container>
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+        <td mat-cell *matCellDef="let row">
+          <span class="status" [ngClass]="getStatusClass(row.status)">
+            {{ formatStatus(row.status) }}
+          </span>
+        </td>
+      </ng-container>
+      
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row (click)="openExpenseDetails(row)" *matRowDef="let row; columns: displayedColumns;" class="clickable-row"></tr>
+    </table>
+  </div>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+    aria-label="Itens por página"></mat-paginator>
+</main>

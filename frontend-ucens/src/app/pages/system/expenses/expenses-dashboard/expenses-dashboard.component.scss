@@ -1,0 +1,112 @@
+/* Estilos gerais da página (copiados do financial-dashboard.component.scss) */
+.list-page {
+  padding: 1rem;
+  .toolbar {
+    padding: 1.5rem;
+    background: #eef2f5;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+    border-color: #000;
+    margin-bottom: 1rem;
+    h2 {
+      margin: 0;
+      font-size: 1.75rem;
+    }
+    p {
+      margin: 0.25rem 0 1.5rem;
+      color: #555;
+    }
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+      margin-bottom: 1rem;
+      mat-form-field {
+        min-width: 200px;
+      }
+      .flex-grow {
+        flex: 1;
+      }
+    }
+  }
+  .table-container {
+    background: #fff;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    border: 1px solid #000;
+    .styled-table {
+      width: 100%;
+      border-collapse: collapse;
+      .clickable-row {
+        cursor: pointer;
+      }
+      th {
+        background: #bfbfbf;
+        color: #333;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+      tr {
+        background-color: #fafafa;
+        transition: background-color 0.2s;
+      }
+      tr:hover {
+        background-color: #d1d1d1;
+      }
+    }
+  }
+  mat-paginator {
+    background: transparent;
+    display: flex;
+    justify-content: flex-end;
+    padding: 0.5rem 0;
+    margin-top: 1rem;
+  }
+}
+
+.btn-custom-style {
+  background-color: #fff;
+  margin-left: 16px;
+  color: #28a745;
+  height: 3.5rem;
+  border: 1px solid #28a745;
+  transition: background-color 0.2s, color 0.2s;
+  &:hover {
+    background-color: #e9f5ec;
+  }
+}
+
+/* Estilos de status */
+.status {
+  padding: 0.4rem 0.8rem;
+  border-radius: 15px;
+  color: white;
+  font-weight: bold;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+.status-paid {
+  background-color: #4CAF50; /* Verde */
+}
+.status-pending {
+  background-color: #ead202; /* Amarelo */
+}
+.status-overdue {
+  background-color: #ff9800; /* Laranja */
+}
+.status-cancelled {
+  background-color: #f44336; /* Vermelho */
+}
+.status-paid-late {
+  background-color: #0081A7; /* Um tom de azul-petróleo, por exemplo */
+}
+.status-default {
+  background-color: #808080; /* Cinza */
+}
+.btn-voltar {
+  margin-bottom: 1rem;
+  border-color: #d32f2f;
+  width: 7.5%;
+  margin-left: 1.5%;
+}

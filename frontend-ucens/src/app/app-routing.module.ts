@@ -47,6 +47,10 @@ import { ListSuppliersComponent } from './pages/system/suppliers/list-suppliers/
 import { CreateSuppliersComponent } from './pages/system/suppliers/create-suppliers/create-suppliers.component';
 import { EditSuppliersComponent } from './pages/system/suppliers/edit-suppliers/edit-suppliers.component';
 import { ViewSuppliersComponent } from './pages/system/suppliers/view-suppliers/view-suppliers.component';
+import { ExpensesDashboardComponent } from './pages/system/expenses/expenses-dashboard/expenses-dashboard.component';
+import { CreateExpenseComponent } from './pages/system/expenses/create-expense/create-expense.component';
+import { ExpenseDetailComponent } from './pages/system/expenses/expense-detail/expense-detail.component';
+import { EditExpenseComponent } from './pages/system/expenses/edit-expense/edit-expense.component';
 
 const routes: Routes = [
   //Rotas site expositivo
@@ -111,6 +115,13 @@ const routes: Routes = [
   { path: 'create-suppliers', component: CreateSuppliersComponent, canActivate: [AuthGuard] },
   { path: 'edit-suppliers/:id', component: EditSuppliersComponent, canActivate: [AuthGuard] },
   { path: 'view-suppliers/:id', component: ViewSuppliersComponent, canActivate: [AuthGuard] },
+
+  //Rotas Despesas
+    { path: 'list-expenses', component: ExpensesDashboardComponent, canActivate: [AuthGuard] },
+    { path: 'create-expense', component: CreateExpenseComponent, canActivate: [AuthGuard] },
+    { path: 'expense-detail/id', component: ExpenseDetailComponent, canActivate: [AuthGuard] },
+    { path: 'edit-expense/:id', component: EditExpenseComponent, canActivate: [AuthGuard] },
+    
 ];
 
 @NgModule({

@@ -76,7 +76,7 @@ export class ViewSuppliersComponent implements OnInit, AfterViewInit {
       }
     });
   }
-  
+
   // Funções de formatação de status para a tabela de despesas
   formatStatus(status: string): string {
     if (!status) return 'N/A';
