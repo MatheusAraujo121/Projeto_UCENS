@@ -21,6 +21,7 @@
           <mat-option value="">Todos</mat-option>
           <mat-option value="Pendente">Pendente</mat-option>
           <mat-option value="Paga">Paga</mat-option>
+          <mat-option value="Pago com atraso">Pago com atraso</mat-option>
           <mat-option value="Atrasada">Atrasada</mat-option>
           <mat-option value="Cancelada">Cancelada</mat-option>
         </mat-select>
@@ -44,10 +45,17 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
         <td mat-cell *matCellDef="let row">{{row.id}}</td>
       </ng-container>
+
+      <ng-container matColumnDef="fornecedor">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Fornecedor</th>
+        <td mat-cell *matCellDef="let row">{{row.fornecedorNome}}</td>
+      </ng-container>
+
       <ng-container matColumnDef="descricao">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Descrição</th>
         <td mat-cell *matCellDef="let row">{{row.descricao}}</td>
       </ng-container>
+
       <ng-container matColumnDef="categoria">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Categoria</th>
         <td mat-cell *matCellDef="let row">{{row.categoria}}</td>

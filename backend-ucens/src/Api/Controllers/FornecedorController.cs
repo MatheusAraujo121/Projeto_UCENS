@@ -68,7 +68,7 @@ namespace Api.Controllers
             await _service.Delete(id);
             return NoContent();
         }
-        
+
         // Endpoints para Despesas
         [HttpPost("{fornecedorId:int}/despesas")]
         [Authorize]
@@ -82,11 +82,26 @@ namespace Api.Controllers
             return Ok(created);
         }
 
+        [HttpGet("despesas/{id:int}")]
+        [Authorize]
+        public async Task<ActionResult<DespesaDTO>> GetDespesaById(int id)
+        {
+            try
+            {
+                var despesa = await _service.GetDespesaById(id);
+                return Ok(despesa);
+            }
+            catch (System.Exception ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+        }
+
         [HttpPut("despesas/{id:int}")]
         [Authorize]
         public async Task<ActionResult<DespesaDTO>> UpdateDespesa(int id, [FromBody] DespesaDTO dto)
         {
-             if (id != dto.Id)
+            if (id != dto.Id)
             {
                 return BadRequest("O ID na URL não corresponde ao ID no corpo da requisição.");
             }
@@ -101,7 +116,7 @@ namespace Api.Controllers
                 return NotFound(new { message = ex.Message });
             }
         }
-        
+
         [HttpDelete("despesas/{id:int}")]
         [Authorize]
         public async Task<IActionResult> DeleteDespesa(int id)

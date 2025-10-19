@@ -34,13 +34,16 @@ mat-dialog-content {
         color: #555;
         margin-bottom: 4px;
       }
+
       span {
         color: #000;
       }
-       &.full-width {
+
+      &.full-width {
         grid-column: 1 / -1;
       }
-       .obs-box {
+
+      .obs-box {
         margin-top: 4px;
         background-color: #f5f5f5;
         padding: 0.75rem;
@@ -74,29 +77,66 @@ mat-dialog-actions {
 }
 
 .btn-custom {
-  &.btn-cancel {
-    border-color: #808080;
-    color: #808080;
-    &:hover { background-color: #f0f0f0; }
-  }
+  background: transparent;
+  border-width: 1px;
+  transition: background-color 0.2s, color 0.2s;
+  font-weight: 500;
+
   &.btn-delete {
     border-color: #d32f2f;
     color: #d32f2f;
-     &:hover { background-color: #d32f2f; color: white; }
+
+    &:hover {
+      background-color: #d32f2f;
+      color: white;
+    }
   }
-  &.btn-edit {
-    background-color: #1976d2;
-    color: white;
-     &:hover { background-color: #1565c0; }
+
+  &.btn-add {
+    border-color: #1976d2;
+    color: #1976d2;
+
+    &:hover {
+      background-color: #1976d2;
+      color: white;
+    }
+  }
+
+  &.btn-cancel {
+    border-color: #808080;
+    color: #808080;
+
+    &:hover {
+      background-color: #cccccc;
+    }
   }
 }
+
 
 .status-text {
   font-weight: bold;
 }
-.status-paid { color: #4CAF50; }
-.status-paid-late { color: #0081A7; }
-.status-pending { color: #e5c502; }
-.status-overdue { color: #ff9800; }
-.status-cancelled { color: #f44336; }
-.status-default { color: #808080; }
+
+.status-paid {
+  color: #4CAF50;
+}
+
+.status-paid-late {
+  color: #0081A7;
+}
+
+.status-pending {
+  color: #e5c502;
+}
+
+.status-overdue {
+  color: #ff9800;
+}
+
+.status-cancelled {
+  color: #f44336;
+}
+
+.status-default {
+  color: #808080;
+}

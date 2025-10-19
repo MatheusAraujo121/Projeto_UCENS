@@ -72,7 +72,7 @@ namespace Application.Features.Fornecedores
         {
             await _repo.Delete(id);
         }
-        
+
         // Métodos para Despesas
         public async Task<DespesaDTO> AddDespesa(DespesaDTO dto)
         {
@@ -94,10 +94,40 @@ namespace Application.Features.Fornecedores
             await _despesaRepo.Update(despesa);
             return dto;
         }
-        
+
         public async Task DeleteDespesa(int id)
         {
             await _despesaRepo.Delete(id);
+        }
+
+        public async Task<DespesaDTO> GetDespesaById(int id)
+        {
+            var despesa = await _despesaRepo.GetById(id);
+            if (despesa == null)
+            {
+                throw new Exception($"Despesa com ID {id} não encontrada.");
+            }
+            return MapToDespesaDto(despesa);
+        }
+
+        private DespesaDTO MapToDespesaDto(Despesa d)
+        {
+            return new DespesaDTO
+            {
+                Id = d.Id,
+                Descricao = d.Descricao,
+                Categoria = d.Categoria,
+                Status = d.Status,
+                Valor = d.Valor,
+                DataVencimento = d.DataVencimento,
+                DataPagamento = d.DataPagamento,
+                FormaPagamento = d.FormaPagamento,
+                NumeroFatura = d.NumeroFatura,
+                MultaJuros = d.MultaJuros,
+                Observacoes = d.Observacoes,
+                AnexoUrl = d.AnexoUrl,
+                FornecedorId = d.FornecedorId
+            };
         }
 
         // Mapeamentos
@@ -151,7 +181,7 @@ namespace Application.Features.Fornecedores
                 FornecedorId = dto.FornecedorId
             };
         }
-        
+
         private void MapDtoToEntity(DespesaDTO dto, Despesa despesa)
         {
             despesa.Descricao = dto.Descricao;

@@ -10,7 +10,11 @@ import { ExpensesService } from '../../../../services/expenses/expenses.service'
 import { Despesa } from '../../../../services/expenses/expenses.interface';
 import { SupplierService } from '../../../../services/suppliers/supplier.service';
 import { Fornecedor } from '../../../../services/suppliers/supplier.interface';
-import { ExpenseDetailComponent } from '../expense-detail/expense-detail.component'; // Importe o novo modal
+import { ExpenseDetailComponent } from '../expense-detail/expense-detail.component';
+
+export interface DespesaComFornecedor extends Despesa {
+  fornecedorNome: string;
+}
 
 @Component({
   selector: 'app-expenses-dashboard',
@@ -18,11 +22,10 @@ import { ExpenseDetailComponent } from '../expense-detail/expense-detail.compone
   styleUrls: ['./expenses-dashboard.component.scss']
 })
 export class ExpensesDashboardComponent implements OnInit, AfterViewInit {
-  // Removida a coluna 'acoes'
-  displayedColumns: string[] = ['id', 'descricao', 'categoria', 'valor', 'dataVencimento', 'status'];
-  dataSource = new MatTableDataSource<Despesa>([]);
+  // ATUALIZADO: Adicionada a coluna 'fornecedor'
+  displayedColumns: string[] = ['id', 'fornecedor', 'descricao', 'categoria', 'valor', 'dataVencimento', 'status'];
+  dataSource = new MatTableDataSource<DespesaComFornecedor>([]);
 
-  // Removido o filtro de descrição
   filterCategoria = new FormControl('');
   filterStatus = new FormControl('');
   filterGlobal = new FormControl('');
@@ -36,7 +39,7 @@ export class ExpensesDashboardComponent implements OnInit, AfterViewInit {
     private supplierService: SupplierService,
     private router: Router,
     private snackBar: MatSnackBar,
-    public dialog: MatDialog // Injete MatDialog
+    public dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -50,7 +53,7 @@ export class ExpensesDashboardComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    this.dataSource.filterPredicate = (data: Despesa, filter: string): boolean => {
+    this.dataSource.filterPredicate = (data: DespesaComFornecedor, filter: string): boolean => {
       const searchTerms = JSON.parse(filter);
 
       const id = data.id.toString();
@@ -58,6 +61,7 @@ export class ExpensesDashboardComponent implements OnInit, AfterViewInit {
       const categoria = data.categoria || '';
       const status = data.status || '';
       const valor = data.valor?.toString() || '';
+      const fornecedorNome = data.fornecedorNome || '';
       let vencimento = '';
       if (data.dataVencimento && !isNaN(new Date(data.dataVencimento).getTime())) {
           vencimento = new Date(data.dataVencimento).toLocaleDateString('pt-BR');
@@ -65,8 +69,7 @@ export class ExpensesDashboardComponent implements OnInit, AfterViewInit {
 
       const globalFilter = (searchTerms.global || '').toLowerCase();
       
-      // A descrição agora é verificada apenas no filtro global
-      const matchGlobal = [id, descricao, categoria, status, valor, vencimento]
+      const matchGlobal = [id, descricao, categoria, status, valor, vencimento, fornecedorNome]
         .some(field => field.toLowerCase().includes(globalFilter));
 
       const matchId = searchTerms.id ? id.includes(searchTerms.id) : true;
@@ -78,8 +81,14 @@ export class ExpensesDashboardComponent implements OnInit, AfterViewInit {
   }
 
   loadExpenses(): void {
-    this.supplierService.getSuppliers().subscribe((data: Fornecedor[]) => {
-      const allExpenses = data.flatMap(supplier => supplier.despesas || []);
+    this.supplierService.getSuppliers().subscribe((suppliers: Fornecedor[]) => {
+      const allExpenses: DespesaComFornecedor[] = suppliers.flatMap(supplier => 
+        (supplier.despesas || []).map(despesa => ({
+          ...despesa,
+          fornecedorNome: supplier.nome
+        }))
+      );
+      
       this.dataSource.data = allExpenses.map(d => ({
         ...d,
         dataVencimento: new Date(d.dataVencimento)
@@ -101,17 +110,12 @@ export class ExpensesDashboardComponent implements OnInit, AfterViewInit {
     }
   }
   
-  /**
-   * Abre o modal com os detalhes da despesa.
-   * @param expense A despesa clicada na linha.
-   */
   openExpenseDetails(expense: Despesa): void {
     const dialogRef = this.dialog.open(ExpenseDetailComponent, {
       width: '700px',
       data: expense 
     });
 
-    // Ouve o resultado do fechamento do modal
     dialogRef.afterClosed().subscribe(result => {
       if (result === 'delete') {
         this.confirmDelete(expense);
@@ -119,10 +123,6 @@ export class ExpensesDashboardComponent implements OnInit, AfterViewInit {
     });
   }
 
-  /**
-   * Confirma e executa a exclusão da despesa.
-   * @param expense A despesa a ser excluída.
-   */
   confirmDelete(expense: Despesa): void {
      if (confirm(`Tem certeza que deseja excluir a despesa "${expense.descricao}"?`)) {
       this.expensesService.deleteExpense(expense.id).subscribe({
@@ -144,7 +144,7 @@ export class ExpensesDashboardComponent implements OnInit, AfterViewInit {
   getStatusClass(status: string): string {
     switch (status) {
       case 'Paga': return 'status-paid';
-      case 'Pago com atraso': return 'status-paid-late'; // NOVO
+      case 'Pago com atraso': return 'status-paid-late';
       case 'Pendente': return 'status-pending';
       case 'Atrasada': return 'status-overdue';
       case 'Cancelada': return 'status-cancelled';
@@ -154,6 +154,6 @@ export class ExpensesDashboardComponent implements OnInit, AfterViewInit {
 
   formatStatus(status: string): string {
     if (!status) return '';
-    return status.charAt(0).toUpperCase() + status.slice(1);
+    return status.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
   }
 }
