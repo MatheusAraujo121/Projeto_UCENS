@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations; // Adicionado
 
 namespace Domain
 {
@@ -11,9 +12,14 @@ namespace Domain
         public DateTime DataVencimento { get; set; }
         public DateTime DataEmissao { get; set; }
         public DateTime? DataPagamento { get; set; } // Adicionado
-        public decimal? ValorPago { get; set; }      // Adicionado
+        public decimal? ValorPago { get; set; }       // Adicionado
+
+        [StringLength(50)] // Adicionado
         public string NossoNumero { get; set; } = "";
+
+        [StringLength(255)] // Adicionado
         public string? MotivoCancelamento { get; set; }
+
         public BoletoStatus Status { get; set; }
         public decimal JurosMora { get; set; }
         public decimal PercentualMulta { get; set; }
