@@ -1,23 +1,23 @@
 <main class="cadastro-page">
-
     <div class="cadastro-container">
         <h2>Editar Dependente #{{ id }}</h2>
         <img src="assets/carp.jpg" class="bg-carpa" alt="carpa" />
         <form [formGroup]="form" (ngSubmit)="atualizar()">
-            <p class="section-label"><em>Vínculo</em></p>
             <div class="form-grid">
+                <p class="section-label full-width"><em>Vínculo</em></p>
                 <mat-form-field appearance="fill">
                     <mat-label>Associado Responsável</mat-label>
                     <input type="text" placeholder="Digite para pesquisar..." matInput
-                        [formControl]="associateFilterCtrl" [value]="associateName" formControlName="idAssociado"
-                        [matAutocomplete]="auto">
+                           [formControl]="associateFilterCtrl" [matAutocomplete]="auto">
                     <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayAssociateName">
-                        <mat-option *ngFor="let associate of filteredAssociates | async" [value]="associate"
-                            (onSelectionChange)="form.get('associadoId')?.setValue(associate)">
+                        <mat-option *ngFor="let associate of filteredAssociates | async" [value]="associate">
                             {{ associate.nome }}
                         </mat-option>
                     </mat-autocomplete>
+                    <mat-error *ngIf="associateFilterCtrl.hasError('required')">É obrigatório selecionar um associado.</mat-error>
+                    <mat-error *ngIf="associateFilterCtrl.hasError('incorrect')">Selecione um associado válido da lista.</mat-error>
                 </mat-form-field>
+
                 <mat-form-field appearance="fill">
                     <mat-label>Situação</mat-label>
                     <mat-select formControlName="situacao">
@@ -29,22 +29,23 @@
                 <mat-form-field appearance="fill">
                     <mat-label>Grau de Parentesco</mat-label>
                     <input matInput formControlName="grauParentesco" />
+                    <mat-error *ngIf="form.get('grauParentesco')?.hasError('required')">O parentesco é obrigatório.</mat-error>
                 </mat-form-field>
-            </div>
 
-            <p class="section-label"><em>Carteirinha</em></p>
-            <div class="form-grid" formGroupName="carteirinha">
+                <p class="section-label full-width"><em>Dados do Dependente e Carteirinha</em></p>
                 <mat-form-field appearance="fill">
-                    <mat-label>Nome na Carteirinha</mat-label>
+                    <mat-label>Nome do Dependente</mat-label>
                     <input matInput formControlName="nome" />
+                    <mat-error *ngIf="form.get('nome')?.hasError('required')">O nome do dependente é obrigatório.</mat-error>
                 </mat-form-field>
                 <mat-form-field appearance="fill">
                     <mat-label>Cognome</mat-label>
                     <input matInput formControlName="cognome" />
                 </mat-form-field>
                 <mat-form-field appearance="fill">
-                    <mat-label>Número</mat-label>
-                    <input matInput formControlName="numero" />
+                    <mat-label>Número da Carteirinha</mat-label>
+                    <input matInput type="tel" formControlName="numeroCarteirinha" />
+                    <mat-error *ngIf="form.get('numeroCarteirinha')?.hasError('pattern')">Apenas números são permitidos.</mat-error>
                 </mat-form-field>
                 <mat-form-field appearance="fill">
                     <mat-label>Categoria</mat-label>
@@ -52,12 +53,10 @@
                 </mat-form-field>
                 <mat-form-field appearance="fill">
                     <mat-label>Validade</mat-label>
-                    <input matInput formControlName="validade">
+                    <input matInput type="date" formControlName="validadeCarteirinha">
                 </mat-form-field>
-            </div>
 
-            <p class="section-label"><em>Identificação</em></p>
-            <div class="form-grid">
+                <p class="section-label full-width"><em>Identificação Pessoal</em></p>
                 <mat-form-field appearance="fill">
                     <mat-label>Sexo</mat-label>
                     <mat-select formControlName="sexo">
@@ -65,26 +64,28 @@
                         <mat-option value="Masculino">Masculino</mat-option>
                         <mat-option value="Outro">Outro</mat-option>
                     </mat-select>
+                     <mat-error *ngIf="form.get('sexo')?.hasError('required')">O sexo é obrigatório.</mat-error>
                 </mat-form-field>
                 <mat-form-field appearance="fill">
-                    <mat-label>CPF</mat-label>
+                    <mat-label>CPF (Opcional)</mat-label>
                     <input matInput mask="000.000.000-00" formControlName="cpf" />
+                    <mat-error *ngIf="form.get('cpf')?.hasError('cpfInvalido')">Este CPF é inválido.</mat-error>
                 </mat-form-field>
                 <mat-form-field appearance="fill">
-                    <mat-label>RG</mat-label>
-                    <input matInput mask="00.000.000-0" formControlName="rg" />
+                    <mat-label>RG (Opcional)</mat-label>
+                    <input matInput type="tel" formControlName="rg" placeholder="Apenas números" />
+                    <mat-error *ngIf="form.get('rg')?.hasError('pattern')">Apenas números são permitidos.</mat-error>
                 </mat-form-field>
-            </div>
 
-            <p class="section-label"><em>Dados Pessoais</em></p>
-            <div class="form-grid">
+                <p class="section-label full-width"><em>Dados Adicionais</em></p>
                 <mat-form-field appearance="fill">
                     <mat-label>Data de Nascimento</mat-label>
                     <input matInput [matDatepicker]="pickerNascimento" formControlName="dataNascimento">
                     <mat-datepicker-toggle matSuffix [for]="pickerNascimento"></mat-datepicker-toggle>
                     <mat-datepicker #pickerNascimento></mat-datepicker>
+                    <mat-error *ngIf="form.get('dataNascimento')?.hasError('required')">A data é obrigatória.</mat-error>
+                    <mat-error *ngIf="form.get('dataNascimento')?.hasError('idadeMinima')">O dependente deve ter no mínimo 1 ano.</mat-error>
                 </mat-form-field>
-
                 <mat-form-field appearance="fill">
                     <mat-label>Local de Nascimento</mat-label>
                     <input matInput formControlName="localNascimento" />
@@ -105,10 +106,8 @@
                     <mat-label>Profissão</mat-label>
                     <input matInput formControlName="profissao" />
                 </mat-form-field>
-            </div>
 
-            <p class="section-label"><em>Extras</em></p>
-            <div class="form-grid">
+                <p class="section-label full-width"><em>Informações Médicas</em></p>
                 <mat-form-field appearance="fill" class="full-width">
                     <mat-label>Exames</mat-label>
                     <textarea matInput formControlName="exames"></textarea>
@@ -120,7 +119,7 @@
             </div>
 
             <div class="btns-bottom">
-                <button mat-stroked-button class="btn-cancel" routerLink="/view-dependents/{{ id }}">
+                <button mat-stroked-button class="btn-cancel" type="button" routerLink="/list-dependents">
                     <mat-icon>close</mat-icon>
                     <span>Cancelar</span>
                 </button>

@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { AssociateService } from 'src/app/services/associates/associate.service';
 import { Associate } from 'src/app/services/associates/associate.interface';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { CustomValidators } from 'src/app/validators/custom-validators';
 
 @Component({
   selector: 'app-edit-associates',
@@ -20,32 +22,37 @@ export class EditAssociatesComponent implements OnInit {
     private fb: FormBuilder,
     private associateService: AssociateService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private http: HttpClient
   ) { }
 
   ngOnInit(): void {
     this.form = this.fb.group({
       nome: ['', Validators.required],
       cognome: [''],
-      cpf: ['', [Validators.required, Validators.minLength(11)]],
-      rg: ['', [Validators.minLength(9)]],
-      dataNascimento: ['', Validators.required],
+      cpf: ['', [Validators.required, CustomValidators.cpfValidator()]],
+      rg: ['', [Validators.required, Validators.pattern(/^[0-9]*$/)]],
+      dataNascimento: ['', [Validators.required, CustomValidators.minAgeValidator(1)]],
       sexo: ['', Validators.required],
       estadoCivil: ['', Validators.required],
       nomePai: [''],
       nomeMae: [''],
-      cep: ['', Validators.required],
+      cep: ['', [Validators.required, Validators.pattern(/^\d{5}-?\d{3}$/)]],
       endereco: ['', Validators.required],
-      numero: ['', Validators.required],
+      numero: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],
       complemento: [''],
+      bairro: ['', Validators.required],
+      cidade: ['', Validators.required],
+      uf: ['', Validators.required],
       localNascimento: [''],
       nacionalidade: ['', Validators.required],
       grauInstrucao: [''],
       profissao: [''],
-      telefone: ['', [Validators.minLength(11)]],
+      telefone: ['', [Validators.required, Validators.pattern(/^[0-9]*$/)]],
       email: ['', [Validators.required, Validators.email]],
       situacao: ['', Validators.required]
     });
+
     const idParam = this.route.snapshot.paramMap.get('id');
     if (idParam) {
       this.id = +idParam;
@@ -58,12 +65,10 @@ export class EditAssociatesComponent implements OnInit {
       next: (data) => {
         if (data) {
           this.associado = data;
-          const dateString = data.dataNascimento;
-          const [year, month, day] = dateString.split('T')[0].split('-').map(Number);
-          const localDate = new Date(year, month - 1, day);
           this.form.patchValue({
             ...data,
-            dataNascimento: localDate
+            // Corrige o formato da data para o DatePicker do Material
+            dataNascimento: new Date(data.dataNascimento) 
           });
         }
       },
@@ -74,9 +79,31 @@ export class EditAssociatesComponent implements OnInit {
     });
   }
 
+  buscarCep() {
+    const cepControl = this.form.get('cep');
+    if (cepControl?.valid && cepControl.value) {
+      const cep = cepControl.value.replace(/\D/g, '');
+      this.http.get(`https://viacep.com.br/ws/${cep}/json/`).subscribe((dados: any) => {
+        if (dados && !dados.erro) {
+          this.form.patchValue({
+            endereco: dados.logradouro,
+            bairro: dados.bairro,
+            cidade: dados.localidade,
+            uf: dados.uf
+          });
+          this.snackBar.open('Endereço preenchido automaticamente!', 'Fechar', { duration: 2000 });
+        } else {
+          this.snackBar.open('CEP não encontrado.', 'Fechar', { duration: 3000 });
+        }
+      }, error => {
+        this.snackBar.open('Erro ao buscar o CEP.', 'Fechar', { duration: 3000 });
+      });
+    }
+  }
+
   atualizar() {
     if (this.form.invalid) {
-      this.snackBar.open('Por favor, preencha todos os campos obrigatórios.', 'Fechar', { duration: 3000 });
+      this.snackBar.open('Por favor, verifique os campos com erro.', 'Fechar', { duration: 3000 });
       this.form.markAllAsTouched();
       return;
     }

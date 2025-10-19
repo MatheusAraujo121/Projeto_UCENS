@@ -1,0 +1,75 @@
+<main class="list-page">
+  <button mat-stroked-button color="warn" class="btn-voltar" routerLink="/dashboard">
+    <mat-icon>arrow_back</mat-icon>
+    <span>Voltar</span>
+  </button>
+  <div class="toolbar">
+    <h2>Lista de Fornecedores</h2>
+    <p>Clique em um fornecedor na lista para ver mais informações</p>
+
+    <div class="filters">
+      <mat-form-field appearance="outline">
+        <mat-label>Filtrar por nome</mat-label>
+        <input matInput [formControl]="filterNome" placeholder="Nome, responsável ou e-mail">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Filtrar por Status</mat-label>
+        <mat-select [formControl]="filterStatus">
+          <mat-option value="">Todos</mat-option>
+          <mat-option value="ativo">Ativo</mat-option>
+          <mat-option value="inativo">Inativo</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="flex-grow">
+        <mat-label>Pesquisar</mat-label>
+        <input matInput [formControl]="filterGlobal" placeholder="Buscar...">
+      </mat-form-field>
+    </div>
+
+    <button mat-raised-button color="primary" class="btn-light-blue" routerLink="/create-suppliers">
+      Cadastrar Fornecedor
+    </button>
+  </div>
+
+  <div class="table-container">
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z1 styled-table">
+
+      <ng-container matColumnDef="nome">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome do Fornecedor</th>
+        <td mat-cell *matCellDef="let row" [routerLink]="['/view-suppliers', row.id]">{{ row.nome }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="responsavel">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Responsável</th>
+        <td mat-cell *matCellDef="let row" [routerLink]="['/view-suppliers', row.id]">{{ row.responsavel }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+        <td mat-cell *matCellDef="let row" [routerLink]="['/view-suppliers', row.id]">{{ row.email }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+        <td mat-cell *matCellDef="let row" [routerLink]="['/view-suppliers', row.id]">
+          <span class="badge" [ngClass]="{'bg-success': row.ativo, 'bg-danger': !row.ativo}">
+            {{ row.ativo ? 'Ativo' : 'Inativo' }}
+          </span>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+          Nenhum fornecedor encontrado.
+        </td>
+      </tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  </div>
+</main>

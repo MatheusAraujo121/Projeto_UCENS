@@ -1,13 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl, AbstractControl, ValidationErrors } from '@angular/forms';
 import { forkJoin, Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
+// Serviços e Interfaces
 import { DependentService } from 'src/app/services/dependents/dependent.service';
 import { AssociateService } from 'src/app/services/associates/associate.service';
 import { Associate } from 'src/app/services/associates/associate.interface';
 import { Dependent } from 'src/app/services/dependents/dependent.interface';
-import { MatSnackBar } from '@angular/material/snack-bar';
+
+// Validador Customizado
+import { CustomValidators } from 'src/app/validators/custom-validators';
 
 @Component({
   selector: 'app-edit-dependents',
@@ -15,12 +20,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./edit-dependents.component.scss']
 })
 export class EditDependentsComponent implements OnInit {
-  form: FormGroup;
+  form!: FormGroup;
   id!: number;
   isLoading = true;
-  associateName: string = '';
   associates: Associate[] = [];
-  associateFilterCtrl = new FormControl<string | Associate>('');
+  associateFilterCtrl = new FormControl<string | Associate>('', [Validators.required, this.requireMatch]);
   filteredAssociates!: Observable<Associate[]>;
 
   constructor(
@@ -31,28 +35,26 @@ export class EditDependentsComponent implements OnInit {
     private associateService: AssociateService,
     private snackBar: MatSnackBar
   ) {
+    // Inicializa o formulário com a estrutura correta e as validações
     this.form = this.fb.group({
-      associadoId: [null, Validators.required],
-      situacao: [''],
+      situacao: ['', Validators.required],
       grauParentesco: ['', Validators.required],
-      exames: [''],
-      atividadesProibidas: [''],
-      carteirinha: this.fb.group({
-        nome: ['', Validators.required],
-        cognome: [''],
-        numero: [''],
-        categoria: [''],
-        validade: [''],
-      }),
+      nome: ['', Validators.required],
+      cognome: [''],
+      numeroCarteirinha: ['', [Validators.pattern(/^[0-9]*$/)]],
+      categoria: [''],
+      validadeCarteirinha: [''],
       sexo: ['', Validators.required],
-      cpf: ['', [Validators.minLength(11)]],
-      rg: ['', [Validators.minLength(9)]],
-      dataNascimento: ['', Validators.required],
+      cpf: ['', [CustomValidators.cpfValidator()]],
+      rg: ['', [Validators.pattern(/^[0-9]*$/)]],
+      dataNascimento: ['', [Validators.required, CustomValidators.minAgeValidator(1)]],
       localNascimento: [''],
       nacionalidade: [''],
       estadoCivil: [''],
       grauInstrucao: [''],
       profissao: [''],
+      exames: [''],
+      atividadesProibidas: [''],
     });
   }
 
@@ -67,6 +69,15 @@ export class EditDependentsComponent implements OnInit {
     this.loadDataAndPopulateForm();
   }
 
+  // Validador para garantir que um objeto foi selecionado no autocomplete
+  private requireMatch(control: AbstractControl): ValidationErrors | null {
+    const selection: any = control.value;
+    if (typeof selection === 'string' && selection.trim() !== '') {
+      return { incorrect: true };
+    }
+    return null;
+  }
+
   loadDataAndPopulateForm(): void {
     forkJoin({
       dependent: this.dependentService.getDependentById(this.id),
@@ -74,7 +85,7 @@ export class EditDependentsComponent implements OnInit {
     }).subscribe({
       next: ({ dependent, associates }) => {
         this.associates = associates;
-        this.populateForm(dependent); 
+        this.populateForm(dependent);
         this.isLoading = false;
       },
       error: (err) => {
@@ -86,34 +97,34 @@ export class EditDependentsComponent implements OnInit {
 
   private populateForm(dep: Dependent): void {
     const selectedAssociate = this.associates.find(a => a.id === dep.associadoId);
-    this.associateName = selectedAssociate ? selectedAssociate.nome : 'Nenhum associado vinculado';
+    
     this.form.patchValue({
-      associadoId: selectedAssociate,
       situacao: dep.situacao,
       grauParentesco: dep.grauParentesco,
-      exames: dep.exames,
-      atividadesProibidas: dep.atividadesProibidas,
-      carteirinha: {
-        nome: dep.nome,
-        cognome: dep.cognome,
-        numero: dep.numeroCarteirinha,
-        categoria: dep.categoria,
-        validade: this.formatDate(dep.validadeCarteirinha),
-      },
+      nome: dep.nome,
+      cognome: dep.cognome,
+      numeroCarteirinha: dep.numeroCarteirinha,
+      categoria: dep.categoria,
+      validadeCarteirinha: this.formatDate(dep.validadeCarteirinha),
       sexo: dep.sexo,
       cpf: dep.cpf,
       rg: dep.rg,
-      dataNascimento: this.formatDate(dep.dataNascimento),
+      dataNascimento: new Date(dep.dataNascimento), // Converte para objeto Date
       localNascimento: dep.localNascimento,
       nacionalidade: dep.nacionalidade,
       estadoCivil: dep.estadoCivil,
       grauInstrucao: dep.grauInstrucao,
       profissao: dep.profissao,
+      exames: dep.exames,
+      atividadesProibidas: dep.atividadesProibidas,
     });
 
-    this.associateFilterCtrl.setValue(selectedAssociate || '');
+    if (selectedAssociate) {
+      this.associateFilterCtrl.setValue(selectedAssociate);
+    }
+
     this.filteredAssociates = this.associateFilterCtrl.valueChanges.pipe(
-      startWith(''),
+      startWith(selectedAssociate || ''),
       map(value => {
         const name = typeof value === 'string' ? value : value?.nome;
         return name ? this._filterAssociates(name) : this.associates.slice();
@@ -121,16 +132,15 @@ export class EditDependentsComponent implements OnInit {
     );
   }
 
- private formatDate(date: any): string {
-  if (!date) return '';
-  if (typeof date === 'string' && date.length === 10) return date; // já está no formato correto
-  try {
+  private formatDate(date: any): string {
+    if (!date) return '';
+    // Formata a data para 'YYYY-MM-DD' para o input type="date"
     const d = new Date(date);
-    return d.toISOString().slice(0, 10);
-  } catch (e) {
-    return '';
+    const year = d.getFullYear();
+    const month = ('0' + (d.getMonth() + 1)).slice(-2);
+    const day = ('0' + d.getDate()).slice(-2);
+    return `${year}-${month}-${day}`;
   }
-}
 
   private _filterAssociates(name: string): Associate[] {
     const filterValue = name.toLowerCase();
@@ -141,41 +151,22 @@ export class EditDependentsComponent implements OnInit {
     return associate && associate.nome ? associate.nome : '';
   }
 
-  onAssociateSelected(associate: Associate): void {
-    this.form.get('associadoId')?.setValue(associate);
-  }
-
   atualizar(): void {
-    if (this.form.invalid) {
+    if (this.form.invalid || this.associateFilterCtrl.invalid) {
       this.form.markAllAsTouched();
-      this.snackBar.open('Por favor, preencha os campos obrigatórios.', 'Fechar', { duration: 3000 });
+      this.associateFilterCtrl.markAsTouched();
+      this.snackBar.open('Por favor, verifique os campos com erro.', 'Fechar', { duration: 3000 });
       return;
     }
 
     const formValue = this.form.getRawValue();
+    const selectedAssociate = this.associateFilterCtrl.value as Associate;
 
-    // Enviando as datas como strings 'YYYY-MM-DD' para evitar problemas de fuso horário
     const payload: Partial<Dependent> = {
       id: this.id,
-      nome: formValue.carteirinha.nome,
-      cognome: formValue.carteirinha.cognome,
-      dataNascimento: formValue.dataNascimento,
-      sexo: formValue.sexo,
-      cpf: formValue.cpf,
-      rg: formValue.rg,
-      estadoCivil: formValue.estadoCivil,
-      grauInstrucao: formValue.grauInstrucao,
-      localNascimento: formValue.localNascimento,
-      nacionalidade: formValue.nacionalidade,
-      profissao: formValue.profissao,
-      associadoId: formValue.associadoId.id,
-      situacao: formValue.situacao,
-      grauParentesco: formValue.grauParentesco,
-      numeroCarteirinha: formValue.carteirinha.numero,
-      categoria: formValue.carteirinha.categoria,
-      validadeCarteirinha: formValue.carteirinha.validade ? formValue.carteirinha.validade : null,
-      exames: formValue.exames,
-      atividadesProibidas: formValue.atividadesProibidas
+      ...formValue,
+      associadoId: selectedAssociate.id,
+      validadeCarteirinha: formValue.validadeCarteirinha ? formValue.validadeCarteirinha : null,
     };
 
     this.dependentService.updateDependent(this.id, payload).subscribe({

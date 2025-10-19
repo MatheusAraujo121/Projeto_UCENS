@@ -381,6 +381,64 @@ namespace Infrastructure.Migrations
                     b.ToTable("Dependentes");
                 });
 
+            modelBuilder.Entity("Domain.Despesa", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("AnexoUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Categoria")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("DataPagamento")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("DataVencimento")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Descricao")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FormaPagamento")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("FornecedorId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal?>("MultaJuros")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<string>("NumeroFatura")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Observacoes")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Valor")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FornecedorId");
+
+                    b.ToTable("Despesas");
+                });
+
             modelBuilder.Entity("Domain.Evento", b =>
                 {
                     b.Property<int>("Id")
@@ -410,6 +468,46 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Eventos");
+                });
+
+            modelBuilder.Entity("Domain.Fornecedor", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal?>("LimiteCredito")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Observacoes")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Responsavel")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Telefone")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Fornecedores");
                 });
 
             modelBuilder.Entity("Domain.MatriculaAssociado", b =>
@@ -518,6 +616,17 @@ namespace Infrastructure.Migrations
                     b.Navigation("Associado");
                 });
 
+            modelBuilder.Entity("Domain.Despesa", b =>
+                {
+                    b.HasOne("Domain.Fornecedor", "Fornecedor")
+                        .WithMany("Despesas")
+                        .HasForeignKey("FornecedorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Fornecedor");
+                });
+
             modelBuilder.Entity("Domain.MatriculaAssociado", b =>
                 {
                     b.HasOne("Domain.Associado", "Associado")
@@ -582,6 +691,11 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Dependente", b =>
                 {
                     b.Navigation("Matriculas");
+                });
+
+            modelBuilder.Entity("Domain.Fornecedor", b =>
+                {
+                    b.Navigation("Despesas");
                 });
 
             modelBuilder.Entity("Domain.Turma", b =>
