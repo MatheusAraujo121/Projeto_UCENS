@@ -17,6 +17,8 @@ using Application.Features.Contato;
 using Application.Features.Financeiro;
 using Application.Features.Fornecedores;  
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -89,6 +91,21 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddFixedWindowLimiter("login", opt =>
+    {
+        opt.PermitLimit = 5; // 5 tentativas permitidas
+        opt.Window = TimeSpan.FromMinutes(10); // Dentro de uma janela de 10 minutos
+        opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        opt.QueueLimit = 0; // Se o limite for atingido, rejeita imediatamente
+    });
+
+    // Resposta padrão para quando o limite é atingido
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests; 
+});
+builder.Services.AddMemoryCache();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -139,7 +156,7 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 app.UseCors("AllowAngularApp");
-
+app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
 

@@ -16,17 +16,15 @@
                             {{ supplier.nome }}
                         </mat-option>
                     </mat-autocomplete>
-                    <mat-error *ngIf="supplierFilterCtrl.hasError('required')">É obrigatório selecionar um
-                        fornecedor.</mat-error>
-                    <mat-error *ngIf="supplierFilterCtrl.hasError('incorrect')">Selecione um fornecedor válido da
-                        lista.</mat-error>
+                    <mat-error *ngIf="supplierFilterCtrl.hasError('required')">É obrigatório selecionar um fornecedor.</mat-error>
+                    <mat-error *ngIf="supplierFilterCtrl.hasError('incorrect')">Selecione um fornecedor válido da lista.</mat-error>
                 </mat-form-field>
 
                 <mat-form-field appearance="fill" class="full-width">
                     <mat-label>Descrição</mat-label>
                     <input matInput formControlName="descricao" placeholder="Ex: Compra de material de escritório" />
-                    <mat-error *ngIf="form.get('descricao')?.hasError('required')">A descrição é
-                        obrigatória.</mat-error>
+                    <mat-error *ngIf="form.get('descricao')?.hasError('required')">A descrição é obrigatória.</mat-error>
+                     <mat-error *ngIf="form.get('descricao')?.hasError('maxlength')">A descrição não pode exceder 150 caracteres.</mat-error>
                 </mat-form-field>
 
                 <mat-form-field appearance="fill">
@@ -41,8 +39,7 @@
                     <input matInput [matDatepicker]="pickerVencimento" formControlName="dataVencimento">
                     <mat-datepicker-toggle matSuffix [for]="pickerVencimento"></mat-datepicker-toggle>
                     <mat-datepicker #pickerVencimento></mat-datepicker>
-                    <mat-error *ngIf="form.get('dataVencimento')?.hasError('required')">A data de vencimento é
-                        obrigatória.</mat-error>
+                    <mat-error *ngIf="form.get('dataVencimento')?.hasError('required')">A data de vencimento é obrigatória.</mat-error>
                 </mat-form-field>
 
                 <mat-form-field appearance="fill">
@@ -54,8 +51,8 @@
                             {{categoria}}
                         </mat-option>
                     </mat-autocomplete>
-                    <mat-error *ngIf="form.get('categoria')?.hasError('required')">A categoria é
-                        obrigatória.</mat-error>
+                    <mat-error *ngIf="form.get('categoria')?.hasError('required')">A categoria é obrigatória.</mat-error>
+                    <mat-error *ngIf="form.get('categoria')?.hasError('maxlength')">A categoria não pode exceder 50 caracteres.</mat-error>
                 </mat-form-field>
 
                 <mat-form-field appearance="fill">
@@ -82,6 +79,7 @@
                     <mat-form-field appearance="fill">
                         <mat-label>Forma de Pagamento</mat-label>
                         <input matInput formControlName="formaPagamento" placeholder="Ex: Boleto, Cartão de Crédito" />
+                        <mat-error *ngIf="form.get('formaPagamento')?.hasError('maxlength')">A forma de pagamento não pode exceder 50 caracteres.</mat-error>
                     </mat-form-field>
 
                     <mat-form-field appearance="fill">
@@ -96,12 +94,14 @@
                 <mat-form-field appearance="fill">
                     <mat-label>Número da Fatura/Nota</mat-label>
                     <input matInput formControlName="numeroFatura" type="text" mask="0*" />
+                    <mat-error *ngIf="form.get('numeroFatura')?.hasError('maxlength')">O número não pode exceder 50 caracteres.</mat-error>
                 </mat-form-field>
 
                 <mat-form-field appearance="fill" class="full-width">
                     <mat-label>Observações</mat-label>
                     <textarea matInput formControlName="observacoes"
                         placeholder="Qualquer informação adicional sobre a despesa..."></textarea>
+                    <mat-error *ngIf="form.get('observacoes')?.hasError('maxlength')">As observações não podem exceder 500 caracteres.</mat-error>
                 </mat-form-field>
             </div>
             <p class="section-label"><em>Anexo da Despesa (Opcional)</em></p>

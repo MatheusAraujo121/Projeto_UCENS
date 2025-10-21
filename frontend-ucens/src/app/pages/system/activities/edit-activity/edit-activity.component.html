@@ -18,6 +18,7 @@
           Selecionar Nova Imagem
         </button>
         <input #fileInput type="file" accept="image/*" (change)="onFileChange($event)" hidden />
+        <mat-error *ngIf="form.get('imagemUrl')?.hasError('required') && !previewUrl" class="mat-error-standalone">A Imagem é obrigatória.</mat-error>
       </div>
 
       <p class="section-label"><em>Identificação</em></p>
@@ -25,10 +26,14 @@
         <mat-form-field appearance="fill">
           <mat-label>Código da Atividade</mat-label>
           <input matInput formControlName="codigo" />
+          <mat-error *ngIf="form.get('codigo')?.hasError('required')">O código é obrigatório.</mat-error>
+          <mat-error *ngIf="form.get('codigo')?.hasError('maxlength')">O código não pode exceder 20 caracteres.</mat-error>
         </mat-form-field>
         <mat-form-field appearance="fill">
           <mat-label>Nome da Atividade</mat-label>
           <input matInput formControlName="nome" />
+           <mat-error *ngIf="form.get('nome')?.hasError('required')">O nome é obrigatório.</mat-error>
+           <mat-error *ngIf="form.get('nome')?.hasError('maxlength')">O nome não pode exceder 100 caracteres.</mat-error>
         </mat-form-field>
       </div>
 
@@ -37,16 +42,20 @@
         <mat-form-field appearance="fill" class="full-width">
           <mat-label>Descrição</mat-label>
           <textarea matInput formControlName="descricao"></textarea>
+          <mat-error *ngIf="form.get('descricao')?.hasError('required')">A Descrição é obrigatória.</mat-error>
+          <mat-error *ngIf="form.get('descricao')?.hasError('maxlength')">A descrição não pode exceder 1000 caracteres.</mat-error>
         </mat-form-field>
         <mat-radio-group formControlName="exigePiscina" color="primary">
           <label>Solicita exame de piscina:</label>
           <mat-radio-button [value]="true">Sim</mat-radio-button>
           <mat-radio-button [value]="false">Não</mat-radio-button>
+          <mat-error *ngIf="form.get('exigePiscina')?.hasError('required')">A seleção é obrigatória.</mat-error>
         </mat-radio-group>
         <mat-radio-group formControlName="exigeFisico" color="primary">
             <label>Solicita exame físico:</label>
             <mat-radio-button [value]="true">Sim</mat-radio-button>
             <mat-radio-button [value]="false">Não</mat-radio-button>
+            <mat-error *ngIf="form.get('exigeFisico')?.hasError('required')">A seleção é obrigatória.</mat-error>
         </mat-radio-group>
       </div>
 
@@ -57,6 +66,7 @@
               <mat-select formControlName="categoria">
                   <mat-option *ngFor="let categoria of categorias" [value]="categoria">{{ categoria }}</mat-option>
               </mat-select>
+               <mat-error *ngIf="form.get('categoria')?.hasError('required')">A categoria é obrigatória.</mat-error>
           </mat-form-field>
 
           <mat-form-field appearance="fill">
@@ -64,24 +74,29 @@
               <mat-select formControlName="diasDisponiveis" multiple>
                   <mat-option *ngFor="let dia of diasSemana" [value]="dia">{{ dia }}</mat-option>
               </mat-select>
+              <mat-error *ngIf="form.get('diasDisponiveis')?.hasError('required')">Selecione ao menos um dia.</mat-error>
           </mat-form-field>
           <mat-form-field appearance="fill">
               <mat-label>Horário Sugerido</mat-label>
               <input matInput type="time" formControlName="horarioSugerido" />
+              <mat-error *ngIf="form.get('horarioSugerido')?.hasError('required')">O horário é obrigatório.</mat-error>
           </mat-form-field>
           <mat-form-field appearance="fill">
               <mat-label>Idade Mínima</mat-label>
               <input matInput type="number" formControlName="idadeMinima" />
+              <mat-error *ngIf="form.get('idadeMinima')?.hasError('required')">A idade mínima é obrigatória.</mat-error>
           </mat-form-field>
 
           <mat-form-field appearance="fill">
               <mat-label>Idade Máxima</mat-label>
               <input matInput type="number" formControlName="idadeMaxima" />
+              <mat-error *ngIf="form.get('idadeMaxima')?.hasError('required')">A idade máxima é obrigatória.</mat-error>
           </mat-form-field>
 
           <mat-form-field appearance="fill">
               <mat-label>Limite de Participantes</mat-label>
               <input matInput type="number" formControlName="limiteParticipantes" />
+              <mat-error *ngIf="form.get('limiteParticipantes')?.hasError('required')">O limite de participantes é obrigatório.</mat-error>
           </mat-form-field>
 
           <mat-form-field appearance="fill">
@@ -89,11 +104,14 @@
               <mat-select formControlName="local" multiple>
                   <mat-option *ngFor="let sede of sedes" [value]="sede">{{ sede }}</mat-option>
               </mat-select>
+              <mat-error *ngIf="form.get('local')?.hasError('required')">Selecione ao menos um local.</mat-error>
           </mat-form-field>
 
           <mat-form-field appearance="fill">
               <mat-label>Professor Responsável</mat-label>
               <input matInput formControlName="professorResponsavel" placeholder="Nome do professor" />
+               <mat-error *ngIf="form.get('professorResponsavel')?.hasError('required')">O nome do professor é obrigatório.</mat-error>
+               <mat-error *ngIf="form.get('professorResponsavel')?.hasError('maxlength')">O nome do professor não pode exceder 150 caracteres.</mat-error>
           </mat-form-field>
       </div>
 

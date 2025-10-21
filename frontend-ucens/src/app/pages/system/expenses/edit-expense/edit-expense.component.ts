@@ -48,16 +48,16 @@ export class EditExpenseComponent implements OnInit {
   ngOnInit() {
     this.form = this.fb.group({
       id: [''],
-      descricao: ['', Validators.required],
-      categoria: ['', Validators.required],
-      status: ['Pendente', Validators.required],
+      descricao: ['', [Validators.required, Validators.maxLength(150)]],
+      categoria: ['', [Validators.required, Validators.maxLength(50)]],
+      status: ['Pendente', [Validators.required, Validators.maxLength(30)]],
       valor: [null, [Validators.required]],
       dataVencimento: ['', Validators.required],
       dataPagamento: [null],
-      formaPagamento: [''],
-      numeroFatura: [''],
+      formaPagamento: ['', [Validators.maxLength(50)]],
+      numeroFatura: ['', [Validators.maxLength(50)]],
       multaJuros: [null],
-      observacoes: [''],
+      observacoes: ['', [Validators.maxLength(500)]],
       anexoUrl: ['']
     });
 

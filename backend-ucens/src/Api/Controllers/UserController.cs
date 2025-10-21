@@ -2,6 +2,7 @@ using Application.Features.Usuarios;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.RateLimiting;
 using System;
 using System.Threading.Tasks;
 
@@ -63,11 +64,24 @@ namespace Api.Controllers
         }
 
         [HttpPost("login")]
+        [EnableRateLimiting("login")] 
         public async Task<IActionResult> Login([FromBody] LoginDTO dto)
         {
-            var token = await _service.Login(dto);
+            var (token, remainingAttempts) = await _service.Login(dto);
+
             if (token == null)
-                return Unauthorized(new { message = "Credenciais inválidas" });
+            {
+                if (remainingAttempts.HasValue && remainingAttempts.Value == 0)
+                {
+                    // Retorna 429 Too Many Requests se as tentativas se esgotaram
+                    return StatusCode(429, new { message = "Muitas tentativas de login. Tente novamente mais tarde." });
+                }
+                // Retorna 401 Unauthorized com o número de tentativas restantes
+                return Unauthorized(new { 
+                    message = "Credenciais inválidas", 
+                    remainingAttempts = remainingAttempts 
+                });
+            }
 
             return Ok(new { token });
         }

@@ -10,11 +10,13 @@
                     <mat-label>Nome</mat-label>
                     <input matInput formControlName="nome" placeholder="Insira o nome do fornecedor" />
                     <mat-error *ngIf="form.get('nome')?.hasError('required')">O nome é obrigatório.</mat-error>
+                    <mat-error *ngIf="form.get('nome')?.hasError('maxlength')">O nome não pode exceder 150 caracteres.</mat-error>
                 </mat-form-field>
 
                 <mat-form-field appearance="fill">
                     <mat-label>Responsável</mat-label>
                     <input matInput formControlName="responsavel" placeholder="Insira o nome do responsável" />
+                    <mat-error *ngIf="form.get('responsavel')?.hasError('maxlength')">O nome do responsável não pode exceder 150 caracteres.</mat-error>
                 </mat-form-field>
             </div>
             <p class="section-label"><em>Contato</em></p>
@@ -24,8 +26,7 @@
                     <input matInput type="tel" formControlName="telefone" placeholder="(00) 00000-0000"
                         mask="(00) 00000-0000" />
                     <mat-error *ngIf="form.get('telefone')?.hasError('required')">O telefone é obrigatório.</mat-error>
-                    <mat-error *ngIf="form.get('telefone')?.hasError('pattern')">Apenas números são
-                        permitidos.</mat-error>
+                    <mat-error *ngIf="form.get('telefone')?.hasError('maxlength')">O telefone não pode exceder 20 caracteres.</mat-error>
                 </mat-form-field>
 
                 <mat-form-field appearance="fill" class="full-width">
@@ -33,6 +34,7 @@
                     <input matInput type="email" formControlName="email" placeholder="fornecedor@exemplo.com" />
                     <mat-error *ngIf="form.get('email')?.hasError('required')">O e-mail é obrigatório.</mat-error>
                     <mat-error *ngIf="form.get('email')?.hasError('email')">Formato de e-mail inválido.</mat-error>
+                    <mat-error *ngIf="form.get('email')?.hasError('maxlength')">O e-mail não pode exceder 150 caracteres.</mat-error>
                 </mat-form-field>
             </div>
             <p class="section-label"><em>Detalhes Financeiros e Status</em></p>
@@ -40,8 +42,6 @@
                 <mat-form-field appearance="fill">
                     <mat-label>Limite de Crédito (Opcional)</mat-label>
                     <input matInput type="number" formControlName="limiteCredito" />
-                    <mat-error *ngIf="form.get('limiteCredito')?.hasError('pattern')">Apenas números são
-                        permitidos.</mat-error>
                 </mat-form-field>
 
                 <div class="toggle-container">
@@ -56,11 +56,12 @@
                 <mat-form-field appearance="fill" class="full-width">
                     <mat-label>Observações</mat-label>
                     <textarea matInput formControlName="observacoes" cdkTextareaAutosize></textarea>
+                    <mat-error *ngIf="form.get('observacoes')?.hasError('maxlength')">As observações não podem exceder 500 caracteres.</mat-error>
                 </mat-form-field>
             </div>
 
             <div class="btns-bottom">
-                <button mat-stroked-button class="btn-cancel" type="button" routerLink="/sistema/fornecedores">
+                <button mat-stroked-button class="btn-cancel" type="button" routerLink="/list-suppliers">
                     <mat-icon>close</mat-icon>
                     <span>Cancelar</span>
                 </button>

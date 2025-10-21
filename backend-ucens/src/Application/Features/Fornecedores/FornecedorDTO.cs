@@ -1,18 +1,30 @@
-using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations; // Adicionado
 
 namespace Application.Features.Fornecedores
 {
     public class FornecedorDTO
     {
         public int Id { get; set; }
+
+        [StringLength(150)] // Adicionado
         public string Nome { get; set; } = string.Empty;
+
+        [StringLength(20)] // Adicionado
         public string Telefone { get; set; } = string.Empty;
+
+        [StringLength(150)] // Adicionado
         public string Email { get; set; } = string.Empty;
+
+        [StringLength(150)] // Adicionado
         public string Responsavel { get; set; } = string.Empty;
-        public bool Ativo { get; set; }
+
+        public bool Ativo { get; set; } = true;
         public decimal? LimiteCredito { get; set; }
+
+        [StringLength(500)] // Adicionado
         public string? Observacoes { get; set; }
-        public List<DespesaDTO> Despesas { get; set; } = new List<DespesaDTO>();
+
+        public List<DespesaDTO> Despesas { get; set; } = new();
     }
 }

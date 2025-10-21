@@ -28,8 +28,8 @@ export class EditClassComponent implements OnInit {
     this.form = this.fb.group({
       id: [null],
       atividadeId: [null],
-      nome: ['', Validators.required],
-      professor: [''],
+      nome: ['', [Validators.required, Validators.maxLength(100)]],
+      professor: ['', [Validators.maxLength(150), Validators.required]],
       diasDisponiveis: [[], Validators.required],
       horarioSugerido: ['', Validators.required],
       vagas: [null, [Validators.required, Validators.min(1)]],
@@ -95,7 +95,7 @@ export class EditClassComponent implements OnInit {
         professor: this.form.value.professor,
         vagas: this.form.value.vagas,
         diasHorarios: diasHorariosString,
-        alunosMatriculados: [] 
+        alunosMatriculados: []
     };
 
     this.turmaService.updateTurma(this.turmaId, turmaData).subscribe({

@@ -29,10 +29,10 @@ export class CreateClassComponent implements OnInit {
     private snackBar: MatSnackBar
   ) {
     this.form = this.fb.group({
-      nome: ['', Validators.required],
-      professor: [''],
-      diasDisponiveis: [[], Validators.required], 
-      horarioSugerido: ['', Validators.required], 
+      nome: ['', [Validators.required, Validators.maxLength(100)]],
+      professor: ['', [Validators.maxLength(150), Validators.required]],
+      diasDisponiveis: [[], Validators.required],
+      horarioSugerido: ['', Validators.required],
       vagas: [null, [Validators.required, Validators.min(1)]],
     });
   }
@@ -60,15 +60,15 @@ export class CreateClassComponent implements OnInit {
     }
     this.isLoading = true;
 
-    const dias = this.form.value.diasDisponiveis.join(', '); 
+    const dias = this.form.value.diasDisponiveis.join(', ');
     const horario = this.form.value.horarioSugerido;
-    const diasHorariosString = `${dias} às ${horario}`; 
+    const diasHorariosString = `${dias} às ${horario}`;
 
     const turmaData = {
       nome: this.form.value.nome,
       professor: this.form.value.professor,
       vagas: this.form.value.vagas,
-      diasHorarios: diasHorariosString, 
+      diasHorarios: diasHorariosString,
       atividadeId: this.atividadeId
     };
 

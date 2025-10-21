@@ -48,11 +48,9 @@ export class GenerateBoletoComponent implements OnInit {
     this.filteredAssociates = this.associateCtrl.valueChanges.pipe(
       startWith(null),
       map((associateName: string | null) => {
-        // Se o usuário digitou algo, filtra com base no nome
         if (associateName) {
           return this._filter(associateName);
         } else {
-          // Se a barra estiver vazia, retorna os 5 primeiros da lista completa que ainda não foram adicionados
           return this.allAssociates
             .filter(a => !this.boletosIndividuais.some(b => b.associate.id === a.id))
             .slice(0, 5);
@@ -69,21 +67,17 @@ export class GenerateBoletoComponent implements OnInit {
   loadAssociates(): void {
     this.associateService.getAssociados().subscribe(data => {
       this.allAssociates = data;
-      // Força a atualização do autocomplete após carregar os associados
       this.associateCtrl.setValue('');
     });
   }
 
-  // MÉTODO DE FILTRO ATUALIZADO PARA LIMITAR OS RESULTADOS
   private _filter(value: string): Associate[] {
     const filterValue = value.toLowerCase();
     return this.allAssociates.filter(associate => 
-      // Filtra por nome
       associate.nome.toLowerCase().includes(filterValue) &&
-      // Garante que o associado já não está na lista de boletos a serem gerados
       !this.boletosIndividuais.some(b => b.associate.id === associate.id)
     )
-    .slice(0, 5); // AQUI ESTÁ A MUDANÇA: Retorna apenas os 5 primeiros resultados
+    .slice(0, 5);
   }
 
   selectAllAssociates(): void {

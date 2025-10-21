@@ -17,6 +17,7 @@
           Selecionar Nova Imagem
         </button>
         <input #fileInput type="file" accept="image/*" (change)="onFileChange($event)" hidden />
+        <mat-error *ngIf="form.get('imagemUrl')?.hasError('required') && !previewUrl">A imagem é obrigatória.</mat-error>
       </div>
 
       <p class="section-label"><em>Informações do Evento</em></p>
@@ -24,6 +25,8 @@
         <mat-form-field appearance="fill">
           <mat-label>Nome do Evento</mat-label>
           <input matInput formControlName="nome" />
+           <mat-error *ngIf="form.get('nome')?.hasError('required')">O nome do evento é obrigatório.</mat-error>
+           <mat-error *ngIf="form.get('nome')?.hasError('maxlength')">O nome não pode exceder 150 caracteres.</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="fill">
@@ -34,6 +37,8 @@
               {{option}}
             </mat-option>
           </mat-autocomplete>
+           <mat-error *ngIf="form.get('local')?.hasError('required')">O local é obrigatório.</mat-error>
+           <mat-error *ngIf="form.get('local')?.hasError('maxlength')">O local não pode exceder 150 caracteres.</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="fill">
@@ -41,6 +46,7 @@
           <input matInput [matDatepicker]="pickerInicio" formControlName="dataInicio">
           <mat-datepicker-toggle matSuffix [for]="pickerInicio"></mat-datepicker-toggle>
           <mat-datepicker #pickerInicio></mat-datepicker>
+           <mat-error *ngIf="form.get('dataInicio')?.hasError('required')">A data de início é obrigatória.</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="fill">
@@ -48,21 +54,26 @@
           <input matInput [matDatepicker]="pickerFinal" formControlName="dataFinal">
           <mat-datepicker-toggle matSuffix [for]="pickerFinal"></mat-datepicker-toggle>
           <mat-datepicker #pickerFinal></mat-datepicker>
+          <mat-error *ngIf="form.get('dataFinal')?.hasError('required')">A data de término é obrigatória.</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="fill">
           <mat-label>Horário de Início</mat-label>
           <input matInput formControlName="horarioInicio" type="time" />
+           <mat-error *ngIf="form.get('horarioInicio')?.hasError('required')">O horário de início é obrigatório.</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="fill">
           <mat-label>Horário de Término</mat-label>
           <input matInput formControlName="horarioFinal" type="time" />
+          <mat-error *ngIf="form.get('horarioFinal')?.hasError('required')">O horário de término é obrigatório.</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="fill" class="full-width">
           <mat-label>Descrição</mat-label>
           <textarea matInput formControlName="descricao"></textarea>
+          <mat-error *ngIf="form.get('descricao')?.hasError('required')">A descrição é obrigatória.</mat-error>
+           <mat-error *ngIf="form.get('descricao')?.hasError('maxlength')">A descrição não pode exceder 1000 caracteres.</mat-error>
         </mat-form-field>
       </div>
 

@@ -23,7 +23,7 @@ export interface DespesaComFornecedor extends Despesa {
 })
 export class ExpensesDashboardComponent implements OnInit, AfterViewInit {
   // ATUALIZADO: Adicionada a coluna 'fornecedor'
-  displayedColumns: string[] = ['id', 'fornecedor', 'descricao', 'categoria', 'valor', 'dataVencimento', 'status'];
+  displayedColumns: string[] = ['id', 'fornecedor', 'categoria', 'valor', 'dataVencimento', 'status'];
   dataSource = new MatTableDataSource<DespesaComFornecedor>([]);
 
   filterCategoria = new FormControl('');
@@ -57,7 +57,6 @@ export class ExpensesDashboardComponent implements OnInit, AfterViewInit {
       const searchTerms = JSON.parse(filter);
 
       const id = data.id.toString();
-      const descricao = data.descricao || '';
       const categoria = data.categoria || '';
       const status = data.status || '';
       const valor = data.valor?.toString() || '';
@@ -69,7 +68,7 @@ export class ExpensesDashboardComponent implements OnInit, AfterViewInit {
 
       const globalFilter = (searchTerms.global || '').toLowerCase();
       
-      const matchGlobal = [id, descricao, categoria, status, valor, vencimento, fornecedorNome]
+      const matchGlobal = [id,  categoria, status, valor, vencimento, fornecedorNome]
         .some(field => field.toLowerCase().includes(globalFilter));
 
       const matchId = searchTerms.id ? id.includes(searchTerms.id) : true;

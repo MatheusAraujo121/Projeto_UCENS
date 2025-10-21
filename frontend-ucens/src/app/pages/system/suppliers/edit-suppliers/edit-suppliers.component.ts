@@ -27,13 +27,13 @@ export class EditSuppliersComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      nome: ['', Validators.required],
-      responsavel: [''],
-      email: ['', [Validators.required, Validators.email]],
-      telefone: ['', Validators.required],
-      ativo: [true, Validators.required], // O status agora é um booleano
+      nome: ['', [Validators.required, Validators.maxLength(150)]],
+      responsavel: ['', [Validators.maxLength(150)]],
+      email: ['', [Validators.required, Validators.email, Validators.maxLength(150)]],
+      telefone: ['', [Validators.required, Validators.maxLength(20)]],
+      ativo: [true, Validators.required],
       limiteCredito: [null],
-      observacoes: ['']
+      observacoes: ['', [Validators.maxLength(500)]]
     });
 
     const idParam = this.route.snapshot.paramMap.get('id');

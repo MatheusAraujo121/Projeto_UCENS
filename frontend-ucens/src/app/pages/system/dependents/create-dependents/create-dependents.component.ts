@@ -36,25 +36,24 @@ export class CreateDependentsComponent implements OnInit {
 
   ngOnInit() {
     this.form = this.fb.group({
-      // O campo associadoId será setado manualmente, não precisa estar no form group principal
-      situacao: ['Regular', Validators.required],
-      grauParentesco: ['', Validators.required],
-      nome: ['', Validators.required],
-      cognome: [''],
-      numeroCarteirinha: ['', [Validators.pattern(/^[0-9]*$/)]],
-      categoria: [''],
+      situacao: ['Regular', [Validators.required, Validators.maxLength(30)]],
+      grauParentesco: ['', [Validators.required, Validators.maxLength(50)]],
+      nome: ['', [Validators.required, Validators.maxLength(150)]],
+      cognome: ['', [Validators.maxLength(100)]],
+      numeroCarteirinha: ['', [Validators.pattern(/^[0-9]*$/), Validators.maxLength(20)]],
+      categoria: ['', [Validators.maxLength(50)]],
       validadeCarteirinha: [''],
-      sexo: ['', Validators.required],
-      cpf: ['', [CustomValidators.cpfValidator()]], // Opcional, mas se preenchido, deve ser válido
-      rg: ['', [Validators.pattern(/^[0-9]*$/)]], // Opcional, mas apenas números
+      sexo: ['', [Validators.required, Validators.maxLength(10)]],
+      cpf: ['', [CustomValidators.cpfValidator(), Validators.maxLength(14)]],
+      rg: ['', [Validators.pattern(/^[0-9]*$/), Validators.maxLength(30)]],
       dataNascimento: ['', [Validators.required, CustomValidators.minAgeValidator(1)]],
-      localNascimento: [''],
-      nacionalidade: [''],
-      estadoCivil: [''],
-      grauInstrucao: [''],
-      profissao: [''],
-      exames: [''],
-      atividadesProibidas: [''],
+      localNascimento: ['', [Validators.maxLength(100)]],
+      nacionalidade: ['', [Validators.maxLength(100)]],
+      estadoCivil: ['', [Validators.maxLength(30)]],
+      grauInstrucao: ['', [Validators.maxLength(100)]],
+      profissao: ['', [Validators.maxLength(100)]],
+      exames: ['', [Validators.maxLength(500)]],
+      atividadesProibidas: ['', [Validators.maxLength(500)]],
     });
 
     this.loadAssociates();
