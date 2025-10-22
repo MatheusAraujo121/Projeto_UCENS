@@ -10,12 +10,15 @@
         <mat-form-field appearance="fill">
           <mat-label>Valor (R$)</mat-label>
           <input matInput type="number" formControlName="valorPadrao" placeholder="90.00">
+           <mat-error *ngIf="boletoForm.get('valorPadrao')?.hasError('required')">O valor é obrigatório.</mat-error>
+           <mat-error *ngIf="boletoForm.get('valorPadrao')?.hasError('min')">O valor deve ser maior que zero.</mat-error>
         </mat-form-field>
         <mat-form-field appearance="fill">
           <mat-label>Data de Vencimento</mat-label>
           <input matInput [matDatepicker]="pickerVencimento" formControlName="dataVencimento">
           <mat-datepicker-toggle matSuffix [for]="pickerVencimento"></mat-datepicker-toggle>
           <mat-datepicker #pickerVencimento></mat-datepicker>
+          <mat-error *ngIf="boletoForm.get('dataVencimento')?.hasError('required')">A data de vencimento é obrigatória.</mat-error>
         </mat-form-field>
 
         <p class="section-label full-width"><em>2. Adicione os associados</em></p>

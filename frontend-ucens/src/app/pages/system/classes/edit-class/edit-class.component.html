@@ -11,6 +11,8 @@
         <mat-form-field appearance="fill" class="full-width">
           <mat-label>Nome da Turma</mat-label>
           <input matInput formControlName="nome" placeholder="Ex: Turma A - Manhã" />
+           <mat-error *ngIf="form.get('nome')?.hasError('required')">O nome da turma é obrigatório.</mat-error>
+           <mat-error *ngIf="form.get('nome')?.hasError('maxlength')">O nome não pode exceder 100 caracteres.</mat-error>
         </mat-form-field>
       </div>
 
@@ -19,6 +21,8 @@
         <mat-form-field appearance="fill">
           <mat-label>Professor Responsável</mat-label>
           <input matInput formControlName="professor" />
+          <mat-error *ngIf="form.get('professor')?.hasError('required')">O nome do professor é obrigatório.</mat-error>
+          <mat-error *ngIf="form.get('professor')?.hasError('maxlength')">O nome do professor não pode exceder 150 caracteres.</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="fill">
@@ -26,16 +30,20 @@
           <mat-select formControlName="diasDisponiveis" multiple>
             <mat-option *ngFor="let dia of diasSemana" [value]="dia">{{ dia }}</mat-option>
           </mat-select>
+           <mat-error *ngIf="form.get('diasDisponiveis')?.hasError('required')">Selecione ao menos um dia.</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="fill">
             <mat-label>Horário</mat-label>
             <input matInput type="time" formControlName="horarioSugerido" />
+             <mat-error *ngIf="form.get('horarioSugerido')?.hasError('required')">O horário é obrigatório.</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="fill">
           <mat-label>Número de Vagas</mat-label>
           <input matInput type="number" formControlName="vagas" />
+           <mat-error *ngIf="form.get('vagas')?.hasError('required')">O número de vagas é obrigatório.</mat-error>
+           <mat-error *ngIf="form.get('vagas')?.hasError('min')">O número de vagas deve ser no mínimo 1.</mat-error>
         </mat-form-field>
       </div>
 

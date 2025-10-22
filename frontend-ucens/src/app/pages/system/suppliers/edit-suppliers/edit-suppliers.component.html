@@ -9,10 +9,13 @@
                 <mat-form-field appearance="fill">
                     <mat-label>Nome</mat-label>
                     <input matInput formControlName="nome" />
+                    <mat-error *ngIf="form.get('nome')?.hasError('required')">O nome é obrigatório.</mat-error>
+                    <mat-error *ngIf="form.get('nome')?.hasError('maxlength')">O nome não pode exceder 150 caracteres.</mat-error>
                 </mat-form-field>
                 <mat-form-field appearance="fill">
                     <mat-label>Responsável</mat-label>
                     <input matInput formControlName="responsavel" />
+                    <mat-error *ngIf="form.get('responsavel')?.hasError('maxlength')">O nome do responsável não pode exceder 150 caracteres.</mat-error>
                 </mat-form-field>
             </div>
 
@@ -20,11 +23,16 @@
             <div class="form-grid">
                 <mat-form-field appearance="fill">
                     <mat-label>Telefone</mat-label>
-                    <input matInput formControlName="telefone" />
+                    <input matInput formControlName="telefone" mask="(00) 00000-0000" />
+                     <mat-error *ngIf="form.get('telefone')?.hasError('required')">O telefone é obrigatório.</mat-error>
+                     <mat-error *ngIf="form.get('telefone')?.hasError('maxlength')">O telefone não pode exceder 20 caracteres.</mat-error>
                 </mat-form-field>
                 <mat-form-field appearance="fill" class="full-width">
                     <mat-label>E‑mail</mat-label>
                     <input matInput type="email" formControlName="email" />
+                     <mat-error *ngIf="form.get('email')?.hasError('required')">O e-mail é obrigatório.</mat-error>
+                    <mat-error *ngIf="form.get('email')?.hasError('email')">Formato de e-mail inválido.</mat-error>
+                    <mat-error *ngIf="form.get('email')?.hasError('maxlength')">O e-mail não pode exceder 150 caracteres.</mat-error>
                 </mat-form-field>
             </div>
 
@@ -49,6 +57,7 @@
                 <mat-form-field appearance="fill" class="full-width">
                     <mat-label>Observações</mat-label>
                     <textarea matInput formControlName="observacoes" cdkTextareaAutosize></textarea>
+                    <mat-error *ngIf="form.get('observacoes')?.hasError('maxlength')">As observações não podem exceder 500 caracteres.</mat-error>
                 </mat-form-field>
             </div>
 

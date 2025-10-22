@@ -24,13 +24,13 @@ export class CreateSuppliersComponent implements OnInit {
 
   ngOnInit() {
     this.form = this.fb.group({
-      nome: ['', Validators.required],
-      responsavel: [''],
-      email: ['', [Validators.required, Validators.email]],
-      telefone: ['', [Validators.required, Validators.pattern(/^[0-9]*$/)]],
+      nome: ['', [Validators.required, Validators.maxLength(150)]],
+      responsavel: ['', [Validators.maxLength(150)]],
+      email: ['', [Validators.required, Validators.email, Validators.maxLength(150)]],
+      telefone: ['', [Validators.required, Validators.maxLength(20)]],
       ativo: [true], // Valor padrão para o toggle
-      limiteCredito: [null, [Validators.pattern(/^[0-9.]*$/)]], // Apenas números e ponto
-      observacoes: ['']
+      limiteCredito: [null],
+      observacoes: ['', [Validators.maxLength(500)]]
     });
   }
 

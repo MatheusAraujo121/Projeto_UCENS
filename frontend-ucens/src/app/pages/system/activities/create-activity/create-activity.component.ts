@@ -15,7 +15,7 @@ export class CreateActivityComponent implements OnInit {
   form: FormGroup;
   previewUrl: string | ArrayBuffer | null = null;
   selectedFile: File | null = null;
-  isLoading = false; 
+  isLoading = false;
 
   categorias = ['Esportivo', 'Cultural'];
   diasSemana = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
@@ -29,20 +29,20 @@ export class CreateActivityComponent implements OnInit {
     private snackBar: MatSnackBar
   ) {
     this.form = this.fb.group({
-      codigo: ['', Validators.required],
-      nome: ['', Validators.required],
-      descricao: [''],
-      imagemUrl: [''], 
+      codigo: ['', [Validators.required, Validators.maxLength(20)]],
+      nome: ['', [Validators.required, Validators.maxLength(100)]],
+      descricao: ['', [Validators.maxLength(1000), Validators.required]],
+      imagemUrl: [''],
       exigePiscina: [false],
       exigeFisico: [false],
-      categoria: ['', Validators.required],
-      diasDisponiveis: [[]],
-      horarioSugerido: [''],
-      idadeMinima: [null],
-      idadeMaxima: [null],
-      limiteParticipantes: [null],
-      local: [[]],
-      professorResponsavel: ['']
+      categoria: ['', [Validators.required, Validators.maxLength(50)]],
+      diasDisponiveis: [[], Validators.required],
+      horarioSugerido: ['', Validators.required],
+      idadeMinima: [null, Validators.required],
+      idadeMaxima: [null, Validators.required],
+      limiteParticipantes: [null, Validators.required],
+      local: [[], Validators.required],
+      professorResponsavel: ['', [Validators.maxLength(150), Validators.required]]
     });
   }
 
@@ -51,10 +51,10 @@ export class CreateActivityComponent implements OnInit {
   onFileChange(event: any): void {
     const file = event.target.files[0];
     if (file) {
-      this.selectedFile = file; 
+      this.selectedFile = file;
       const reader = new FileReader();
       reader.readAsDataURL(file);
-      reader.onload = () => this.previewUrl = reader.result; 
+      reader.onload = () => this.previewUrl = reader.result;
     }
   }
 
@@ -77,8 +77,11 @@ export class CreateActivityComponent implements OnInit {
           this.isLoading = false;
         }
       });
-    } else {
-      this.cadastrarAtividade();
+    }else {
+        // Como a imagem é obrigatória, teoricamente não deveria chegar aqui se o form for válido,
+        // mas é uma boa prática ter um fallback.
+        this.snackBar.open('Por favor, selecione uma imagem.', 'Fechar', { duration: 3000 });
+        this.isLoading = false;
     }
   }
 
