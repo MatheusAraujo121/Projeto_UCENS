@@ -27,9 +27,16 @@
                         <mat-option value="Desligado">Desligado</mat-option>
                     </mat-select>
                 </mat-form-field>
+
                 <mat-form-field appearance="fill">
                     <mat-label>Grau de Parentesco</mat-label>
-                    <input matInput formControlName="grauParentesco" placeholder="Ex: Filho(a), Cônjuge" />
+                    <input type="text" matInput formControlName="grauParentesco" placeholder="Ex: Filho(a), Cônjuge" 
+                           [matAutocomplete]="autoParentesco">
+                    <mat-autocomplete #autoParentesco="matAutocomplete">
+                        <mat-option *ngFor="let grau of filteredGraus | async" [value]="grau">
+                            {{ grau }}
+                        </mat-option>
+                    </mat-autocomplete>
                     <mat-error *ngIf="form.get('grauParentesco')?.hasError('required')">O parentesco é obrigatório.</mat-error>
                     <mat-error *ngIf="form.get('grauParentesco')?.hasError('maxlength')">O parentesco não pode exceder 50 caracteres.</mat-error>
                 </mat-form-field>

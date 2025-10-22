@@ -53,16 +53,28 @@ namespace Application.Features.Financeiro
                 foreach (var boleto in boletosVencidos)
                 {
                     boleto.Status = BoletoStatus.Vencido;
-                    // Apenas marcamos a alteração, o SaveChangesAsync cuidará de salvar
                 }
-                // Salva todas as alterações de status no banco de dados de uma só vez
                 await _boletoRepo.SaveChangesAsync(); 
+                
+                // >>> LÓGICA ADICIONADA: ATUALIZA A SITUAÇÃO DO ASSOCIADO PARA INADIMPLENTE <<<
+                var associadoIdsComBoletosVencidos = boletosVencidos.Select(b => b.AssociadoId).Distinct().ToArray();
+                var associadosParaAtualizar = await _associadoRepo.GetAssociadosByIds(associadoIdsComBoletosVencidos);
+
+                foreach (var associado in associadosParaAtualizar)
+                {
+                    if (associado.Situacao != "Inadimplente")
+                    {
+                        associado.Situacao = "Inadimplente";
+                        await _associadoRepo.Update(associado);
+                        _logger.LogInformation("Associado ID {AssociadoId} atualizado para 'Inadimplente' devido a boleto vencido.", associado.Id);
+                    }
+                }
             }
 
             // ETAPA 2: Retornar a lista completa e agora atualizada para o frontend
             return await _boletoRepo.GetQueryable()
                 .Include(b => b.Associado)
-                .OrderByDescending(b => b.Id) // Ordenar por ID mais recente pode ser mais útil no dashboard
+                .OrderByDescending(b => b.Id)
                 .Select(b => new BoletoDTO
                 {
                     Id = b.Id,
@@ -164,9 +176,9 @@ namespace Application.Features.Financeiro
             }
 
             var associadoIds = boletosParaGerar.Select(b => b.AssociadoId)
-                                               .Union(boletosParaCancelar.Select(b => b.AssociadoId))
-                                               .Distinct()
-                                               .ToArray();
+                                              .Union(boletosParaCancelar.Select(b => b.AssociadoId))
+                                              .Distinct()
+                                              .ToArray();
             
             var associados = (await _associadoRepo.GetAssociadosByIds(associadoIds))
                 .ToDictionary(a => a.Id);
@@ -180,7 +192,7 @@ namespace Application.Features.Financeiro
             var dataGeracao = DateTime.Now;
 
             var ultimoNumeroRemessa = await _boletoRepo.GetQueryable()
-                                     .MaxAsync(b => (int?)b.NumeroArquivoRemessa) ?? 0;
+                                         .MaxAsync(b => (int?)b.NumeroArquivoRemessa) ?? 0;
             var novoNumeroRemessa = ultimoNumeroRemessa + 1;
 
             const string postoBeneficiario = "01";
@@ -211,7 +223,7 @@ namespace Application.Features.Financeiro
             var boletosGeradosInfo = new List<BoletoGeradoDto>();
             
             var ultimoSequencial = await _boletoRepo.GetQueryable()
-                                     .MaxAsync(b => (int?)b.SequencialNossoNumero) ?? 0;
+                                         .MaxAsync(b => (int?)b.SequencialNossoNumero) ?? 0;
 
             // 1. PROCESSAR NOVOS BOLETOS PARA REGISTRO
             foreach (var boletoInfo in boletosParaGerar)
@@ -419,7 +431,10 @@ namespace Application.Features.Financeiro
 
             var todosOsRetornos = await _cnabRetornoRepository.GetAll();
             
-            var boletosPendentes = await _boletoRepo.GetQueryable().Where(b => b.Status == BoletoStatus.Pendente).ToListAsync();
+            var boletosPendentes = await _boletoRepo.GetQueryable()
+                .Include(b => b.Associado)
+                .Where(b => b.Status == BoletoStatus.Pendente || b.Status == BoletoStatus.Vencido)
+                .ToListAsync();
             var boletosAguardandoConfirmacaoCancelamento = await _boletoRepo.GetQueryable().Where(b => b.Status == BoletoStatus.CancelamentoEnviado).ToListAsync();
 
             foreach (var detalhe in resultadoParse.Details)
@@ -432,12 +447,25 @@ namespace Application.Features.Financeiro
                     if (boletoParaAtualizar != null)
                     {
                         boletoParaAtualizar.Status = BoletoStatus.Pago;
-                        await _boletoRepo.Update(boletoParaAtualizar);
-                        _logger.LogInformation("Boleto ID {BoletoId} (NossoNumero: {NossoNumero}) atualizado para 'Pago'.", boletoParaAtualizar.Id, nossoNumeroCompleto);
+                        boletoParaAtualizar.DataPagamento = detalhe.DataOcorrencia;
+                        boletoParaAtualizar.ValorPago = detalhe.ValorPago;
+                        _logger.LogInformation("Boleto ID {BoletoId} (NossoNumero: {NossoNumero}) marcado para ser atualizado para 'Pago'.", boletoParaAtualizar.Id, nossoNumeroCompleto);
+
+                        // >>> LÓGICA ADICIONADA: VERIFICA SE O ASSOCIADO PODE VOLTAR A SER REGULAR <<<
+                        var outrosBoletosPendentes = await _boletoRepo.GetQueryable()
+                            .AnyAsync(b => b.AssociadoId == boletoParaAtualizar.AssociadoId && 
+                                           b.Id != boletoParaAtualizar.Id && 
+                                          (b.Status == BoletoStatus.Pendente || b.Status == BoletoStatus.Vencido));
+
+                        if (!outrosBoletosPendentes && boletoParaAtualizar.Associado != null && boletoParaAtualizar.Associado.Situacao == "Inadimplente")
+                        {
+                            boletoParaAtualizar.Associado.Situacao = "Regular";
+                            _logger.LogInformation("Associado ID {AssociadoId} não possui mais pendências. Atualizando para 'Regular'.", boletoParaAtualizar.AssociadoId);
+                        }
                     }
                     else
                     {
-                        _logger.LogWarning("Boleto com NossoNumero {NossoNumero} não encontrado na lista de pendentes para pagamento.", nossoNumeroCompleto);
+                        _logger.LogWarning("Boleto com NossoNumero {NossoNumero} não encontrado na lista de pendentes/vencidos para pagamento.", nossoNumeroCompleto);
                     }
                 }
                 else if (detalhe.CodigoOcorrencia == "09") // "09" = Baixado automaticamente via arquivo
@@ -447,7 +475,6 @@ namespace Application.Features.Financeiro
                     {
                         boletoParaConfirmarCancelamento.Status = BoletoStatus.Cancelado;
                         boletoParaConfirmarCancelamento.MotivoCancelamento += " (Baixa confirmada pelo banco.)";
-                        await _boletoRepo.Update(boletoParaConfirmarCancelamento);
                         _logger.LogInformation("Boleto ID {BoletoId} (NossoNumero: {NossoNumero}) confirmado como 'Cancelado' pelo banco.", boletoParaConfirmarCancelamento.Id, nossoNumeroCompleto);
                     }
                     else
