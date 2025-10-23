@@ -1,0 +1,95 @@
+.list-page {
+  padding: 1.5rem;
+}
+
+.toolbar {
+  padding: 1.5rem;
+  background: #f5f5f5;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  h2 {
+    margin: 0 0 0.5rem 0;
+  }
+  p {
+    margin: 0;
+    color: #666;
+  }
+}
+
+.report-container {
+  padding: 1.5rem 0;
+}
+
+.styled-table {
+  width: 100%;
+}
+
+ul {
+  padding-left: 0;
+  list-style: none;
+  margin: 0;
+}
+
+.status-regular {
+    color: green;
+    font-weight: 500;
+}
+
+.status-inadimplente {
+    color: red;
+    font-weight: 500;
+}
+
+.finance-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+
+    form {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+}
+
+.finance-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+
+    .summary-card {
+        p {
+            font-size: 2rem;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        &.entrada p { color: #2e7d32; }
+        &.saida p { color: #c62828; }
+        &.saldo-positivo p { color: #1565c0; }
+        &.saldo-negativo p { color: #c62828; }
+    }
+}
+
+.add-transacao-btn {
+    margin-bottom: 1.5rem;
+}
+
+.categoria {
+    font-size: 0.8em;
+    color: #777;
+}
+
+.entrada-text {
+    color: #2e7d32;
+    font-weight: 500;
+}
+
+.saida-text {
+    color: #c62828;
+    font-weight: 500;
+}

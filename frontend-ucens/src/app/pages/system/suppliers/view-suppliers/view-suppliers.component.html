@@ -30,15 +30,22 @@
         <mat-label>Nome</mat-label>
         <input matInput [value]="supplier.nome" disabled />
       </mat-form-field>
+
+      <!-- CAMPO CNPJ ADICIONADO -->
+      <mat-form-field appearance="fill">
+        <mat-label>CNPJ</mat-label>
+        <input matInput [value]="supplier.cnpj | mask: '00.000.000/0001-00'" disabled />
+      </mat-form-field>
+
       <mat-form-field appearance="fill">
         <mat-label>Responsável</mat-label>
-        <input matInput [value]="supplier.responsavel" disabled />
+        <input matInput [value]="supplier.responsavel || 'Não informado'" disabled />
       </mat-form-field>
 
       <p class="section-label"><em>Contato</em></p>
       <mat-form-field appearance="fill">
         <mat-label>Telefone</mat-label>
-        <input matInput [value]="supplier.telefone" disabled />
+        <input matInput [value]="supplier.telefone | mask: '(00) 00000-0000'" disabled />
       </mat-form-field>
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>E-mail</mat-label>

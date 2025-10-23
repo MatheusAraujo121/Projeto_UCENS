@@ -1,75 +1,82 @@
 <main class="cadastro-page">
-    <div class="cadastro-container">
-        <img src="assets/carp.jpg" class="bg-carpa" alt="carpa" />
-        <h2>Cadastrar Fornecedor</h2>
+    <div class="cadastro-container">
+        <img src="assets/carp.jpg" class="bg-carpa" alt="carpa" />
+        <h2>Cadastrar Fornecedor</h2>
 
-        <form [formGroup]="form" (ngSubmit)="efetuarCadastro()">
-            <p class="section-label"><em>Dados Básicos</em></p>
-            <div class="form-grid">
-                <mat-form-field appearance="fill">
-                    <mat-label>Nome</mat-label>
-                    <input matInput formControlName="nome" placeholder="Insira o nome do fornecedor" />
-                    <mat-error *ngIf="form.get('nome')?.hasError('required')">O nome é obrigatório.</mat-error>
-                    <mat-error *ngIf="form.get('nome')?.hasError('maxlength')">O nome não pode exceder 150 caracteres.</mat-error>
-                </mat-form-field>
+        <form [formGroup]="form" (ngSubmit)="efetuarCadastro()">
+            <p class="section-label"><em>Dados Básicos</em></p>
+            <div class="form-grid">
+                <mat-form-field appearance="fill">
+                    <mat-label>Nome</mat-label>
+                    <input matInput formControlName="nome" placeholder="Insira o nome do fornecedor" />
+                    <mat-error *ngIf="form.get('nome')?.hasError('required')">O nome é obrigatório.</mat-error>
+                    <mat-error *ngIf="form.get('nome')?.hasError('maxlength')">O nome não pode exceder 150 caracteres.</mat-error>
+                </mat-form-field>
 
-                <mat-form-field appearance="fill">
-                    <mat-label>Responsável</mat-label>
-                    <input matInput formControlName="responsavel" placeholder="Insira o nome do responsável" />
-                    <mat-error *ngIf="form.get('responsavel')?.hasError('maxlength')">O nome do responsável não pode exceder 150 caracteres.</mat-error>
-                </mat-form-field>
-            </div>
-            <p class="section-label"><em>Contato</em></p>
-            <div class="form-grid">
-                <mat-form-field appearance="fill">
-                    <mat-label>Telefone</mat-label>
-                    <input matInput type="tel" formControlName="telefone" placeholder="(00) 00000-0000"
-                        mask="(00) 00000-0000" />
-                    <mat-error *ngIf="form.get('telefone')?.hasError('required')">O telefone é obrigatório.</mat-error>
-                    <mat-error *ngIf="form.get('telefone')?.hasError('maxlength')">O telefone não pode exceder 20 caracteres.</mat-error>
-                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>CNPJ</mat-label>
+                    <input matInput formControlName="cnpj" placeholder="00.000.000/0001-00" mask="00.000.000/0001-00" />
+                    <mat-error *ngIf="form.get('cnpj')?.hasError('required')">O CNPJ é obrigatório.</mat-error>
+                    <mat-error *ngIf="form.get('cnpj')?.hasError('cnpjInvalido')">Este CNPJ é inválido.</mat-error>
+                </mat-form-field>
 
-                <mat-form-field appearance="fill" class="full-width">
-                    <mat-label>E‑mail</mat-label>
-                    <input matInput type="email" formControlName="email" placeholder="fornecedor@exemplo.com" />
-                    <mat-error *ngIf="form.get('email')?.hasError('required')">O e-mail é obrigatório.</mat-error>
-                    <mat-error *ngIf="form.get('email')?.hasError('email')">Formato de e-mail inválido.</mat-error>
-                    <mat-error *ngIf="form.get('email')?.hasError('maxlength')">O e-mail não pode exceder 150 caracteres.</mat-error>
-                </mat-form-field>
-            </div>
-            <p class="section-label"><em>Detalhes Financeiros e Status</em></p>
-            <div class="form-grid">
-                <mat-form-field appearance="fill">
-                    <mat-label>Limite de Crédito (Opcional)</mat-label>
-                    <input matInput type="number" formControlName="limiteCredito" />
-                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Responsável</mat-label>
+                    <input matInput formControlName="responsavel" placeholder="Insira o nome do responsável" />
+                    <mat-error *ngIf="form.get('responsavel')?.hasError('maxlength')">O nome do responsável não pode exceder 150 caracteres.</mat-error>
+                </mat-form-field>
+            </div>
+            <p class="section-label"><em>Contato</em></p>
+            <div class="form-grid">
+                <mat-form-field appearance="fill">
+                    <mat-label>Telefone</mat-label>
+                    <input matInput type="tel" formControlName="telefone" placeholder="(00) 00000-0000"
+                        mask="(00) 00000-0000" />
+                    <mat-error *ngIf="form.get('telefone')?.hasError('required')">O telefone é obrigatório.</mat-error>
+                    <mat-error *ngIf="form.get('telefone')?.hasError('maxlength')">O telefone não pode exceder 20 caracteres.</mat-error>
+                </mat-form-field>
 
-                <div class="toggle-container">
-                    <mat-slide-toggle formControlName="ativo">
-                        {{ form.get('ativo')?.value ? 'Ativo' : 'Inativo' }}
-                    </mat-slide-toggle>
-                </div>
-            </div>
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>E‑mail</mat-label>
+                    <input matInput type="email" formControlName="email" placeholder="fornecedor@exemplo.com" />
+                    <mat-error *ngIf="form.get('email')?.hasError('required')">O e-mail é obrigatório.</mat-error>
+                    <mat-error *ngIf="form.get('email')?.hasError('email')">Formato de e-mail inválido.</mat-error>
+                    <mat-error *ngIf="form.get('email')?.hasError('maxlength')">O e-mail não pode exceder 150 caracteres.</mat-error>
+                </mat-form-field>
+            </div>
+            <p class="section-label"><em>Detalhes Financeiros e Status</em></p>
+            <div class="form-grid">
+                <mat-form-field appearance="fill">
+                    <mat-label>Limite de Crédito (Opcional)</mat-label>
+                    <input matInput type="number" formControlName="limiteCredito" />
+                </mat-form-field>
 
-            <p class="section-label"><em>Observações</em></p>
-            <div class="form-grid">
-                <mat-form-field appearance="fill" class="full-width">
-                    <mat-label>Observações</mat-label>
-                    <textarea matInput formControlName="observacoes" cdkTextareaAutosize></textarea>
-                    <mat-error *ngIf="form.get('observacoes')?.hasError('maxlength')">As observações não podem exceder 500 caracteres.</mat-error>
-                </mat-form-field>
-            </div>
+                <div class="toggle-container">
+                    <mat-slide-toggle formControlName="ativo">
+                        {{ form.get('ativo')?.value ? 'Ativo' : 'Inativo' }}
+                    </mat-slide-toggle>
+                </div>
+            </div>
 
-            <div class="btns-bottom">
-                <button mat-stroked-button class="btn-cancel" type="button" routerLink="/list-suppliers">
-                    <mat-icon>close</mat-icon>
-                    <span>Cancelar</span>
-                </button>
-                <button mat-stroked-button class="btn-submit" type="submit" [disabled]="isLoading">
-                    <mat-icon>radio_button_unchecked</mat-icon>
-                    <span>Efetuar cadastro</span>
-                </button>
-            </div>
-        </form>
-    </div>
+            <p class="section-label"><em>Observações</em></p>
+            <div class="form-grid">
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Observações</mat-label>
+                    <textarea matInput formControlName="observacoes" cdkTextareaAutosize></textarea>
+                    <mat-error *ngIf="form.get('observacoes')?.hasError('maxlength')">As observações não podem exceder 500 caracteres.</mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="btns-bottom">
+              <button mat-stroked-button class="btn-cancel" type="button" routerLink="/list-suppliers">
+                    <mat-icon>close</mat-icon>
+                    <span>Cancelar</span>
+                </button>
+                <button mat-stroked-button class="btn-submit" type="submit" [disabled]="isLoading">
+                    <mat-icon>radio_button_unchecked</mat-icon>
+                    <span>Efetuar cadastro</span>
+                </button>
+            </div>
+        </form>
+    </div>
 </main>

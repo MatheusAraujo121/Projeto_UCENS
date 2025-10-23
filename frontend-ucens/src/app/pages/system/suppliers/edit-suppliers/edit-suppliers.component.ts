@@ -7,6 +7,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Fornecedor } from '../../../../services/suppliers/supplier.interface';
 import { SupplierService } from '../../../../services/suppliers/supplier.service';
 
+// ADICIONADO: Importação do validador (usando caminho relativo corrigido)
+import { CustomValidators } from '../../../../validators/custom-validators';
+
 @Component({
   selector: 'app-edit-supplier',
   templateUrl: './edit-suppliers.component.html',
@@ -28,6 +31,8 @@ export class EditSuppliersComponent implements OnInit {
   ngOnInit(): void {
     this.form = this.fb.group({
       nome: ['', [Validators.required, Validators.maxLength(150)]],
+      // ADICIONADO: Campo CNPJ com validadores
+      cnpj: ['', [Validators.required, CustomValidators.cnpjValidator()]],
       responsavel: ['', [Validators.maxLength(150)]],
       email: ['', [Validators.required, Validators.email, Validators.maxLength(150)]],
       telefone: ['', [Validators.required, Validators.maxLength(20)]],
@@ -48,7 +53,8 @@ export class EditSuppliersComponent implements OnInit {
       next: (data) => {
         if (data) {
           this.supplier = data;
-          this.form.patchValue(data);
+          // O patchValue irá preencher o campo 'cnpj' se ele existir nos dados
+          this.form.patchValue(data); 
         }
       },
       error: (err) => {
@@ -60,12 +66,13 @@ export class EditSuppliersComponent implements OnInit {
 
   atualizar() {
     if (this.form.invalid) {
-      this.snackBar.open('Por favor, preencha todos os campos obrigatórios.', 'Fechar', { duration: 3000 });
+      this.snackBar.open('Por favor, preencha todos os campos obrigatórios e corrija os erros.', 'Fechar', { duration: 3000 });
       this.form.markAllAsTouched();
       return;
     }
 
     if (this.id) {
+      // O form.value já inclui o 'cnpj'
       const updatedData = { ...this.form.value, id: this.id };
       this.supplierService.updateSupplier(this.id, updatedData).subscribe({
         next: () => {

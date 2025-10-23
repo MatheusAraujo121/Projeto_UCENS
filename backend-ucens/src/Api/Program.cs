@@ -45,8 +45,12 @@ builder.Services.AddScoped<IMatriculaDependenteRepository, MatriculaDependenteRe
 builder.Services.AddScoped<ITurmaRepository, TurmaRepository>();
 builder.Services.AddScoped<ICnab400SicrediParser, Cnab400SicrediParser>();
 builder.Services.AddScoped<IFornecedorRepository, FornecedorRepository>();
+builder.Services.AddScoped<ITransacaoRepository, TransacaoRepository>(); 
+builder.Services.AddScoped<IDependenteRepository, DependenteRepository>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 
+
+builder.Services.AddScoped<TransacaoService>();
 builder.Services.AddScoped<FornecedorService>();
 builder.Services.AddScoped<FinanceiroService>(); 
 builder.Services.AddScoped<UserService>();

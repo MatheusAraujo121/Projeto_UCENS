@@ -35,6 +35,7 @@ namespace Application.Features.Fornecedores
             var fornecedor = new Fornecedor
             {
                 Nome = dto.Nome,
+                Cnpj = dto.Cnpj,
                 Telefone = dto.Telefone,
                 Email = dto.Email,
                 Responsavel = dto.Responsavel,
@@ -57,6 +58,7 @@ namespace Application.Features.Fornecedores
             }
 
             fornecedor.Nome = dto.Nome;
+            fornecedor.Cnpj = dto.Cnpj;
             fornecedor.Telefone = dto.Telefone;
             fornecedor.Email = dto.Email;
             fornecedor.Responsavel = dto.Responsavel;
@@ -137,6 +139,7 @@ namespace Application.Features.Fornecedores
             {
                 Id = f.Id,
                 Nome = f.Nome,
+                Cnpj = f.Cnpj,
                 Telefone = f.Telefone,
                 Email = f.Email,
                 Responsavel = f.Responsavel,

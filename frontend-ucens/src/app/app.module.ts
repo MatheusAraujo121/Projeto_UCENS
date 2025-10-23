@@ -24,6 +24,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatDatepickerModule } from '@angular/material/datepicker'; 
 import { MatNativeDateModule } from '@angular/material/core'; 
 import { MatButtonModule } from '@angular/material/button';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule }     from '@angular/material/radio';
 import { MatIconModule } from '@angular/material/icon';
@@ -123,6 +124,8 @@ import { ExpensesDashboardComponent } from './pages/system/expenses/expenses-das
 import { CreateExpenseComponent } from './pages/system/expenses/create-expense/create-expense.component';
 import { EditExpenseComponent } from './pages/system/expenses/edit-expense/edit-expense.component';
 import { ExpenseDetailComponent } from './pages/system/expenses/expense-detail/expense-detail.component';
+import { ReportsPageComponent } from './pages/system/reports/reports-page/reports-page.component';
+import { AddTransacaoModalComponent } from './pages/system/reports/add-transacao-modal/add-transacao-modal.component';
 
 @NgModule({
   declarations: [
@@ -180,7 +183,9 @@ import { ExpenseDetailComponent } from './pages/system/expenses/expense-detail/e
     ExpensesDashboardComponent,
     CreateExpenseComponent,
     EditExpenseComponent,
-    ExpenseDetailComponent
+    ExpenseDetailComponent,
+    ReportsPageComponent,
+    AddTransacaoModalComponent
   ],
   imports: [
     BrowserModule,
@@ -201,6 +206,7 @@ import { ExpenseDetailComponent } from './pages/system/expenses/expense-detail/e
     MatNativeDateModule,
     MatPaginatorModule,
     MatSortModule,
+    MatTabsModule,
     MatFormFieldModule,
     MatProgressSpinnerModule,
     MatInputModule,

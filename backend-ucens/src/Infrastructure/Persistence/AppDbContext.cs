@@ -20,7 +20,7 @@ namespace Infrastructure.Persistence
         public DbSet<CnabRetorno> CnabRetornos { get; set; }
         public DbSet<Fornecedor> Fornecedores { get; set; } = null!;
         public DbSet<Despesa> Despesas { get; set; } = null!;
-
+        public DbSet<Transacao> Transacoes { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

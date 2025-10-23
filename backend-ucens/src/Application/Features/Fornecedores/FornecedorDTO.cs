@@ -10,6 +10,9 @@ namespace Application.Features.Fornecedores
         [StringLength(150)] // Adicionado
         public string Nome { get; set; } = string.Empty;
 
+        [StringLength(18)] // Tamanho para CNPJ formatado (ex: 00.000.000/0001-00) ou CPF
+        public string Cnpj { get; set; } = string.Empty;
+
         [StringLength(20)] // Adicionado
         public string Telefone { get; set; } = string.Empty;
 

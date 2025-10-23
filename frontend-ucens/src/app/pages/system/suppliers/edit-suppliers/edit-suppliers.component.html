@@ -12,6 +12,14 @@
                     <mat-error *ngIf="form.get('nome')?.hasError('required')">O nome é obrigatório.</mat-error>
                     <mat-error *ngIf="form.get('nome')?.hasError('maxlength')">O nome não pode exceder 150 caracteres.</mat-error>
                 </mat-form-field>
+
+                <mat-form-field appearance="fill">
+                    <mat-label>CNPJ</mat-label>
+                    <input matInput formControlName="cnpj" placeholder="00.000.000/0001-00" mask="00.000.000/0001-00" />
+                    <mat-error *ngIf="form.get('cnpj')?.hasError('required')">O CNPJ é obrigatório.</mat-error>
+                    <mat-error *ngIf="form.get('cnpj')?.hasError('cnpjInvalido')">Este CNPJ é inválido.</mat-error>
+                </mat-form-field>
+
                 <mat-form-field appearance="fill">
                     <mat-label>Responsável</mat-label>
                     <input matInput formControlName="responsavel" />
