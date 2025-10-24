@@ -51,6 +51,7 @@ import { ExpensesDashboardComponent } from './pages/system/expenses/expenses-das
 import { CreateExpenseComponent } from './pages/system/expenses/create-expense/create-expense.component';
 import { ExpenseDetailComponent } from './pages/system/expenses/expense-detail/expense-detail.component';
 import { EditExpenseComponent } from './pages/system/expenses/edit-expense/edit-expense.component';
+import { ReportsPageComponent } from './pages/system/reports/reports-page/reports-page.component';
 
 const routes: Routes = [
   //Rotas site expositivo
@@ -121,6 +122,9 @@ const routes: Routes = [
     { path: 'create-expense', component: CreateExpenseComponent, canActivate: [AuthGuard] },
     { path: 'expense-detail/id', component: ExpenseDetailComponent, canActivate: [AuthGuard] },
     { path: 'edit-expense/:id', component: EditExpenseComponent, canActivate: [AuthGuard] },
+
+  //Rotas Relatórios
+  { path: 'reports', component: ReportsPageComponent, canActivate: [AuthGuard] },
     
 ];
 

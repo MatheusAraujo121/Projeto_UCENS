@@ -1,0 +1,81 @@
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #e0e0e0;
+
+  h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem; // Espaço entre o ícone e o texto
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 500;
+  }
+
+  mat-icon[color="warn"] {
+    color: #ffa000; // Cor laranja/amarelo para o ícone de aviso
+  }
+}
+
+mat-dialog-content {
+  p {
+    line-height: 1.5;
+    margin-bottom: 1rem;
+  }
+
+  strong {
+    font-weight: 500;
+  }
+
+  mat-divider {
+    margin: 1.5rem 0;
+  }
+
+  .list-title {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+
+  .boleto-item {
+    // Aumenta a altura para acomodar mais linhas
+    height: auto !important;
+    padding: 10px 0; // Adiciona padding vertical
+
+    .mat-mdc-list-item-unscoped-content {
+      // Permite que o conteúdo interno defina a altura
+      display: block;
+    }
+
+    // Ajusta o ícone para ficar centralizado verticalmente se houver mais linhas
+    .mdc-list-item__start {
+        align-self: flex-start;
+        margin-top: 4px; // Pequeno ajuste
+    }
+  }
+
+  // Estilos das linhas dentro do item da lista
+  [matListItemTitle], [matListItemLine] {
+    white-space: normal; // Permite quebra de linha
+  }
+
+  i { // Estilo para o motivo
+    color: #666;
+    font-size: 0.9em;
+  }
+}
+
+mat-dialog-actions {
+  padding-top: 1rem;
+  margin-top: 1rem;
+  border-top: 1px solid #e0e0e0;
+
+  button {
+    display: inline-flex; // Garante que o ícone fique alinhado
+    align-items: center;
+    gap: 0.3rem;
+  }
+}

@@ -1,0 +1,114 @@
+<main class="list-page">
+  <div class="toolbar">
+    <h2>Relatórios</h2>
+    <p>Visualize relatórios financeiros e gerais da associação.</p>
+  </div>
+
+  <mat-tab-group animationDuration="0ms">
+    <mat-tab label="Geral">
+      <div class="report-container">
+        <h3>Associados e Dependentes</h3>
+        <table mat-table [dataSource]="associadosDataSource" matSort class="styled-table">
+          <ng-container matColumnDef="associado">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Associado</th>
+            <td mat-cell *matCellDef="let element">
+              {{element.nome}} ({{element.cpf}}) - <span [ngClass]="getSituacaoClass(element.situacao)">{{element.situacao}}</span>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="dependentes">
+            <th mat-header-cell *matHeaderCellDef>Dependentes</th>
+            <td mat-cell *matCellDef="let element">
+              <ul>
+                <li *ngFor="let dep of element.dependentes">
+                  {{dep.nome}} ({{dep.grauParentesco}})
+                </li>
+              </ul>
+              <span *ngIf="element.dependentes.length === 0">Nenhum dependente</span>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="associadosDisplayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: associadosDisplayedColumns;"></tr>
+        </table>
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Financeiro">
+      <div class="report-container">
+        <div class="finance-header">
+          <h3>Fluxo de Caixa</h3>
+          <form [formGroup]="dateRangeForm" (ngSubmit)="loadFinanceiro()">
+            <mat-form-field appearance="outline">
+              <mat-label>Data Início</mat-label>
+              <input matInput [matDatepicker]="pickerStart" formControlName="start">
+              <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
+              <mat-datepicker #pickerStart></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Data Fim</mat-label>
+              <input matInput [matDatepicker]="pickerEnd" formControlName="end">
+              <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+              <mat-datepicker #pickerEnd></mat-datepicker>
+            </mat-form-field>
+            <button mat-flat-button color="primary" type="submit">Gerar</button>
+          </form>
+        </div>
+
+        <div *ngIf="relatorioFinanceiro" class="finance-summary">
+            <mat-card class="summary-card entrada">
+              <mat-card-header>
+                <mat-card-title>Total de Entradas</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <p>{{ relatorioFinanceiro.totalEntradas | currency:'BRL' }}</p>
+              </mat-card-content>
+            </mat-card>
+            <mat-card class="summary-card saida">
+              <mat-card-header>
+                <mat-card-title>Total de Saídas</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <p>{{ relatorioFinanceiro.totalSaidas | currency:'BRL' }}</p>
+              </mat-card-content>
+            </mat-card>
+            <mat-card class="summary-card saldo" [ngClass]="{'saldo-positivo': relatorioFinanceiro.saldo >= 0, 'saldo-negativo': relatorioFinanceiro.saldo < 0}">
+              <mat-card-header>
+                <mat-card-title>Saldo do Período</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <p>{{ relatorioFinanceiro.saldo | currency:'BRL' }}</p>
+              </mat-card-content>
+            </mat-card>
+        </div>
+
+        <button mat-raised-button class="add-transacao-btn" (click)="openAddTransacaoModal()">
+            <mat-icon>add</mat-icon>
+            Adicionar Lançamento Manual
+        </button>
+
+        <table mat-table [dataSource]="financeiroDataSource" matSort class="styled-table">
+          <ng-container matColumnDef="data">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Data</th>
+            <td mat-cell *matCellDef="let element">{{element.data | date:'dd/MM/yyyy'}}</td>
+          </ng-container>
+          <ng-container matColumnDef="descricao">
+            <th mat-header-cell *matHeaderCellDef>Descrição</th>
+            <td mat-cell *matCellDef="let element">
+                {{element.descricao}}
+                <span class="categoria"> ({{element.categoria}})</span>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="valor">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Valor</th>
+            <td mat-cell *matCellDef="let element" [ngClass]="{'entrada-text': element.tipo === 'Entrada', 'saida-text': element.tipo === 'Saida'}">
+              {{ (element.tipo === 'Saida' ? '-' : '') + (element.valor | currency:'BRL') }}
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="financeiroDisplayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: financeiroDisplayedColumns;"></tr>
+        </table>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</main>

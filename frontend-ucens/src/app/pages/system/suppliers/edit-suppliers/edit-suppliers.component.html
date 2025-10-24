@@ -4,7 +4,9 @@
         <h2>Editar Fornecedor #{{ id }}</h2>
 
         <form [formGroup]="form" (ngSubmit)="atualizar()">
-            <p class="section-label full-width"><em>Dados Básicos</em></p>
+
+            <!-- *** CORREÇÃO: TÍTULO FORA DO GRID *** -->
+            <p class="section-label"><em>Dados Básicos</em></p>
             <div class="form-grid">
                 <mat-form-field appearance="fill">
                     <mat-label>Nome</mat-label>
@@ -12,6 +14,15 @@
                     <mat-error *ngIf="form.get('nome')?.hasError('required')">O nome é obrigatório.</mat-error>
                     <mat-error *ngIf="form.get('nome')?.hasError('maxlength')">O nome não pode exceder 150 caracteres.</mat-error>
                 </mat-form-field>
+
+                <mat-form-field appearance="fill">
+                    <mat-label>CNPJ</mat-label>
+                    <!-- *** CORREÇÃO: MÁSCARA DO CNPJ CORRIGIDA DE '.../0001-00' PARA '.../0000-00' *** -->
+                    <input matInput formControlName="cnpj" placeholder="00.000.000/0000-00" mask="00.000.000/0000-00" />
+                    <mat-error *ngIf="form.get('cnpj')?.hasError('required')">O CNPJ é obrigatório.</mat-error>
+                    <mat-error *ngIf="form.get('cnpj')?.hasError('cnpjInvalido')">Este CNPJ é inválido.</mat-error>
+                </mat-form-field>
+
                 <mat-form-field appearance="fill">
                     <mat-label>Responsável</mat-label>
                     <input matInput formControlName="responsavel" />
@@ -19,24 +30,28 @@
                 </mat-form-field>
             </div>
 
-            <p class="section-label full-width"><em>Contato</em></p>
+            <!-- *** CORREÇÃO: TÍTULO FORA DO GRID *** -->
+            <p class="section-label"><em>Contato</em></p>
             <div class="form-grid">
                 <mat-form-field appearance="fill">
                     <mat-label>Telefone</mat-label>
-                    <input matInput formControlName="telefone" mask="(00) 00000-0000" />
-                     <mat-error *ngIf="form.get('telefone')?.hasError('required')">O telefone é obrigatório.</mat-error>
-                     <mat-error *ngIf="form.get('telefone')?.hasError('maxlength')">O telefone não pode exceder 20 caracteres.</mat-error>
+                    <!-- *** MELHORIA: Máscara de telefone que aceita Fixo (8 dígitos) e Celular (9 dígitos) *** -->
+                    <input matInput formControlName="telefone" placeholder="(00) 0000-0000"
+                           mask="(00) 0000-0000||(00) 00000-0000" />
+                    <mat-error *ngIf="form.get('telefone')?.hasError('required')">O telefone é obrigatório.</mat-error>
+                    <mat-error *ngIf="form.get('telefone')?.hasError('maxlength')">O telefone não pode exceder 20 caracteres.</mat-error>
                 </mat-form-field>
                 <mat-form-field appearance="fill" class="full-width">
                     <mat-label>E‑mail</mat-label>
                     <input matInput type="email" formControlName="email" />
-                     <mat-error *ngIf="form.get('email')?.hasError('required')">O e-mail é obrigatório.</mat-error>
+                    <mat-error *ngIf="form.get('email')?.hasError('required')">O e-mail é obrigatório.</mat-error>
                     <mat-error *ngIf="form.get('email')?.hasError('email')">Formato de e-mail inválido.</mat-error>
                     <mat-error *ngIf="form.get('email')?.hasError('maxlength')">O e-mail não pode exceder 150 caracteres.</mat-error>
                 </mat-form-field>
             </div>
 
-            <p class="section-label full-width"><em>Detalhes Financeiros e Status</em></p>
+            <!-- *** CORREÇÃO: TÍTULO FORA DO GRID *** -->
+            <p class="section-label"><em>Detalhes Financeiros e Status</em></p>
             <div class="form-grid">
                 <mat-form-field appearance="fill">
                     <mat-label>Limite de Crédito</mat-label>
@@ -52,7 +67,8 @@
                 </mat-form-field>
             </div>
 
-            <p class="section-label full-width"><em>Observações</em></p>
+            <!-- *** CORREÇÃO: TÍTULO FORA DO GRID *** -->
+            <p class="section-label"><em>Observações</em></p>
             <div class="form-grid">
                 <mat-form-field appearance="fill" class="full-width">
                     <mat-label>Observações</mat-label>

@@ -10,6 +10,9 @@ namespace Domain
         [StringLength(150)] // Adicionado
         public string Nome { get; set; } = string.Empty;
 
+        [StringLength(18)] // Adicionado
+        public string Cnpj { get; set; } = string.Empty;
+
         [StringLength(20)] // Adicionado
         public string Telefone { get; set; } = string.Empty;
 

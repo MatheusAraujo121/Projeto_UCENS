@@ -2,87 +2,101 @@
 .cadastro-page {
     position: relative;
     padding: 2rem;
+    min-height: 100vh;
+    background-color: #f0f2f5; 
+}
 
-    .bg-carpa {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 80%;
-        max-width: 800px;
-        opacity: 0.15;
-        transform: translate(-85%, -50%);
-        pointer-events: none;
-        z-index: 0;
+.bg-carpa {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80%;
+    max-width: 800px;
+    opacity: 0.15;
+    transform: translate(-85%, -50%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.cadastro-container {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: auto;
+    background-color: #d9d9d9;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+    font-size: 2rem;
+}
+
+// *** CORREÇÃO: ADICIONADO PARA DEIXAR OS CAMPOS BRANCOS ***
+mat-form-field {
+    // Acessa o contêiner interno do mat-form-field
+    ::ng-deep .mat-mdc-form-field-flex {
+        background-color: #ffffff !important;
     }
+}
 
-    .cadastro-container {
-        position: relative;
-        z-index: 1;
-        max-width: 900px;
-        margin: auto;
-        background-color: #d9d9d9;
-        padding: 2rem;
-        border-radius: 1rem;
-    }
 
-    h2 {
-        text-align: center;
-        margin-bottom: 1.5rem;
-    }
+.form-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    align-items: start;
+}
 
-    .form-grid {
-        display: grid;
-        gap: 1rem;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        align-items: start;
+.full-width {
+    grid-column: 1 / -1;
+}
 
-        &.full-width {
-            grid-column: 1 / -1;
-        }
-    }
+// O .toggle-container foi removido pois este form usa mat-select
 
-    .full-width {
-        grid-column: 1 / -1;
-    }
+.btns-bottom {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+    gap: 1rem;
 
-    .toggle-container {
+    button {
+        width: 48%;
         display: flex;
         align-items: center;
-        height: 100%;
-        padding-top: 0.8rem; // Alinha com os outros campos
+        justify-content: center;
+        gap: 0.5rem;
     }
 
-    .btns-bottom {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 2rem;
+    .btn-cancel {
+        border: 2px solid #d32f2f;
+        color: #d32f2f;
+        background: transparent;
 
+        &:hover {
+            background: rgba(211, 47, 47, 0.1);
+        }
+    }
+
+    .btn-submit {
+        border: 2px solid #1976d2;
+        color: #1976d2;
+        background: transparent;
+
+        &:hover {
+            background: rgba(25, 118, 210, 0.1);
+        }
+    }
+
+    @media (max-width: 600px) {
+        flex-direction: column;
+        
         button {
-            width: 48%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .btn-cancel {
-            border: 2px solid #d32f2f;
-            color: #d32f2f;
-            background: transparent;
-
-            &:hover {
-                background: rgba(211, 47, 47, 0.1);
-            }
-        }
-
-        .btn-submit {
-            border: 2px solid #1976d2;
-            color: #1976d2;
-            background: transparent;
-
-            &:hover {
-                background: rgba(25, 118, 210, 0.1);
-            }
+          width: 100%; 
         }
     }
 }
@@ -91,5 +105,8 @@
     grid-column: 1 / -1;
     margin: 1.5rem 0 0.5rem;
     font-style: italic;
-    color: #555;
+    font-weight: 500;
+    color: #c22121;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    padding-bottom: 4px;
 }
