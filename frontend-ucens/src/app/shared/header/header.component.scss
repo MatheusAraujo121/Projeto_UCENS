@@ -1,62 +1,109 @@
+// Variáveis para breakpoints (ajuste conforme necessário)
+$breakpoint-lg: 992px;
+
+.navbar {
+  // Ajustes básicos para o navbar
+  padding: 0.75rem 1rem; // Ajuste o padding se necessário
+}
+
+.navbar-brand img {
+  height: 40px; // Mantém a altura da logo
+}
+
 .app-toolbar {
-    background: #fff;
-    box-shadow: none;
-    padding: 0 2rem;
-    display: flex;
+  background: transparent; // Fundo transparente
+  box-shadow: none;
+  padding: 0; // Remove padding interno do mat-toolbar
+  display: flex;
+  flex-wrap: wrap; // Permite que os itens quebrem a linha em telas menores
+  justify-content: flex-start; // Alinha itens à esquerda por padrão
+
+  .nav-item, .menu-button { // Aplica estilos a todos os botões/itens de menu
+    margin: 0 0.5rem; // Espaçamento horizontal menor
+    text-transform: none; // Remove a capitalização padrão do Material
+    color: #555;
+    font-weight: 500;
+    transition: color 0.2s;
+
+    &:hover {
+      color: #e60012; // Cor de hover
+    }
+  }
+
+  .menu-button {
+    display: inline-flex;
     align-items: center;
+    padding: 0.5rem; // Padding para área de clique
 
-    .logo-link {
-        padding: 0;
-        min-width: auto;
+    .menu-icon {
+      transition: transform 0.2s, color 0.2s;
     }
 
-    button.mat-button,
-    button.mat-stroked-button {
-        margin: 0 1.5rem;
-        text-transform: none;
+    &.opened {
+      color: #e60012 !important; // Cor quando o menu está aberto
+
+      .menu-icon {
+        color: #e60012 !important;
+        transform: rotate(180deg) !important; // Gira o ícone
+      }
     }
+  }
+}
 
-    button.mat-button:not(.menu-button) {
-        color: #555;
-        font-weight: 500;
-        transition: color 0.2s;
-
-        &:hover {
-            color: #e60012;
-        }
-    }
-
-    .menu-button {
-        display: inline-flex;
-        align-items: center;
-        color: #555;
-        font-weight: 500;
-        transition: color 0.2s;
-        padding: 1%;
-
-        .menu-icon {
-            transition: transform 0.2s, color 0.2s;
-        }
-
-
-        &.opened {
-            color: #e60012 !important;
-
-            .menu-icon {
-                color: #e60012 !important;
-                transform: rotate(180deg) !important;
-            }
-        }
-    }
-
-    .login-button {
-        margin-left: 1rem;
-    }
+.login-section {
+  // Estilos para a seção de login/configurações
+  margin-left: auto; // Empurra para a direita em telas grandes
+  padding-left: 1rem; // Adiciona um espaço à esquerda
 }
 
 .header-divider {
-    border: none;
-    height: 2px;
-    background-color: #000;
-    margin: 0;
+  border: none;
+  height: 2px;
+  background-color: #000;
+  margin: 0; // Remove margens padrão
+}
+
+// Estilos específicos para telas menores (quando o menu colapsa)
+@media (max-width: #{$breakpoint-lg - 1px}) {
+  .navbar-collapse {
+    width: 100%; // Ocupa toda a largura
+    margin-top: 0.5rem; // Espaço acima do menu colapsado
+  }
+
+  .app-toolbar {
+    flex-direction: column; // Itens ficam em coluna
+    align-items: flex-start; // Alinha itens à esquerda
+    padding: 1rem 0; // Adiciona padding vertical
+  }
+
+  .nav-item, .menu-button {
+    width: 100%; // Ocupa toda a largura
+    justify-content: flex-start; // Alinha texto à esquerda
+    margin: 0.25rem 0; // Espaçamento vertical
+    padding: 0.75rem 1rem; // Padding interno para melhor toque
+    border-bottom: 1px solid #eee; // Linha divisória
+    
+    &:last-child {
+        border-bottom: none; // Remove a linha do último item
+    }
+  }
+  
+  .menu-button .menu-icon {
+      margin-left: auto; // Empurra o ícone de seta para a direita
+  }
+
+  .login-section {
+    width: 100%;
+    margin-left: 0; // Remove margem automática
+    padding: 1rem; // Adiciona padding
+    border-top: 1px solid #eee; // Linha divisória acima
+    display: flex;
+    justify-content: flex-start; // Alinha o botão de login à esquerda
+  }
+}
+
+// Garante que o container do Angular Material não interfira
+::ng-deep .mat-toolbar-single-row {
+  padding: 0 !important; // Remove padding padrão do Angular Material
+  height: auto !important; // Altura automática
 }

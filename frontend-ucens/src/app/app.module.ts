@@ -20,6 +20,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatListModule } from '@angular/material/list'; // Certifique-se que MatListModule está importado
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDatepickerModule } from '@angular/material/datepicker'; 
 import { MatNativeDateModule } from '@angular/material/core'; 
@@ -126,6 +127,7 @@ import { EditExpenseComponent } from './pages/system/expenses/edit-expense/edit-
 import { ExpenseDetailComponent } from './pages/system/expenses/expense-detail/expense-detail.component';
 import { ReportsPageComponent } from './pages/system/reports/reports-page/reports-page.component';
 import { AddTransacaoModalComponent } from './pages/system/reports/add-transacao-modal/add-transacao-modal.component';
+import { PendingPaymentCancellationModalComponent } from './pages/system/financial/pending-payment-cancellation-modal/pending-payment-cancellation-modal.component';
 
 @NgModule({
   declarations: [
@@ -185,7 +187,8 @@ import { AddTransacaoModalComponent } from './pages/system/reports/add-transacao
     EditExpenseComponent,
     ExpenseDetailComponent,
     ReportsPageComponent,
-    AddTransacaoModalComponent
+    AddTransacaoModalComponent,
+    PendingPaymentCancellationModalComponent
   ],
   imports: [
     BrowserModule,
@@ -206,6 +209,7 @@ import { AddTransacaoModalComponent } from './pages/system/reports/add-transacao
     MatNativeDateModule,
     MatPaginatorModule,
     MatSortModule,
+    MatListModule,
     MatTabsModule,
     MatFormFieldModule,
     MatProgressSpinnerModule,

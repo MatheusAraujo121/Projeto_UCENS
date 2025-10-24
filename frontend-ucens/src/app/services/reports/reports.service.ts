@@ -19,7 +19,7 @@ export class ReportsService {
     const params = new HttpParams()
       .set('dataInicio', dataInicio.toISOString())
       .set('dataFim', dataFim.toISOString());
-    return this.http.get<RelatorioFinanceiro>(`${this.relatorioApiUrl}/fluxo-de-caixa`, { params });
+    return this.http.get<RelatorioFinanceiro>(`${this.relatorioApiUrl}/fluxo-caixa`, { params });
   }
 
   addTransacaoManual(transacao: TransacaoManual): Observable<any> {

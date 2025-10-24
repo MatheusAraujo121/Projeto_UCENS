@@ -1,0 +1,40 @@
+<div class="modal-header">
+  <h2 mat-dialog-title>
+    <mat-icon color="warn">warning</mat-icon>
+    Atenção: Cancelamentos Pendentes!
+  </h2>
+  <button mat-icon-button (click)="close()" aria-label="Fechar modal">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<mat-dialog-content class="mat-typography">
+  <p>
+    Os seguintes boletos tiveram o cancelamento solicitado, mas ainda não foram incluídos em um arquivo de remessa para baixa no banco.
+  </p>
+  <p>
+    <strong>É importante gerar um novo arquivo de remessa o mais rápido possível</strong> para efetivar estes cancelamentos e evitar cobranças indevidas.
+  </p>
+
+  <mat-divider></mat-divider>
+
+  <h3 class="list-title">Boletos Pendentes de Envio para Baixa:</h3>
+  <mat-list role="list">
+    <mat-list-item role="listitem" *ngFor="let boleto of data.boletos" class="boleto-item">
+      <mat-icon matListItemIcon>receipt</mat-icon>
+      <div matListItemTitle><strong>ID: {{ boleto.id }}</strong> - {{ boleto.associado.nome || 'Associado não encontrado' }}</div>
+      <div matListItemLine>Nosso Número: {{ boleto.nossoNumero || 'N/A' }}</div>
+      <div matListItemLine>Vencimento: {{ boleto.vencimento | date:'dd/MM/yyyy' }} | Valor: {{ boleto.valor | currency:'BRL' }}</div>
+      <div matListItemLine><i>Motivo Solicitação: {{ boleto.motivoCancelamento || 'Não informado' }}</i></div>
+    </mat-list-item>
+  </mat-list>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-stroked-button (click)="close()">Fechar</button>
+  <button mat-flat-button color="primary" (click)="goToGenerateRemessa()">
+    <mat-icon>send</mat-icon>
+    Ir para Gerar Remessa
+  </button>
+</mat-dialog-actions>

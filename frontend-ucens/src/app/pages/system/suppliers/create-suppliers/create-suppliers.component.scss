@@ -1,95 +1,120 @@
 // Estilos idênticos ao create-associates.scss
 .cadastro-page {
-    position: relative;
-    padding: 2rem;
+  position: relative;
+  padding: 2rem;
+  min-height: 100vh; // Garante que a página ocupe a altura toda
+  background-color: #f0f2f5; // Adiciona um fundo leve à página
+}
 
-    .bg-carpa {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 80%;
-        max-width: 800px;
-        opacity: 0.15;
-        transform: translate(-85%, -50%);
-        pointer-events: none;
-        z-index: 0;
-    }
+.bg-carpa {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80%;
+  max-width: 800px;
+  opacity: 0.15;
+  transform: translate(-85%, -50%);
+  pointer-events: none;
+  z-index: 0;
+}
 
-    .cadastro-container {
-        position: relative;
-        z-index: 1;
-        max-width: 900px;
-        margin: auto;
-        background-color: #d9d9d9;
-        padding: 2rem;
-        border-radius: 1rem;
-    }
+.cadastro-container {
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+  margin: auto;
+  background-color: #d9d9d9;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); // Adiciona uma sombra
+}
 
-    h2 {
-        text-align: center;
-        margin-bottom: 1.5rem;
-    }
+h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+  font-size: 2rem;
+}
 
-    .form-grid {
-        display: grid;
-        gap: 1rem;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        align-items: start;
+.form-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  align-items: start;
+}
 
-        &.full-width {
-            grid-column: 1 / -1;
-        }
-    }
+// *** CORREÇÃO: ADICIONADO PARA DEIXAR OS CAMPOS BRANCOS ***
+mat-form-field {
+  // O 'appearance="fill"' usa a cor do tema. Vamos forçar o branco.
+  // Acessa o contêiner interno do mat-form-field
+  ::ng-deep .mat-mdc-form-field-flex {
+    background-color: #ffffff !important;
+  }
+}
 
-    .full-width {
-        grid-column: 1 / -1;
-    }
+.full-width {
+  grid-column: 1 / -1;
+}
 
-    .toggle-container {
-        display: flex;
-        align-items: center;
-        height: 100%;
-        padding-top: 0.8rem;
-    }
-
-    .btns-bottom {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 2rem;
-
-        button {
-            width: 48%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .btn-cancel {
-            border: 2px solid #d32f2f;
-            color: #d32f2f;
-            background: transparent;
-
-            &:hover {
-                background: rgba(211, 47, 47, 0.1);
-            }
-        }
-
-        .btn-submit {
-            border: 2px solid #1976d2;
-            color: #1976d2;
-            background: transparent;
-
-            &:hover {
-                background: rgba(25, 118, 210, 0.1);
-            }
-        }
-    }
+.toggle-container {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  // Ajusta altura para alinhar com os outros campos
+  min-height: 56px; 
+  padding-top: 0.8rem;
 }
 
 .section-label {
-    margin: 1.5rem 0 0.5rem;
-    font-style: italic;
-    color: #555;
-    grid-column: 1 / -1; // Garante que o label ocupe a largura toda
+  margin: 1.5rem 0 0.5rem;
+  font-style: italic;
+  font-weight: 500;
+  color: #c22121; // Mudei a cor para destacar
+  grid-column: 1 / -1; // Garante que o label ocupe a largura toda
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+  padding-bottom: 4px;
+}
+
+.btns-bottom {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+  gap: 1rem; // Adiciona um gap para os botões não colarem
+
+  button {
+    width: 48%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .btn-cancel {
+    border: 2px solid #d32f2f;
+    color: #d32f2f;
+    background: transparent;
+
+    &:hover {
+      background: rgba(211, 47, 47, 0.1);
+    }
+  }
+
+  .btn-submit {
+    border: 2px solid #1976d2;
+    color: #1976d2;
+    background: transparent;
+
+    &:hover {
+      background: rgba(25, 118, 210, 0.1);
+    }
+  }
+
+  // Ajuste para telas pequenas
+  @media (max-width: 600px) {
+    flex-direction: column;
+    
+    button {
+      width: 100%; // Botões ocupam largura total
+    }
+  }
 }
