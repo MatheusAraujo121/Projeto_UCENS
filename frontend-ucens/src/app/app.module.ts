@@ -129,6 +129,14 @@ import { ReportsPageComponent } from './pages/system/reports/reports-page/report
 import { AddTransacaoModalComponent } from './pages/system/reports/add-transacao-modal/add-transacao-modal.component';
 import { PendingPaymentCancellationModalComponent } from './pages/system/financial/pending-payment-cancellation-modal/pending-payment-cancellation-modal.component';
 
+import { NzCollapseModule } from 'ng-zorro-antd/collapse';
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
+import { NZ_I18N } from 'ng-zorro-antd/i18n';
+import { en_US } from 'ng-zorro-antd/i18n';
+import en from '@angular/common/locales/en';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -196,7 +204,7 @@ import { PendingPaymentCancellationModalComponent } from './pages/system/financi
     MatDialogModule,
     FullCalendarModule,
     SwiperModule,
-    BrowserAnimationsModule,
+    BrowserAnimationsModule, // <-- AQUI, agora no lugar certo!
     MatCardModule,
     MatGridListModule,
     MatToolbarModule,
@@ -222,8 +230,13 @@ import { PendingPaymentCancellationModalComponent } from './pages/system/financi
     MatChipsModule,
     HttpClientModule,
     MatDividerModule,
-    NgxMaskModule.forRoot()
+    NgxMaskModule.forRoot(),
+    NzCollapseModule,
+    NzDatePickerModule,
+    NzButtonModule,
+    NzInputNumberModule
   ],
+
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
@@ -251,7 +264,8 @@ import { PendingPaymentCancellationModalComponent } from './pages/system/financi
         return paginatorIntl;
       }
     },
-    AuthGuard
+    AuthGuard,
+    { provide: NZ_I18N, useValue: en_US }
   ],
 
   bootstrap: [AppComponent]

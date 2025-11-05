@@ -1,25 +1,72 @@
 <div class="container mt-4">
   <h4 class="fw-bold text-center mb-4">Relatórios Financeiros</h4>
 
-  <div class="d-flex flex-wrap gap-3 justify-content-center">
-    <button class="btn btn-outline-primary" (click)="gerarRelatorio('associados-dependentes')">Associados e Dependentes</button>
-    <button class="btn btn-outline-primary" (click)="gerarRelatorio('adimplentes')">Adimplentes</button>
-    <button class="btn btn-outline-primary" (click)="gerarRelatorio('associados')">Associados</button>
-    <button class="btn btn-outline-primary" (click)="gerarRelatorio('dependentes')">Dependentes</button>
-    <button class="btn btn-outline-primary" (click)="gerarRelatorio('usuarios')">Usuários</button>
-    <button class="btn btn-outline-primary" (click)="gerarRelatorio('contas-a-receber')">Contas a Receber</button>
-    <button class="btn btn-outline-primary" (click)="gerarRelatorio('contas-a-pagar')">Contas a Pagar</button>
-    <button class="btn btn-outline-primary" (click)="gerarRelatorio('contas-pagas')">Contas Pagas</button>
-    <button class="btn btn-outline-primary" (click)="gerarRelatorio('receitas-arrecadadas')">Receitas Arrecadadas</button>
-    <button class="btn btn-outline-primary" (click)="gerarRelatorio('contas-recebidas')">Contas Recebidas</button>
-    <button class="btn btn-outline-primary" (click)="gerarRelatorio('extrato-financeiro')">Extrato Financeiro</button>
-    <button class="btn btn-outline-primary" (click)="gerarRelatorio('fornecedores')">Fornecedores</button>
-    <button class="btn btn-outline-primary" (click)="gerarRelatorio('arrecadacao-mensalidades')">Arrecadação de Mensalidades</button>
-    <button class="btn btn-outline-primary" (click)="gerarRelatorio('movimento-diario')">Movimento Diário</button>
-    <button class="btn btn-outline-primary" (click)="gerarRelatorio('despesas-por-emissao')">Despesas por Emissão</button>
-    <button class="btn btn-outline-primary" (click)="gerarRelatorio('receitas-mensais')">Receitas Mensais</button>
-    <button class="btn btn-outline-primary" (click)="gerarRelatorio('resumo-financeiro')">Resumo Financeiro</button>
-    <button class="btn btn-outline-primary" (click)="gerarRelatorio('inadimplentes')">Inadimplentes</button>
-    <button class="btn btn-outline-primary" (click)="gerarRelatorio('previsao-financeira')">Previsão Financeira</button>
-  </div>
+  <nz-collapse nzAccordion>
+    <!-- Relatórios Simples -->
+    <nz-collapse-panel nzHeader="Relatórios de Associados">
+      <div class="d-flex flex-wrap gap-2">
+        <button nz-button nzType="primary" (click)="gerarRelatorio('associados')">Associados</button>
+        <button nz-button nzType="primary" (click)="gerarRelatorio('associados-dependentes')">Associados e Dependentes</button>
+        <button nz-button nzType="primary" (click)="gerarRelatorio('adimplentes')">Adimplentes</button>
+        <button nz-button nzType="primary" (click)="gerarRelatorio('inadimplentes')">Inadimplentes</button>
+        <button nz-button nzType="primary" (click)="gerarRelatorio('dependentes')">Dependentes</button>
+      </div>
+    </nz-collapse-panel>
+
+    <nz-collapse-panel nzHeader="Usuários e Fornecedores">
+      <div class="d-flex flex-wrap gap-2">
+        <button nz-button nzType="primary" (click)="gerarRelatorio('usuarios')">Usuários</button>
+        <button nz-button nzType="primary" (click)="gerarRelatorio('fornecedores')">Fornecedores</button>
+      </div>
+    </nz-collapse-panel>
+
+    <!-- Relatórios com Intervalo de Datas -->
+    <nz-collapse-panel nzHeader="Relatórios com Período">
+      <div class="row mb-3">
+        <div class="col-md-4">
+          <label>Data de Início</label>
+          <nz-date-picker [(ngModel)]="dataInicio" nzFormat="dd/MM/yyyy"></nz-date-picker>
+        </div>
+        <div class="col-md-4">
+          <label>Data de Fim</label>
+          <nz-date-picker [(ngModel)]="dataFim" nzFormat="dd/MM/yyyy"></nz-date-picker>
+        </div>
+      </div>
+
+      <div class="d-flex flex-wrap gap-2">
+        <button nz-button nzType="primary" (click)="gerarRelatorioComDatas('contas-a-receber')">Contas a Receber</button>
+        <button nz-button nzType="primary" (click)="gerarRelatorioComDatas('contas-a-pagar')">Contas a Pagar</button>
+        <button nz-button nzType="primary" (click)="gerarRelatorioComDatas('contas-pagas')">Contas Pagas</button>
+        <button nz-button nzType="primary" (click)="gerarRelatorioComDatas('receitas-arrecadadas')">Receitas Arrecadadas</button>
+        <button nz-button nzType="primary" (click)="gerarRelatorioComDatas('contas-recebidas')">Contas Recebidas</button>
+        <button nz-button nzType="primary" (click)="gerarRelatorioComDatas('extrato-financeiro')">Extrato Financeiro</button>
+        <button nz-button nzType="primary" (click)="gerarRelatorioComDatas('arrecadacao-mensalidades')">Arrecadação de Mensalidades</button>
+        <button nz-button nzType="primary" (click)="gerarRelatorioComDatas('despesas-por-emissao')">Despesas por Emissão</button>
+        <button nz-button nzType="primary" (click)="gerarRelatorioComDatas('resumo-financeiro')">Resumo Financeiro</button>
+        <button nz-button nzType="primary" (click)="gerarRelatorioComDatas('previsao-financeira')">Previsão Financeira</button>
+      </div>
+    </nz-collapse-panel>
+
+    <!-- Relatórios com Ano -->
+    <nz-collapse-panel nzHeader="Relatórios Anuais">
+      <div class="row mb-3">
+        <div class="col-md-3">
+          <label>Ano</label>
+          <nz-input-number [(ngModel)]="anoSelecionado" [nzMin]="2000" [nzMax]="2100"></nz-input-number>
+        </div>
+      </div>
+      <button nz-button nzType="primary" (click)="gerarRelatorioComAno('receitas-mensais')">Receitas Mensais</button>
+    </nz-collapse-panel>
+
+    <!-- Relatórios com Data Única -->
+    <nz-collapse-panel nzHeader="Relatórios Diários">
+      <div class="row mb-3">
+        <div class="col-md-3">
+          <label>Data</label>
+          <nz-date-picker [(ngModel)]="dataSelecionada" nzFormat="dd/MM/yyyy"></nz-date-picker>
+        </div>
+      </div>
+      <button nz-button nzType="primary" (click)="gerarRelatorioComData('movimento-diario')">Movimento Diário</button>
+    </nz-collapse-panel>
+  </nz-collapse>
 </div>
