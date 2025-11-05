@@ -28,6 +28,7 @@
     "bootstrap-icons": "^1.13.1",
     "date-fns": "^4.1.0",
     "file-saver": "^2.0.5",
+    "ng-zorro-antd": "^15.1.1",
     "ngx-mask": "^14.3.3",
     "pdfmake": "^0.2.20",
     "rxjs": "~7.8.0",
