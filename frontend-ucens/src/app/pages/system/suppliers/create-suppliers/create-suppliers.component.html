@@ -53,12 +53,6 @@
           <mat-label>Limite de Crédito (Opcional)</mat-label>
           <input matInput type="number" formControlName="limiteCredito" />
         </mat-form-field>
-
-        <div class="toggle-container">
-          <mat-slide-toggle formControlName="ativo">
-            {{ form.get('ativo')?.value ? 'Ativo' : 'Inativo' }}
-          </mat-slide-toggle>
-        </div>
       </div>
 
       <p class="section-label"><em>Observações</em></p>

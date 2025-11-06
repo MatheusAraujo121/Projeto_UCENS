@@ -43,24 +43,45 @@ namespace Application.Features.Relatorios
         // --- Relatórios Existentes (Mantidos) ---
 
         // Relatório de Associados e Dependentes (Já existe na sua lista)
-        public async Task<List<RelatorioAssociadoDTO>> GerarRelatorioAssociadosComDependentes()
+        public async Task<List<object>> GerarRelatorioAssociadosComDependentes()
         {
             var associados = await _associadoRepo.GetAllWithDependentes(); 
+            
+            // Vamos criar uma lista plana (flat list)
+            var listaPlana = new List<object>();
 
-            return associados.Select(a => new RelatorioAssociadoDTO
+            foreach (var a in associados)
             {
-                Id = a.Id,
-                Nome = a.Nome,
-                CPF = a.CPF,
-                Situacao = a.Situacao,
-                Dependentes = a.Dependentes.Select(d => new RelatorioDependenteDTO
+                // Se o associado não tiver dependentes, adicione ele mesmo assim
+                if (a.Dependentes == null || !a.Dependentes.Any())
                 {
-                    Id = d.Id,
-                    Nome = d.Nome,
-                    DataNascimento = d.DataNascimento,
-                    GrauParentesco = d.GrauParentesco
-                }).ToList()
-            }).ToList();
+                    listaPlana.Add(new {
+                        AssociadoId = a.Id,
+                        Associado = a.Nome,
+                        CPF = a.CPF,
+                        Situacao = a.Situacao,
+                        Dependente = "---",
+                        Parentesco = "---"
+                    });
+                }
+                else
+                {
+                    // Se tiver dependentes, crie uma linha para cada um
+                    foreach (var d in a.Dependentes)
+                    {
+                        listaPlana.Add(new {
+                            AssociadoId = a.Id,
+                            Associado = a.Nome,
+                            CPF = a.CPF,
+                            Situacao = a.Situacao,
+                            Dependente = d.Nome,
+                            Parentesco = d.GrauParentesco
+                        });
+                    }
+                }
+            }
+            
+            return listaPlana;
         }
 
         // Fluxo de Caixa (Já existe na sua lista)

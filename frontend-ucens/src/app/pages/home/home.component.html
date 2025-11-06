@@ -1,19 +1,30 @@
 <!-- CARROSSEL PRINCIPAL -->
-<swiper [config]="config" class="main-swiper">
-  <ng-template swiperSlide>
-    <div class="banner banner-1 d-flex align-items-center justify-content-center">
+
+<!-- Adiciona um *ngIf para esperar as imagens carregarem -->
+<swiper *ngIf="!isLoading && carouselImages.length > 0" [config]="config" class="main-swiper">
+  
+  <!-- 
+    1. Usamos *ngFor para 'printar' um slide para cada imagem
+    2. Removemos as classes 'banner-1' e 'banner-2'
+    3. Usamos [style.background-image] para definir a imagem dinamicamente
+  -->
+  <ng-template *ngFor="let img of carouselImages" swiperSlide>
+    <div 
+      class="banner d-flex align-items-center justify-content-center"
+      [style.background-image]="'url(' + img.imageUrl + ')'">
     </div>
   </ng-template>
 
-  <ng-template swiperSlide>
-    <div class="banner banner-2 d-flex align-items-center justify-content-center">
-    </div>
-  </ng-template>
-
+  <!-- Controles do Swiper (sem mudanças) -->
   <div class="swiper-button-prev"></div>
   <div class="swiper-button-next"></div>
   <div class="swiper-pagination"></div>
 </swiper>
+
+<!-- Indicador de Loading (Opcional, mas recomendado) -->
+<div *ngIf="isLoading" class="main-swiper-loading d-flex justify-content-center align-items-center">
+  Carregando...
+</div>
 
 <!-- SEÇÃO CONHEÇA A NIPPON -->
 <section class="conheca-nippon py-5">

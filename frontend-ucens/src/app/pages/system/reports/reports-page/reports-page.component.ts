@@ -101,6 +101,8 @@ export class ReportsPageComponent {
         ? `Data: ${new Date(dataInicio).toLocaleDateString()}`
         : '';
 
+    const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    const userName = user.name || 'Desconhecido';
     const docDefinition: any = {
       pageSize: 'A4',
       pageMargins: [40, 60, 40, 40],
@@ -130,7 +132,8 @@ export class ReportsPageComponent {
         this.criarTabela(data),
 
         { text: '\n', margin: [0, 10, 0, 0] },
-        { text: `Gerado em: ${new Date().toLocaleString('pt-BR')}`, style: 'rodape', alignment: 'right' }
+        { text: `Gerado em: ${new Date().toLocaleString('pt-BR')}`, style: 'rodape', alignment: 'right' },
+        { text: `Gerado por: ${userName}`, style: 'rodape', alignment: 'right' }
       ],
       styles: {
         header: { fontSize: 12, bold: true, alignment: 'left' },
@@ -154,7 +157,7 @@ export class ReportsPageComponent {
 
     return {
       layout: 'lightHorizontalLines',
-      table: { headerRows: 1, widths: Array(colunas.length).fill('*'), body }
+      table: { headerRows: 1,alignment: 'center', widths: Array(colunas.length).fill('auto'), body }
     };
   }
 }

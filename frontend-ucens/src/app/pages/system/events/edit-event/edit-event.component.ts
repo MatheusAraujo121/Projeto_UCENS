@@ -41,7 +41,7 @@ export class EditEventComponent implements OnInit {
       dataFinal: ['', Validators.required],
       horarioFinal: ['', Validators.required],
       descricao: ['', [Validators.maxLength(1000), Validators.required]],
-      imagemUrl: ['', Validators.required]
+      imagemUrl: ['']
     });
   }
 

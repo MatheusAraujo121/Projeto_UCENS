@@ -111,6 +111,7 @@ import { CreateClassComponent } from './pages/system/classes/create-class/create
 import { EditClassComponent } from './pages/system/classes/edit-class/edit-class.component';
 import { ViewClassComponent } from './pages/system/classes/view-class/view-class.component';
 import { AuthGuard } from './guards/auth.guard';
+import { AdminGuard } from './guards/admin.guard';
 
 //Financeiro
 import { GenerateBoletoComponent } from './pages/system/financial/generate-boleto/generate-boleto.component';
@@ -136,6 +137,13 @@ import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { NZ_I18N } from 'ng-zorro-antd/i18n';
 import { en_US } from 'ng-zorro-antd/i18n';
 import en from '@angular/common/locales/en';
+
+//Users
+import { ListUsersComponent } from './pages/system/users/list-users/list-users.component';
+import { CreateUserComponent } from './pages/system/users/create-user/create-user.component';
+import { ViewUserComponent } from './pages/system/users/view-user/view-user.component';
+import { EditUserComponent } from './pages/system/users/edit-user/edit-user.component';
+import { ManageCarouselComponent } from './pages/system/home/manage-carousel/manage-carousel.component';
 
 @NgModule({
   declarations: [
@@ -196,7 +204,12 @@ import en from '@angular/common/locales/en';
     ExpenseDetailComponent,
     ReportsPageComponent,
     AddTransacaoModalComponent,
-    PendingPaymentCancellationModalComponent
+    PendingPaymentCancellationModalComponent,
+    ListUsersComponent,
+    CreateUserComponent,
+    ViewUserComponent,
+    EditUserComponent,
+    ManageCarouselComponent
   ],
   imports: [
     BrowserModule,
@@ -265,6 +278,7 @@ import en from '@angular/common/locales/en';
       }
     },
     AuthGuard,
+    AdminGuard,
     { provide: NZ_I18N, useValue: en_US }
   ],
 

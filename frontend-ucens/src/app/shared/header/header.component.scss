@@ -107,3 +107,24 @@ $breakpoint-lg: 992px;
   padding: 0 !important; // Remove padding padrão do Angular Material
   height: auto !important; // Altura automática
 }
+.login-section {
+  display: flex;
+  align-items: center;
+}
+
+// Estilo para a mensagem de boas-vindas
+.welcome-message {
+  font-size: 0.9rem;
+  color: rgba(0, 0, 0, 0.75);
+  white-space: nowrap; // Impede que quebre a linha
+  cursor: pointer; // Indica que é clicável
+
+  &:hover {
+    color: #0056b3; // Cor primária no hover
+  }
+
+  // Em telas pequenas (modo colapsado), a mensagem some
+  @media (max-width: 991.98px) {
+    display: none;
+  }
+}

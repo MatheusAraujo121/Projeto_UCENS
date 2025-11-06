@@ -57,6 +57,17 @@
           <div class="dash-label">Relatórios</div>
         </mat-card-content>
       </mat-card>
+
+      <mat-card class="dash-card" routerLink="/list-users" *ngIf="isAdmin"> <mat-card-content>
+          <mat-icon class="dash-icon">manage_accounts</mat-icon> <div class="dash-label">Usuários</div> </mat-card-content>
+      </mat-card>
+
+      <mat-card class="dash-card" routerLink="/manage-carousel" >
+        <mat-card-content>
+          <mat-icon class="dash-icon">collections</mat-icon>
+          <div class="dash-label">Carrossel</div>
+        </mat-card-content>
+      </mat-card>
     </div>
   </div>
 </main>

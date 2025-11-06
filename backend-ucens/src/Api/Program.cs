@@ -14,6 +14,7 @@ using Application.Features.Atividades;
 using Application.Features.Turmas;
 using Application.Features.Relatorios;
 using Application.Features.Contato;
+using Application.Features.Carousel;
 using Application.Features.Financeiro;
 using Application.Features.Fornecedores;  
 using Microsoft.OpenApi.Models;
@@ -62,6 +63,7 @@ builder.Services.AddScoped<TurmaService>();
 builder.Services.AddScoped<RelatorioService>();
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddScoped<FinanceiroService>(); 
+builder.Services.AddScoped<CarouselService>();
 
 builder.Services.AddControllers();
 

@@ -1,10 +1,39 @@
-import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { AbstractControl, ValidationErrors, ValidatorFn, FormGroup } from '@angular/forms';
 
 export class CustomValidators {
 
   /**
    * Valida um CPF brasileiro. Só executa se o campo tiver valor.
    */
+  static passwordMatchValidator(controlName: string, matchingControlName: string): ValidatorFn {
+    return (formGroup: AbstractControl): ValidationErrors | null => {
+      
+      if (!(formGroup instanceof FormGroup)) {
+        console.error('passwordMatchValidator deve ser aplicado a um FormGroup.');
+        return null;
+      }
+
+      const control = formGroup.controls[controlName];
+      const matchingControl = formGroup.controls[matchingControlName];
+
+      if (!control || !matchingControl) {
+        console.error('Controles de senha não encontrados no FormGroup.');
+        return null;
+      }
+
+      if (matchingControl.errors && !matchingControl.errors['passwordMismatch']) {
+        return null;
+      }
+
+      if (control.value !== matchingControl.value) {
+        matchingControl.setErrors({ passwordMismatch: true });
+        return { passwordMismatch: true };
+      } else {
+        matchingControl.setErrors(null);
+        return null;
+      }
+    };
+  }
   static cpfValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       // Se o campo estiver vazio, não faz a validação e retorna nulo (sem erro).

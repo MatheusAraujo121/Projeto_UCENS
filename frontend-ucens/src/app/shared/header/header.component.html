@@ -55,7 +55,11 @@
         <button mat-button routerLink="/list-suppliers" class="nav-item" (click)="closeNavbar()">Fornecedores</button>
         <button mat-button routerLink="/list-expenses" class="nav-item" (click)="closeNavbar()">Despesas</button>
         <button mat-button routerLink="/reports" class="nav-item" (click)="closeNavbar()">Relatórios</button>
-      </ng-container>
+        
+        <ng-container *ngIf="isAdmin">
+          <button mat-button routerLink="/list-users" class="nav-item" (click)="closeNavbar()">Usuários</button>
+        </ng-container>
+        </ng-container>
 
     </mat-toolbar>
 
@@ -65,10 +69,17 @@
       </ng-container>
 
       <ng-template #loggedMenu>
+        <span *ngIf="userName" class="navbar-text me-2 welcome-message" (click)="viewProfile()">
+          Olá {{ userName }}, seja bem vindo
+        </span>
         <button mat-icon-button [matMenuTriggerFor]="userMenu">
           <mat-icon>settings</mat-icon>
         </button>
         <mat-menu #userMenu="matMenu">
+          <button mat-menu-item (click)="viewProfile()"> 
+            <mat-icon>person</mat-icon>
+            Visualizar Perfil
+          </button>
           <button mat-menu-item (click)="logout()"> 
             <mat-icon>logout</mat-icon>
             Sair

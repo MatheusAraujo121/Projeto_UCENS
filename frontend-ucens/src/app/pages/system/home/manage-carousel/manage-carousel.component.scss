@@ -1,0 +1,123 @@
+/* Estilos principais (baseados no que já tínhamos) */
+.carousel-manager {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  max-width: 900px;
+  margin: auto;
+}
+
+h2, h3 {
+  color: #333;
+}
+
+.upload-section {
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.upload-section input[type="file"] {
+  margin-bottom: 10px;
+}
+
+.upload-section button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1em;
+}
+
+.upload-section button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.file-info {
+  font-size: 0.9em;
+  font-style: italic;
+  margin-bottom: 10px;
+}
+
+.error-message { color: red; }
+.loading-message, .empty-message { color: #888; }
+
+/* Galeria de imagens já salvas */
+.image-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 15px;
+}
+
+.image-card {
+  position: relative;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.image-card img {
+  width: 100%;
+  height: 140px; 
+  object-fit: cover;
+  display: block;
+}
+
+.delete-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: rgba(255, 0, 0, 0.7);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 24px;
+  text-align: center;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+
+.delete-btn:hover {
+  opacity: 1;
+}
+
+/* ====================================
+  NOVOS ESTILOS PARA A GALERIA DE PREVIEW
+  ====================================
+*/
+.preview-gallery {
+  display: grid;
+  /* previews menores */
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); 
+  gap: 10px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  padding: 10px;
+  background: #f0f0f0; /* fundo levemente diferente */
+  border-radius: 4px;
+  border: 1px dashed #ccc;
+}
+
+.preview-image-card {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.preview-image-card img {
+  width: 100%;
+  height: 80px; /* altura menor para o preview */
+  object-fit: cover;
+  display: block;
+}

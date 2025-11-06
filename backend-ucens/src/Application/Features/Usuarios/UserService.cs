@@ -3,7 +3,7 @@ using Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.Extensions.Caching.Memory; 
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -23,7 +23,7 @@ namespace Application.Features.Usuarios
         private readonly IHttpContextAccessor _httpContextAccessor;
         private const int MaxLoginAttempts = 5;
         private static readonly TimeSpan LockoutDuration = TimeSpan.FromMinutes(10);
-        
+
         public UserService(IUserRepository repository, IConfiguration configuration, IMemoryCache cache, // <-- Adicione
             IHttpContextAccessor httpContextAccessor)
         {
@@ -50,12 +50,12 @@ namespace Application.Features.Usuarios
                 UserName = dto.UserName,
                 Email = dto.Email
             };
-            
+
             user.Senha = _passwordService.HashPassword(user, dto.Senha);
-            
+
             return await _repository.Add(user);
         }
-        
+
         public async Task<User> UpdateUser(int id, UserUpdateDTO dto)
         {
             var user = await _repository.GetById(id);
@@ -76,7 +76,7 @@ namespace Application.Features.Usuarios
         }
 
         public async Task DeleteUser(int id) => await _repository.Delete(id);
-        
+
         public async Task<(string? Token, int? RemainingAttempts)> Login(LoginDTO dto)
         {
             var ipAddress = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
@@ -101,24 +101,26 @@ namespace Application.Features.Usuarios
                 // Incrementa a tentativa de falha
                 attempts++;
                 _cache.Set(cacheKey, attempts, LockoutDuration); // Armazena no cache com tempo de expiração
-                
+
                 var remaining = MaxLoginAttempts - attempts;
                 return (null, remaining < 0 ? 0 : remaining);
             }
 
             // Se o login for bem-sucedido, remove a chave do cache
             _cache.Remove(cacheKey);
-            
-            var token = GenerateJwtToken(user.Email);
+
+            var token = GenerateJwtToken(user);
             return (token, null);
         }
-        
-        private string GenerateJwtToken(string email)
+
+        private string GenerateJwtToken(User user)
         {
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                new Claim(JwtRegisteredClaimNames.Sub, user.Email), // Email
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim("id", user.Id.ToString()),
+                new Claim("username", user.UserName),
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
@@ -128,7 +130,7 @@ namespace Application.Features.Usuarios
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddHours(1),
+                expires: DateTime.UtcNow.AddHours(8),
                 signingCredentials: creds);
 
             return new JwtSecurityTokenHandler().WriteToken(token);

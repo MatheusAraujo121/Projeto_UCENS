@@ -21,6 +21,7 @@ namespace Infrastructure.Persistence
         public DbSet<Fornecedor> Fornecedores { get; set; } = null!;
         public DbSet<Despesa> Despesas { get; set; } = null!;
         public DbSet<Transacao> Transacoes { get; set; } = null!;
+        public DbSet<CarouselImage> CarouselImages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

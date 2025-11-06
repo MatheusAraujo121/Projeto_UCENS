@@ -14,7 +14,7 @@ namespace Api.Controllers
     {
         private readonly IWebHostEnvironment _env;
         // Adicionado "despesas" à lista de tipos permitidos
-        private readonly string[] _allowedUploadTypes = { "activities", "events", "despesas" };
+        private readonly string[] _allowedUploadTypes = { "activities", "events", "despesas", "carousel" };
 
         public FileController(IWebHostEnvironment env)
         {
