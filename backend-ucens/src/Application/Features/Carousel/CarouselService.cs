@@ -65,7 +65,7 @@ namespace Application.Features.Carousel
                 
                 // --- CORREÇÃO DO BUG ---
                 // O backendHost já contém "http://", então não precisamos do request.Scheme
-                var backendHost = "http://localhost:5277"; 
+                var backendHost = "https://nippon-api.onrender.com"; 
                 
                 // 2. Cria URL pública
                 // Note que o caminho da URL usa / (barra normal), e não o Path.Combine
