@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CarouselImageDto } from './carousel.interface'; // Ajuste o caminho se necessário
+import { environment } from 'src/environments/environment.prod';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ import { CarouselImageDto } from './carousel.interface'; // Ajuste o caminho se 
 export class CarouselService {
   
   // A URL base da sua API (bate com o [Route("api/[controller]")])
-  private apiUrl = 'api/carousel'; 
+  private apiUrl = `${environment.apiUrl}/api/carousel`; 
 
   constructor(private http: HttpClient) { }
 

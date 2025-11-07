@@ -3,12 +3,13 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Fornecedor, Despesa } from './supplier.interface';
+import { environment } from 'src/environments/environment.prod';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SupplierService {
-  private apiUrl = `/api/Fornecedor`;
+  private apiUrl = `${environment.apiUrl}/api/Fornecedor`;
 
   constructor(private http: HttpClient) { }
 

@@ -3,13 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Associate } from './associate.interface';
+import { environment } from 'src/environments/environment.prod';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AssociateService {
 
-  private apiUrl = '/api/Associado'; 
+  private apiUrl = `${environment.apiUrl}/api/Associado`; 
 
   constructor(private http: HttpClient) { }
 

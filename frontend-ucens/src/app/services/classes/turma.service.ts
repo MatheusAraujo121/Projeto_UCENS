@@ -2,12 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Turma, MatriculaDTO } from './class.interface';
+import { environment } from 'src/environments/environment.prod';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TurmaService {
-  private apiUrl = `api/turma`;
+  private apiUrl = `${environment.apiUrl}/api/Turma`;
 
   constructor(private http: HttpClient) {}
 
