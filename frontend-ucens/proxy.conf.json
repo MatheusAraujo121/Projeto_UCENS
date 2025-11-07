@@ -1,11 +1,11 @@
 {
   "/api": {
-    "target": "http://localhost:5277",
+    "target": "https://nippon-api.onrender.com",
     "secure": false,
     "logLevel": "debug"
   },
   "/images": {
-    "target": "http://localhost:5277",
+    "target": "https://nippon-api.onrender.com",
     "secure": false,
     "logLevel": "debug"
   }
