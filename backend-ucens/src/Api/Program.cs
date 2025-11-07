@@ -34,9 +34,10 @@ builder.Services.AddCors(options =>
         });
 });
 
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")
-        ?? "Data Source=Nippon.db"));
+    options.UseNpgsql(connectionString)); // Mude para UseNpgsql
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAssociadoRepository, AssociadoRepository>();
