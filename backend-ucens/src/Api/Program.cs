@@ -35,42 +35,38 @@ builder.Services.AddCors(options =>
         });
 });
 
-// --- SOLUÇÃO DEFINITIVA PARA CONEXÃO NEON/RENDER ---
-
 string BuildConnectionString()
 {
-    // Pega a variável de ambiente DATABASE_URL (padrão do Render)
+    // tenta pegar do ambiente (Render)
     var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
-
-    // Se não achar, tenta pegar a DefaultConnection (seu plano B)
-    if (string.IsNullOrWhiteSpace(databaseUrl))
+    if (!string.IsNullOrWhiteSpace(databaseUrl))
     {
-        databaseUrl = builder.Configuration.GetConnectionString("DefaultConnection");
+        // 🔒 Só tenta criar URI se começar com postgres://
+        if (databaseUrl.StartsWith("postgres://", StringComparison.OrdinalIgnoreCase))
+        {
+            var uri = new Uri(databaseUrl);
+            var userInfo = uri.UserInfo.Split(':');
+            var builder = new NpgsqlConnectionStringBuilder
+            {
+                Host = uri.Host,
+                Port = uri.Port > 0 ? uri.Port : 5432,
+                Username = userInfo[0],
+                Password = userInfo.Length > 1 ? userInfo[1] : "",
+                Database = uri.AbsolutePath.TrimStart('/'),
+                SslMode = SslMode.Require
+            };
+            return builder.ToString();
+        }
+        else
+        {
+            // já está em formato padrão (Host=...;Database=...)
+            return databaseUrl;
+        }
     }
 
-    if (string.IsNullOrWhiteSpace(databaseUrl))
-    {
-        throw new InvalidOperationException("Não foi possível encontrar a string de conexão (DATABASE_URL ou DefaultConnection)");
-    }
-
-    // Converte a URL (postgres://...) para o formato que o Npgsql entende (Host=...; etc)
-    var uri = new Uri(databaseUrl);
-    var userInfo = uri.UserInfo.Split(':');
-    
-    var npgsqlBuilder = new NpgsqlConnectionStringBuilder
-    {
-        Host = uri.Host,
-        Port = uri.Port > 0 ? uri.Port : 5432,
-        Username = userInfo[0],
-        Password = userInfo.Length > 1 ? userInfo[1] : "",
-        Database = uri.AbsolutePath.TrimStart('/'),
-        SslMode = SslMode.Require,
-        TrustServerCertificate = true // Necessário para o Neon no Render
-    };
-    
-    return npgsqlBuilder.ToString();
+    // fallback: usa o connection string do appsettings.json local
+    return builder.Configuration.GetConnectionString("DefaultConnection") ?? "";
 }
-
 // Constrói a string de conexão limpa
 var connectionString = BuildConnectionString();
 
@@ -188,7 +184,7 @@ using (var scope = app.Services.CreateScope())
         {
             UserName = "admin",
             Email = "admin@gmail.com",
-            Senha = "admin123"
+            Senha = "nipponadmin9182738@_"
         };
         await userService.AddUser(adminUserDto);
     }
