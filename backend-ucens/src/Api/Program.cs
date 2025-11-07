@@ -20,6 +20,7 @@ using Application.Features.Fornecedores;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Threading.RateLimiting;
+using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,10 +35,51 @@ builder.Services.AddCors(options =>
         });
 });
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+// --- SOLUÇÃO DEFINITIVA PARA CONEXÃO NEON/RENDER ---
 
+string BuildConnectionString()
+{
+    // Pega a variável de ambiente DATABASE_URL (padrão do Render)
+    var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+
+    // Se não achar, tenta pegar a DefaultConnection (seu plano B)
+    if (string.IsNullOrWhiteSpace(databaseUrl))
+    {
+        databaseUrl = builder.Configuration.GetConnectionString("DefaultConnection");
+    }
+
+    if (string.IsNullOrWhiteSpace(databaseUrl))
+    {
+        throw new InvalidOperationException("Não foi possível encontrar a string de conexão (DATABASE_URL ou DefaultConnection)");
+    }
+
+    // Converte a URL (postgres://...) para o formato que o Npgsql entende (Host=...; etc)
+    var uri = new Uri(databaseUrl);
+    var userInfo = uri.UserInfo.Split(':');
+    
+    var npgsqlBuilder = new NpgsqlConnectionStringBuilder
+    {
+        Host = uri.Host,
+        Port = uri.Port > 0 ? uri.Port : 5432,
+        Username = userInfo[0],
+        Password = userInfo.Length > 1 ? userInfo[1] : "",
+        Database = uri.AbsolutePath.TrimStart('/'),
+        SslMode = SslMode.Require,
+        TrustServerCertificate = true // Necessário para o Neon no Render
+    };
+    
+    return npgsqlBuilder.ToString();
+}
+
+// Constrói a string de conexão limpa
+var connectionString = BuildConnectionString();
+
+// Usa a string limpa para configurar o AppDbContext
+// (Note que eu corrigi para AppDbContext, que é o nome do seu DbContext)
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(connectionString)); // Mude para UseNpgsql
+    options.UseNpgsql(connectionString));
+
+// --- FIM DA SOLUÇÃO ---
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAssociadoRepository, AssociadoRepository>();
