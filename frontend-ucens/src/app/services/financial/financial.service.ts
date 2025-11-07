@@ -3,12 +3,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Boleto } from './boleto.interface'; // Importe a nova interface
+import { environment } from 'src/environments/environment.prod';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FinancialService {
-  private apiUrl = '/api/Financeiro';
+  private apiUrl = `${environment.apiUrl}/api/Financeiro`;
 
   constructor(private http: HttpClient) { }
 

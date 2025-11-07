@@ -5,12 +5,13 @@ import { LoginResponse, DecodedToken } from './auth.interface'; // Importa Decod
 import { Router } from '@angular/router';
 import { tap } from 'rxjs/operators';
 import { jwtDecode } from 'jwt-decode'; // Lembre-se: execute npm install jwt-decode
+import { environment } from 'src/environments/environment.prod';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = '/api/User';
+  private apiUrl = `${environment.apiUrl}/api/User`;
 
   constructor(private http: HttpClient, private router: Router) { }
 

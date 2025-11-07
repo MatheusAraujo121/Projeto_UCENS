@@ -2,13 +2,17 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { RelatorioAssociado, RelatorioFinanceiro, TransacaoManual } from './reports.interface';
+import { environment } from 'src/environments/environment.prod';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ReportsService {
-  private relatorioApiUrl = '/api/Relatorio';
-  private transacaoApiUrl = '/api/Transacao';
+  private apiUrl = environment.apiUrl;
+
+  // 3. MONTE AS URLS COMPLETAS USANDO A URL BASE
+  private relatorioApiUrl = `${this.apiUrl}/api/Relatorio`;
+  private transacaoApiUrl = `${this.apiUrl}/api/Transacao`;
 
   constructor(private http: HttpClient) { }
 

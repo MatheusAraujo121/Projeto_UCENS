@@ -4,13 +4,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Despesa } from './expenses.interface';
+import { environment } from 'src/environments/environment.prod';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ExpensesService {
 
-  private apiUrl = '/api/Fornecedor';
+  private apiUrl = `${environment.apiUrl}/api/Fornecedor`;
 
   constructor(private http: HttpClient) { }
 
