@@ -28,25 +28,25 @@ export class EditActivityComponent implements OnInit {
     private atividadeService: AtividadeService,
     private fileUploadService: FileUploadService,
     private router: Router,
-    private route: ActivatedRoute, 
+    private route: ActivatedRoute,
     private snackBar: MatSnackBar
   ) {
     this.form = this.fb.group({
       id: [null],
-      codigo: ['', Validators.required],
-      nome: ['', Validators.required],
-      descricao: [''],
+      codigo: ['', [Validators.required, Validators.maxLength(20)]],
+      nome: ['', [Validators.required, Validators.maxLength(100)]],
+      descricao: ['', [Validators.maxLength(1000), Validators.required]],
       imagemUrl: [''],
       exigePiscina: [false],
       exigeFisico: [false],
-      categoria: ['', Validators.required],
-      diasDisponiveis: [[]],
-      horarioSugerido: [''],
-      idadeMinima: [null],
-      idadeMaxima: [null],
-      limiteParticipantes: [null],
-      local: [[]],
-      professorResponsavel: ['']
+      categoria: ['', [Validators.required, Validators.maxLength(50)]],
+      diasDisponiveis: [[], Validators.required],
+      horarioSugerido: ['', Validators.required],
+      idadeMinima: [null, Validators.required],
+      idadeMaxima: [null, Validators.required],
+      limiteParticipantes: [null, Validators.required],
+      local: [[], Validators.required],
+      professorResponsavel: ['', [Validators.maxLength(150), Validators.required]]
     });
   }
 
@@ -63,7 +63,7 @@ export class EditActivityComponent implements OnInit {
     this.atividadeService.getById(id).subscribe({
       next: (data: Atividade) => {
         this.form.patchValue(data);
-        this.previewUrl = data.imagemUrl || null; 
+        this.previewUrl = data.imagemUrl || null;
         this.isLoading = false;
       },
       error: (err) => {

@@ -27,30 +27,39 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              {
+                "glob": "**/*",
+                "input": "./node_modules/@ant-design/icons-angular/src/inline-svg/",
+                "output": "/assets/"
+              }
             ],
             "styles": [
+              "src/theme.less",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/bootstrap-icons/font/bootstrap-icons.css",
               "node_modules/swiper/swiper-bundle.min.css",
+              "src/styles.scss",
+              "node_modules/ng-zorro-antd/ng-zorro-antd.min.css",
               "src/styles.scss"
             ],
             "scripts": []
           },
           "configurations": {
             "production": {
-                "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "10kb",
-                  "maximumError": "100mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "8kb",
-                  "maximumError": "100mb"
-                }
-              ],
+              "budgets": [
+  {
+    "type": "initial",
+    "maximumWarning": "2mb",  
+    "maximumError": "3mb"     
+  },
+  {
+    "type": "anyComponentStyle",
+    "maximumWarning": "10kb",
+    "maximumError": "15kb"
+  }
+],
+
               "outputHashing": "all"
             },
             "development": {
@@ -99,6 +108,8 @@
               "src/assets"
             ],
             "styles": [
+              "src/styles.scss",
+              "node_modules/ng-zorro-antd/ng-zorro-antd.min.css",
               "src/styles.scss"
             ],
             "scripts": []

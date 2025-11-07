@@ -1,0 +1,64 @@
+<main class="cadastro-page">
+
+  <div *ngIf="user; else loadingOrError" class="cadastro-container visualizar-fornecedor">
+    <img src="assets/carp.jpg" class="bg-carpa" alt="carpa" />
+    
+    <h6>Perfil do Usuário</h6>
+    
+    <button mat-stroked-button color="warn" class="btn-voltar" 
+            [routerLink]="isAdmin ? '/list-users' : '/dashboard'">
+      <mat-icon>arrow_back</mat-icon>
+      <span>Voltar</span>
+    </button>
+    
+    <div class="barra-divisoria"></div>
+    
+    <h2>{{ user.userName }}</h2>
+    
+    <div class="barra-divisoria"></div>
+    <h6>Dados do Usuário</h6>
+
+    <form class="form-grid">
+      <p class="section-label"><em>Informações Principais</em></p>
+
+      <mat-form-field appearance="fill">
+        <mat-label>ID do Usuário</mat-label>
+        <input matInput [value]="user.id" disabled />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Nome</mat-label>
+        <input matInput [value]="user.userName" disabled />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>E-mail</mat-label>
+        <input matInput [value]="user.email" disabled />
+      </mat-form-field>
+
+      <div class="action-buttons" *ngIf="isOwner || isAdmin">
+        <button mat-stroked-button class="btn-submit" [routerLink]="['/edit-user', user.id]">
+          <mat-icon>edit</mat-icon>
+          <span>Editar Perfil</span>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <ng-template #loadingOrError>
+    <div *ngIf="isLoading" class="text-center py-5 loading-template">
+      <mat-spinner diameter="50" class="mx-auto"></mat-spinner>
+      <p class="mt-3">Carregando perfil...</p>
+    </div>
+    
+    <div *ngIf="!isLoading && !user" class="text-center py-5 loading-template">
+      <mat-icon color="warn" class="error-icon">error_outline</mat-icon>
+      <h3 class="mt-3">Acesso Negado</h3>
+      <p>O perfil que você está tentando visualizar não existe ou você não tem permissão.</p>
+      <button mat-raised-button color="primary" [routerLink]="isAdmin ? '/list-users' : '/dashboard'">
+        Voltar
+      </button>
+    </div>
+  </ng-template>
+
+</main>

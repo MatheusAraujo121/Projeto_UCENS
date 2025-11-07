@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-export type UploadType = 'activities' | 'events';
+export type UploadType = 'activities' | 'events' | 'despesas';
 
 @Injectable({
   providedIn: 'root'

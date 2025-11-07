@@ -1,0 +1,113 @@
+.cadastro-page {
+    position: relative;
+    padding: 2rem;
+
+    .bg-carpa {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 80%;
+        max-width: 800px;
+        opacity: 0.15;
+        transform: translate(-85%, -50%);
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .cadastro-container {
+        position: relative;
+        z-index: 1;
+        max-width: 900px;
+        margin: auto;
+        background-color: #d9d9d9;
+        padding: 2rem;
+        border-radius: 1rem;
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-grid {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        align-items: start;
+
+        &.full-width {
+            grid-column: 1 / -1;
+        }
+    }
+
+    .full-width {
+        grid-column: 1 / -1;
+    }
+
+    .btns-bottom {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 2rem;
+
+        button {
+            width: 48%;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-cancel {
+            border: 2px solid #d32f2f;
+            color: #d32f2f;
+            background: transparent;
+
+            &:hover {
+                background: rgba(211, 47, 47, 0.1);
+            }
+        }
+
+        .btn-submit {
+            border: 2px solid #1976d2;
+            color: #1976d2;
+            background: transparent;
+
+            &:hover {
+                background: rgba(25, 118, 210, 0.1);
+            }
+        }
+    }
+}
+
+.section-label {
+    margin: 1.5rem 0 0.5rem;
+    font-style: italic;
+    color: #555;
+}
+
+.preview-container {
+    margin-bottom: 2%;
+
+    .image-preview {
+        background-color: transparent;
+        display: block;
+        max-height: 200px;
+        max-width: 500px;
+        margin-top: 0.5rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 5px 8px rgba(0, 0, 0, 0.2);
+    }
+
+}
+
+.upload-btn {
+    width: max-content;
+    border-color: #1976d2;
+    color: #1976d2;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    &:hover {
+        background: rgba(25, 118, 210, 0.1);
+    }
+}

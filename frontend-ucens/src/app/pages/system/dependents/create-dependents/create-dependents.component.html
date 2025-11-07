@@ -9,13 +9,14 @@
                 <mat-form-field appearance="fill">
                     <mat-label>Associado Responsável</mat-label>
                     <input type="text" placeholder="Digite para pesquisar..." matInput
-                        [formControl]="associateFilterCtrl" [matAutocomplete]="auto">
+                           [formControl]="associateFilterCtrl" [matAutocomplete]="auto">
                     <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayAssociateName">
-                        <mat-option *ngFor="let associate of filteredAssociates | async" [value]="associate"
-                            (onSelectionChange)="form.get('associadoId')?.setValue(associate)">
+                        <mat-option *ngFor="let associate of filteredAssociates | async" [value]="associate">
                             {{ associate.nome }}
                         </mat-option>
                     </mat-autocomplete>
+                    <mat-error *ngIf="associateFilterCtrl.hasError('required')">É obrigatório selecionar um associado.</mat-error>
+                    <mat-error *ngIf="associateFilterCtrl.hasError('incorrect')">Selecione um associado válido da lista.</mat-error>
                 </mat-form-field>
 
                 <mat-form-field appearance="fill">
@@ -26,34 +27,48 @@
                         <mat-option value="Desligado">Desligado</mat-option>
                     </mat-select>
                 </mat-form-field>
+
                 <mat-form-field appearance="fill">
                     <mat-label>Grau de Parentesco</mat-label>
-                    <input matInput formControlName="grauParentesco" placeholder="Ex: Filho(a), Cônjuge" />
+                    <input type="text" matInput formControlName="grauParentesco" placeholder="Ex: Filho(a), Cônjuge" 
+                           [matAutocomplete]="autoParentesco">
+                    <mat-autocomplete #autoParentesco="matAutocomplete">
+                        <mat-option *ngFor="let grau of filteredGraus | async" [value]="grau">
+                            {{ grau }}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <mat-error *ngIf="form.get('grauParentesco')?.hasError('required')">O parentesco é obrigatório.</mat-error>
+                    <mat-error *ngIf="form.get('grauParentesco')?.hasError('maxlength')">O parentesco não pode exceder 50 caracteres.</mat-error>
                 </mat-form-field>
-                <ng-container formGroupName="carteirinha">
-                    <p class="section-label full-width"><em>Dados do Dependente e Carteirinha</em></p>
-                    <mat-form-field appearance="fill">
-                        <mat-label>Nome do Dependente</mat-label>
-                        <input matInput formControlName="nome" placeholder="Nome completo" />
-                    </mat-form-field>
-                    <mat-form-field appearance="fill">
-                        <mat-label>Cognome</mat-label>
-                        <input matInput formControlName="cognome" placeholder="Sobrenome" />
-                    </mat-form-field>
-                    <mat-form-field appearance="fill">
-                        <mat-label>Número da Carteirinha</mat-label>
-                        <input matInput formControlName="numero" mask="00.000-0" placeholder="000000" />
-                    </mat-form-field>
-                    <mat-form-field appearance="fill">
-                        <mat-label>Categoria</mat-label>
-                        <input matInput formControlName="categoria" placeholder="Ex: Dependente" />
-                    </mat-form-field>
-                    <mat-form-field appearance="fill">
-                        <mat-label>Validade da Carteirinha</mat-label>
-                        <input matInput formControlName="validade" type="date" />
-                    </mat-form-field>
-                </ng-container>
 
+                <p class="section-label full-width"><em>Dados do Dependente e Carteirinha</em></p>
+                <mat-form-field appearance="fill">
+                    <mat-label>Nome do Dependente</mat-label>
+                    <input matInput formControlName="nome" placeholder="Nome completo" />
+                    <mat-error *ngIf="form.get('nome')?.hasError('required')">O nome do dependente é obrigatório.</mat-error>
+                    <mat-error *ngIf="form.get('nome')?.hasError('maxlength')">O nome não pode exceder 150 caracteres.</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Cognome</mat-label>
+                    <input matInput formControlName="cognome" placeholder="Apelido" />
+                    <mat-error *ngIf="form.get('cognome')?.hasError('maxlength')">O cognome não pode exceder 100 caracteres.</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Número da Carteirinha</mat-label>
+                    <input matInput type="number" formControlName="numeroCarteirinha" placeholder="Apenas números" />
+                    <mat-error *ngIf="form.get('numeroCarteirinha')?.hasError('pattern')">Apenas números são permitidos.</mat-error>
+                    <mat-error *ngIf="form.get('numeroCarteirinha')?.hasError('maxlength')">O número não pode exceder 20 caracteres.</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Categoria</mat-label>
+                    <input matInput formControlName="categoria" placeholder="Ex: Dependente" />
+                     <mat-error *ngIf="form.get('categoria')?.hasError('maxlength')">A categoria não pode exceder 50 caracteres.</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Validade da Carteirinha</mat-label>
+                    <input matInput formControlName="validadeCarteirinha" type="date" />
+                </mat-form-field>
+                
                 <p class="section-label full-width"><em>Identificação Pessoal</em></p>
                 <mat-form-field appearance="fill">
                     <mat-label>Sexo</mat-label>
@@ -62,14 +77,18 @@
                         <mat-option value="Masculino">Masculino</mat-option>
                         <mat-option value="Outro">Outro</mat-option>
                     </mat-select>
+                    <mat-error *ngIf="form.get('sexo')?.hasError('required')">O sexo é obrigatório.</mat-error>
                 </mat-form-field>
                 <mat-form-field appearance="fill">
-                    <mat-label>CPF</mat-label>
+                    <mat-label>CPF (Opcional)</mat-label>
                     <input matInput formControlName="cpf" mask="000.000.000-00" placeholder="000.000.000-00" />
+                    <mat-error *ngIf="form.get('cpf')?.hasError('cpfInvalido')">Este CPF é inválido.</mat-error>
                 </mat-form-field>
                 <mat-form-field appearance="fill">
-                    <mat-label>RG</mat-label>
-                    <input matInput formControlName="rg" mask="00.000.000-0" placeholder="00.000.000-0" />
+                    <mat-label>RG (Opcional)</mat-label>
+                    <input matInput type="number" formControlName="rg" placeholder="Apenas números" />
+                    <mat-error *ngIf="form.get('rg')?.hasError('pattern')">Apenas números são permitidos.</mat-error>
+                    <mat-error *ngIf="form.get('rg')?.hasError('maxlength')">O RG não pode exceder 30 caracteres.</mat-error>
                 </mat-form-field>
 
                 <p class="section-label full-width"><em>Dados Adicionais</em></p>
@@ -78,38 +97,45 @@
                     <input matInput [matDatepicker]="pickerInicio" formControlName="dataNascimento">
                     <mat-datepicker-toggle matSuffix [for]="pickerInicio"></mat-datepicker-toggle>
                     <mat-datepicker #pickerInicio></mat-datepicker>
+                    <mat-error *ngIf="form.get('dataNascimento')?.hasError('required')">A data é obrigatória.</mat-error>
+                    <mat-error *ngIf="form.get('dataNascimento')?.hasError('idadeMinima')">O dependente deve ter no mínimo 1 ano.</mat-error>
                 </mat-form-field>
                 <mat-form-field appearance="fill">
                     <mat-label>Local de Nascimento</mat-label>
                     <input matInput formControlName="localNascimento" />
+                    <mat-error *ngIf="form.get('localNascimento')?.hasError('maxlength')">O local de nascimento não pode exceder 100 caracteres.</mat-error>
                 </mat-form-field>
                 <mat-form-field appearance="fill">
                     <mat-label>Nacionalidade</mat-label>
                     <input matInput formControlName="nacionalidade" />
+                    <mat-error *ngIf="form.get('nacionalidade')?.hasError('maxlength')">A nacionalidade não pode exceder 100 caracteres.</mat-error>
                 </mat-form-field>
                 <mat-form-field appearance="fill">
                     <mat-label>Estado Civil</mat-label>
                     <input matInput formControlName="estadoCivil" />
+                    <mat-error *ngIf="form.get('estadoCivil')?.hasError('maxlength')">O estado civil não pode exceder 30 caracteres.</mat-error>
                 </mat-form-field>
                 <mat-form-field appearance="fill">
                     <mat-label>Grau de Instrução</mat-label>
                     <input matInput formControlName="grauInstrucao" />
+                    <mat-error *ngIf="form.get('grauInstrucao')?.hasError('maxlength')">O grau de instrução não pode exceder 100 caracteres.</mat-error>
                 </mat-form-field>
                 <mat-form-field appearance="fill" class="full-width">
                     <mat-label>Profissão</mat-label>
                     <input matInput formControlName="profissao" />
+                     <mat-error *ngIf="form.get('profissao')?.hasError('maxlength')">A profissão não pode exceder 100 caracteres.</mat-error>
                 </mat-form-field>
 
                 <p class="section-label full-width"><em>Informações Médicas</em></p>
                 <mat-form-field appearance="fill" class="full-width">
                     <mat-label>Exames</mat-label>
-                    <textarea matInput formControlName="exames"
-                        placeholder="Descreva aqui exames relevantes..."></textarea>
+                    <textarea matInput formControlName="exames" placeholder="Descreva aqui exames relevantes..."></textarea>
+                    <mat-error *ngIf="form.get('exames')?.hasError('maxlength')">O campo não pode exceder 500 caracteres.</mat-error>
                 </mat-form-field>
                 <mat-form-field appearance="fill" class="full-width">
                     <mat-label>Atividades Proibidas</mat-label>
-                    <textarea matInput formControlName="atividadesProibidas"
-                        placeholder="Descreva aqui atividades que o dependente não pode praticar..."></textarea>
+                    <textarea matInput formControlName="atividadesProibidas" placeholder="Descreva aqui atividades que o dependente não pode praticar..."></textarea>
+                    <mat-error *ngIf="form.get('atividadesProibidas')?.hasError('maxlength')">O campo não pode exceder 500 caracteres.</mat-error>
                 </mat-form-field>
             </div>
 

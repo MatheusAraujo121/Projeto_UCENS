@@ -1,0 +1,134 @@
+.list-page {
+    padding: 1rem; // Adiciona um preenchimento geral
+
+    .toolbar {
+        padding: 1.5rem;
+        background: #eef2f5;
+        border: 1px solid #ccc;
+        border-radius: 0.5rem;
+        border-color: #000;
+        margin-bottom: 1rem; // Espaçamento entre toolbar e o resto
+
+        h2 {
+            margin: 0;
+            font-size: 1.75rem;
+        }
+
+        p {
+            margin: 0.25rem 0 1.5rem;
+            color: #555;
+        }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 1rem;
+
+            mat-form-field {
+                min-width: 200px;
+            }
+
+            .flex-grow {
+                flex: 1;
+            }
+        }
+    }
+
+    .table-container {
+        background: #fff;
+        border-radius: 0.5rem;
+        overflow: hidden; // Mantém as bordas da tabela arredondadas
+        border: 1px solid #000;
+
+        .styled-table {
+            width: 100%;
+            border-collapse: collapse;
+
+            .clickable-row {
+                cursor: pointer;
+            }
+
+            th {
+                background: #bfbfbf;
+                color: #333;
+                font-weight: 600;
+                text-transform: uppercase;
+            }
+
+            tr {
+                background-color: #fafafa;
+                transition: background-color 0.2s;
+            }
+
+            tr:hover {
+                background-color: #d1d1d1;
+            }
+        }
+    }
+
+    /* ESTILO DO PAGINADOR FORA DO CONTAINER */
+    mat-paginator {
+        background: transparent; // Fundo transparente para se mesclar com a página
+        display: flex;
+        justify-content: flex-end;
+        padding: 0.5rem 0;
+        margin-top: 1rem;
+    }
+}
+
+/* BOTÃO ESTILIZADO IGUAL AO DE 'CADASTRAR ASSOCIADO' */
+.btn-custom-style {
+    background-color: #fff;
+    margin-left: 16px;
+    color: #28a745; // Cor do texto verde
+    height: 3.5rem;
+    border: 1px solid #28a745; // Borda verde
+    transition: background-color 0.2s, color 0.2s;
+
+    &:hover {
+        background-color: #e9f5ec; // Um verde bem clarinho no hover
+    }
+}
+
+/* Estilos de status (sem alterações) */
+.status {
+    padding: 0.4rem 0.8rem;
+    border-radius: 15px;
+    color: white;
+    font-weight: bold;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}
+
+.status-paid {
+    background-color: #4CAF50;
+}
+
+.status-pending {
+    background-color: #ead202;
+}
+
+.status-pendingcancelled {
+    background-color: #f6bd4c;
+}
+
+.status-cancelled {
+    background-color: #f44336;
+}
+
+.status-sent-for-cancellation {
+    background-color: #b36e06;
+}
+
+.status-default {
+    background-color: #808080;
+}
+
+.btn-voltar {
+    margin-bottom: 1rem;
+    border-color: #d32f2f;
+    width: 7.5%;
+    margin-left: 1.5%;
+}

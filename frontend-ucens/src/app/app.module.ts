@@ -20,10 +20,13 @@ import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatListModule } from '@angular/material/list'; // Certifique-se que MatListModule está importado
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDatepickerModule } from '@angular/material/datepicker'; 
 import { MatNativeDateModule } from '@angular/material/core'; 
 import { MatButtonModule } from '@angular/material/button';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule }     from '@angular/material/radio';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
@@ -31,6 +34,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatChipsModule } from '@angular/material/chips'; 
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatPaginatorIntl } from '@angular/material/paginator';
@@ -107,6 +111,39 @@ import { CreateClassComponent } from './pages/system/classes/create-class/create
 import { EditClassComponent } from './pages/system/classes/edit-class/edit-class.component';
 import { ViewClassComponent } from './pages/system/classes/view-class/view-class.component';
 import { AuthGuard } from './guards/auth.guard';
+import { AdminGuard } from './guards/admin.guard';
+
+//Financeiro
+import { GenerateBoletoComponent } from './pages/system/financial/generate-boleto/generate-boleto.component';
+import { FinancialDashboardComponent } from './pages/system/financial/financial-dashboard/financial-dashboard.component';
+import { PaymentHistoryComponent } from './pages/system/financial/payment-history/payment-history.component';
+import { BoletoDetailComponent } from './pages/system/financial/boleto-detail/boleto-detail.component';
+import { ListSuppliersComponent } from './pages/system/suppliers/list-suppliers/list-suppliers.component';
+import { EditSuppliersComponent } from './pages/system/suppliers/edit-suppliers/edit-suppliers.component';
+import { CreateSuppliersComponent } from './pages/system/suppliers/create-suppliers/create-suppliers.component';
+import { ViewSuppliersComponent } from './pages/system/suppliers/view-suppliers/view-suppliers.component';
+import { ExpensesDashboardComponent } from './pages/system/expenses/expenses-dashboard/expenses-dashboard.component';
+import { CreateExpenseComponent } from './pages/system/expenses/create-expense/create-expense.component';
+import { EditExpenseComponent } from './pages/system/expenses/edit-expense/edit-expense.component';
+import { ExpenseDetailComponent } from './pages/system/expenses/expense-detail/expense-detail.component';
+import { ReportsPageComponent } from './pages/system/reports/reports-page/reports-page.component';
+import { AddTransacaoModalComponent } from './pages/system/reports/add-transacao-modal/add-transacao-modal.component';
+import { PendingPaymentCancellationModalComponent } from './pages/system/financial/pending-payment-cancellation-modal/pending-payment-cancellation-modal.component';
+
+import { NzCollapseModule } from 'ng-zorro-antd/collapse';
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
+import { NZ_I18N } from 'ng-zorro-antd/i18n';
+import { en_US } from 'ng-zorro-antd/i18n';
+import en from '@angular/common/locales/en';
+
+//Users
+import { ListUsersComponent } from './pages/system/users/list-users/list-users.component';
+import { CreateUserComponent } from './pages/system/users/create-user/create-user.component';
+import { ViewUserComponent } from './pages/system/users/view-user/view-user.component';
+import { EditUserComponent } from './pages/system/users/edit-user/edit-user.component';
+import { ManageCarouselComponent } from './pages/system/home/manage-carousel/manage-carousel.component';
 
 @NgModule({
   declarations: [
@@ -152,7 +189,27 @@ import { AuthGuard } from './guards/auth.guard';
     EventInfoComponent,
     CreateClassComponent,
     EditClassComponent,
-    ViewClassComponent
+    ViewClassComponent,
+    GenerateBoletoComponent,
+    FinancialDashboardComponent,
+    PaymentHistoryComponent,
+    BoletoDetailComponent,
+    ListSuppliersComponent,
+    EditSuppliersComponent,
+    CreateSuppliersComponent,
+    ViewSuppliersComponent,
+    ExpensesDashboardComponent,
+    CreateExpenseComponent,
+    EditExpenseComponent,
+    ExpenseDetailComponent,
+    ReportsPageComponent,
+    AddTransacaoModalComponent,
+    PendingPaymentCancellationModalComponent,
+    ListUsersComponent,
+    CreateUserComponent,
+    ViewUserComponent,
+    EditUserComponent,
+    ManageCarouselComponent
   ],
   imports: [
     BrowserModule,
@@ -160,7 +217,7 @@ import { AuthGuard } from './guards/auth.guard';
     MatDialogModule,
     FullCalendarModule,
     SwiperModule,
-    BrowserAnimationsModule,
+    BrowserAnimationsModule, // <-- AQUI, agora no lugar certo!
     MatCardModule,
     MatGridListModule,
     MatToolbarModule,
@@ -173,17 +230,26 @@ import { AuthGuard } from './guards/auth.guard';
     MatNativeDateModule,
     MatPaginatorModule,
     MatSortModule,
+    MatListModule,
+    MatTabsModule,
     MatFormFieldModule,
+    MatProgressSpinnerModule,
     MatInputModule,
     MatSelectModule,
     FormsModule,
     ReactiveFormsModule,
     MatAutocompleteModule,
     MatIconModule,
+    MatChipsModule,
     HttpClientModule,
     MatDividerModule,
-    NgxMaskModule.forRoot()
+    NgxMaskModule.forRoot(),
+    NzCollapseModule,
+    NzDatePickerModule,
+    NzButtonModule,
+    NzInputNumberModule
   ],
+
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
@@ -211,7 +277,9 @@ import { AuthGuard } from './guards/auth.guard';
         return paginatorIntl;
       }
     },
-    AuthGuard
+    AuthGuard,
+    AdminGuard,
+    { provide: NZ_I18N, useValue: en_US }
   ],
 
   bootstrap: [AppComponent]

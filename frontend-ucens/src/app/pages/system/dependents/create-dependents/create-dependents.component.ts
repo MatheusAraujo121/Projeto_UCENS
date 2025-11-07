@@ -1,13 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
+// Serviços e Interfaces
 import { DependentService } from 'src/app/services/dependents/dependent.service';
 import { AssociateService } from 'src/app/services/associates/associate.service';
 import { Associate } from 'src/app/services/associates/associate.interface';
 import { Dependent } from 'src/app/services/dependents/dependent.interface';
-import { MatSnackBar } from '@angular/material/snack-bar';
+
+// Validador Customizado
+import { CustomValidators } from 'src/app/validators/custom-validators';
 
 @Component({
   selector: 'app-create-dependents',
@@ -17,8 +22,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class CreateDependentsComponent implements OnInit {
   form!: FormGroup;
   associates: Associate[] = [];
-  associateFilterCtrl = new FormControl<string | Associate>('');
+  associateFilterCtrl = new FormControl<string | Associate>('', [Validators.required, this.requireMatch]);
   filteredAssociates!: Observable<Associate[]>;
+
+  // NOVAS PROPRIEDADES PARA O AUTOCOMPLETE DE PARENTESCO
+  grausParentesco: string[] = ['Filho(a)', 'Cônjuge', 'Pai', 'Mãe', 'Enteado(a)', 'Tutelado(a)'];
+  filteredGraus!: Observable<string[]>;
 
   constructor(
     private fb: FormBuilder,
@@ -30,30 +39,48 @@ export class CreateDependentsComponent implements OnInit {
 
   ngOnInit() {
     this.form = this.fb.group({
-      associadoId: [null, Validators.required],
-      situacao: ['Regular', Validators.required],
-      grauParentesco: ['', Validators.required],
-      exames: [''],
-      atividadesProibidas: [''],
-      carteirinha: this.fb.group({
-        nome: ['', Validators.required],
-        cognome: [''],
-        numero: [''],
-        categoria: [''],
-        validade: [''],
-      }),
-      sexo: ['', Validators.required],
-      cpf: ['', [Validators.minLength(11)]],
-      rg: ['', [Validators.minLength(9)]],
-      dataNascimento: ['', Validators.required],
-      localNascimento: [''],
-      nacionalidade: [''],
-      estadoCivil: [''],
-      grauInstrucao: [''],
-      profissao: [''],
+      situacao: ['Regular', [Validators.required, Validators.maxLength(30)]],
+      grauParentesco: ['', [Validators.required, Validators.maxLength(50)]],
+      nome: ['', [Validators.required, Validators.maxLength(150)]],
+      cognome: ['', [Validators.maxLength(100)]],
+      numeroCarteirinha: ['', [Validators.pattern(/^[0-9]*$/), Validators.maxLength(20)]],
+      categoria: ['', [Validators.maxLength(50)]],
+      validadeCarteirinha: [''],
+      sexo: ['', [Validators.required, Validators.maxLength(10)]],
+      cpf: ['', [CustomValidators.cpfValidator(), Validators.maxLength(14)]],
+      rg: ['', [Validators.pattern(/^[0-9]*$/), Validators.maxLength(30)]],
+      dataNascimento: ['', [Validators.required, CustomValidators.minAgeValidator(1)]],
+      localNascimento: ['', [Validators.maxLength(100)]],
+      nacionalidade: ['', [Validators.maxLength(100)]],
+      estadoCivil: ['', [Validators.maxLength(30)]],
+      grauInstrucao: ['', [Validators.maxLength(100)]],
+      profissao: ['', [Validators.maxLength(100)]],
+      exames: ['', [Validators.maxLength(500)]],
+      atividadesProibidas: ['', [Validators.maxLength(500)]],
     });
 
     this.loadAssociates();
+
+    // NOVA LÓGICA: Configura o filtro para o campo de parentesco
+    this.filteredGraus = this.form.get('grauParentesco')!.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filterGraus(value || ''))
+    );
+  }
+
+  // NOVA FUNÇÃO: Filtra a lista de graus de parentesco
+  private _filterGraus(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.grausParentesco.filter(option => option.toLowerCase().includes(filterValue));
+  }
+
+  // Validador customizado para o autocomplete
+  private requireMatch(control: AbstractControl): ValidationErrors | null {
+    const selection: any = control.value;
+    if (typeof selection === 'string' && selection !== '') {
+      return { incorrect: true };
+    }
+    return null;
   }
 
   loadAssociates(): void {
@@ -78,39 +105,21 @@ export class CreateDependentsComponent implements OnInit {
     return associate && associate.nome ? associate.nome : '';
   }
 
-  onAssociateSelected(associate: Associate): void {
-    this.form.get('associadoId')?.setValue(associate);
-  }
-
   efetuarCadastro(): void {
-    if (this.form.invalid) {
-      this.snackBar.open('Por favor, preencha todos os campos obrigatórios.', 'Fechar', { duration: 3000 });
+    if (this.form.invalid || this.associateFilterCtrl.invalid) {
+      this.snackBar.open('Por favor, verifique os campos com erro.', 'Fechar', { duration: 3000 });
       this.form.markAllAsTouched();
+      this.associateFilterCtrl.markAsTouched();
       return;
     }
 
     const formValue = this.form.getRawValue();
+    const selectedAssociate = this.associateFilterCtrl.value as Associate;
 
     const payload: Partial<Dependent> = {
-      nome: formValue.carteirinha.nome,
-      cognome: formValue.carteirinha.cognome,
-      dataNascimento: formValue.dataNascimento,
-      sexo: formValue.sexo,
-      cpf: formValue.cpf,
-      rg: formValue.rg,
-      estadoCivil: formValue.estadoCivil,
-      grauInstrucao: formValue.grauInstrucao,
-      localNascimento: formValue.localNascimento,
-      nacionalidade: formValue.nacionalidade,
-      profissao: formValue.profissao,
-      associadoId: formValue.associadoId.id,
-      situacao: formValue.situacao,
-      grauParentesco: formValue.grauParentesco,
-      numeroCarteirinha: formValue.carteirinha.numero,
-      categoria: formValue.carteirinha.categoria,
-      validadeCarteirinha: formValue.carteirinha.validade ? formValue.carteirinha.validade : null,
-      exames: formValue.exames,
-      atividadesProibidas: formValue.atividadesProibidas
+      ...formValue,
+      associadoId: selectedAssociate.id,
+      validadeCarteirinha: formValue.validadeCarteirinha ? formValue.validadeCarteirinha : null,
     };
 
     this.dependentService.createDependent(payload).subscribe({
@@ -119,7 +128,7 @@ export class CreateDependentsComponent implements OnInit {
         this.router.navigate(['/list-dependents']);
       },
       error: (err) => {
-        this.snackBar.open('Ocorreu um erro ao tentar cadastrar o dependente. Verifique os dados e tente novamente.', 'Fechar', { duration: 3000 });
+        this.snackBar.open('Ocorreu um erro ao cadastrar o dependente. Verifique os dados.', 'Fechar', { duration: 3000 });
       }
     });
   }

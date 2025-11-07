@@ -1,0 +1,165 @@
+// Estilos baseados no view-associates.scss (copiados do view-suppliers)
+.cadastro-page {
+  position: relative;
+  padding: 2rem;
+  min-height: 100vh; // Garante altura total
+  background-color: #f0f2f5; // Fundo da página
+}
+
+// Template de loading/erro
+.loading-template {
+  max-width: 900px;
+  margin: auto;
+  padding: 2rem;
+  color: #333;
+
+  .error-icon {
+    font-size: 50px;
+    width: 50px;
+    height: 50px;
+  }
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.7);
+  z-index: 10;
+}
+
+.bg-carpa {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80%;
+  max-width: 800px;
+  opacity: 0.15;
+  transform: translate(-85%, -25%); // Posição da carpa
+  pointer-events: none;
+  z-index: 0;
+}
+
+.cadastro-container {
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+  margin: auto;
+  background-color: #d9d9d9;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+
+  &.visualizar-fornecedor { // Esta classe está sendo reutilizada
+    .btn-voltar {
+      margin-bottom: 1rem;
+      border-color: #d32f2f;
+      color: #d32f2f;
+      width: auto; 
+    }
+
+    .navegacao { // (Estilo não usado aqui, mas mantido)
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 1rem 0;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      font-size: 2rem;
+    }
+
+    h6 {
+      text-align: center;
+      margin-bottom: 1rem;
+      color: #333;
+      font-weight: 500;
+      font-size: 1.2rem;
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      align-items: start;
+    }
+  }
+}
+
+.section-label {
+  margin: 1.5rem 0 0.5rem;
+  font-style: italic;
+  font-weight: 500;
+  color: #646464; 
+  grid-column: 1 / -1;
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+  padding-bottom: 4px;
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+.barra-divisoria {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: #181818;
+  margin: 2rem 0;
+}
+
+.action-buttons {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 1rem;
+  margin-top: 20px;
+}
+
+.btn-submit {
+  border: 2px solid #1976d2;
+  color: #1976d2;
+  background: transparent;
+  width: 48%; // O override abaixo corrige isso
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+
+  &:hover {
+    background: rgba(25, 118, 210, 0.1);
+  }
+}
+
+.btn-delete { // (Estilo não usado aqui, mas mantido)
+  border: 2px solid #ff0000;
+  color: #bc0303;
+  background: transparent;
+  width: 48%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+
+  &:hover {
+    background: #ffb3b3;
+  }
+}
+
+// --- AJUSTE PARA TELA DE USUÁRIO ---
+// O layout original espera 2 botões (48% cada).
+// Este override ajusta para o caso de 1 botão (Editar).
+.action-buttons {
+  .btn-submit {
+    width: 100%; // Faz o botão "Editar" ocupar a largura
+    max-width: 400px; // Limita para não ficar gigante em telas largas
+    margin: 0 auto; // Centraliza o botão
+  }
+}

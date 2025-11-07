@@ -1,0 +1,144 @@
+<main class="cadastro-page">
+    <div class="cadastro-container">
+        <img src="assets/carp.jpg" class="bg-carpa" alt="carpa" />
+        <h2>Lançar Nova Despesa</h2>
+
+        <form [formGroup]="form" (ngSubmit)="lancarDespesa()">
+
+            <p class="section-label"><em>Dados da Despesa</em></p>
+            <div class="form-grid">
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Fornecedor</mat-label>
+                    <input type="text" placeholder="Digite para pesquisar o fornecedor..." matInput
+                        [formControl]="supplierFilterCtrl" [matAutocomplete]="autoSupplier">
+                    <mat-autocomplete #autoSupplier="matAutocomplete" [displayWith]="displaySupplierName">
+                        <mat-option *ngFor="let supplier of filteredSuppliers | async" [value]="supplier">
+                            {{ supplier.nome }}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <mat-error *ngIf="supplierFilterCtrl.hasError('required')">É obrigatório selecionar um fornecedor.</mat-error>
+                    <mat-error *ngIf="supplierFilterCtrl.hasError('incorrect')">Selecione um fornecedor válido da lista.</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Descrição</mat-label>
+                    <input matInput formControlName="descricao" placeholder="Ex: Compra de material de escritório" />
+                    <mat-error *ngIf="form.get('descricao')?.hasError('required')">A descrição é obrigatória.</mat-error>
+                     <mat-error *ngIf="form.get('descricao')?.hasError('maxlength')">A descrição não pode exceder 150 caracteres.</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill">
+                    <mat-label>Valor</mat-label>
+                    <input matInput formControlName="valor" placeholder="R$ 0,00" type="text" mask="separator.2"
+                        thousandSeparator="." decimalMarker="," prefix="R$ " />
+                    <mat-error *ngIf="form.get('valor')?.hasError('required')">O valor é obrigatório.</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill">
+                    <mat-label>Data de Vencimento</mat-label>
+                    <input matInput [matDatepicker]="pickerVencimento" formControlName="dataVencimento">
+                    <mat-datepicker-toggle matSuffix [for]="pickerVencimento"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerVencimento></mat-datepicker>
+                    <mat-error *ngIf="form.get('dataVencimento')?.hasError('required')">A data de vencimento é obrigatória.</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill">
+                    <mat-label>Categoria</mat-label>
+                    <input type="text" placeholder="Digite ou selecione uma categoria" matInput
+                        formControlName="categoria" [matAutocomplete]="autoCategoria">
+                    <mat-autocomplete #autoCategoria="matAutocomplete">
+                        <mat-option *ngFor="let categoria of filteredCategorias | async" [value]="categoria">
+                            {{categoria}}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <mat-error *ngIf="form.get('categoria')?.hasError('required')">A categoria é obrigatória.</mat-error>
+                    <mat-error *ngIf="form.get('categoria')?.hasError('maxlength')">A categoria não pode exceder 50 caracteres.</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill">
+                    <mat-label>Status</mat-label>
+                    <mat-select formControlName="status">
+                        <mat-option value="Pendente">Pendente</mat-option>
+                        <mat-option value="Paga">Paga</mat-option>
+                        <mat-option value="Pago com atraso">Pago com atraso</mat-option>
+                        <mat-option value="Atrasada">Atrasada (Não Paga)</mat-option>
+                        <mat-option value="Cancelada">Cancelada</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <ng-container *ngIf="isPaidOrOverdue">
+                    <p class="section-label full-width"><em>Detalhes do Pagamento</em></p>
+
+                    <mat-form-field appearance="fill">
+                        <mat-label>Data de Pagamento</mat-label>
+                        <input matInput [matDatepicker]="pickerPagamento" formControlName="dataPagamento">
+                        <mat-datepicker-toggle matSuffix [for]="pickerPagamento"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerPagamento></mat-datepicker>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="fill">
+                        <mat-label>Forma de Pagamento</mat-label>
+                        <input matInput formControlName="formaPagamento" placeholder="Ex: Boleto, Cartão de Crédito" />
+                        <mat-error *ngIf="form.get('formaPagamento')?.hasError('maxlength')">A forma de pagamento não pode exceder 50 caracteres.</mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="fill">
+                        <mat-label>Multa/Juros</mat-label>
+                        <input matInput formControlName="multaJuros" placeholder="R$ 0,00" type="text"
+                            mask="separator.2" thousandSeparator="." decimalMarker="," prefix="R$ " />
+                    </mat-form-field>
+                </ng-container>
+
+                <p class="section-label full-width"><em>Outras Informações (Opcional)</em></p>
+
+                <mat-form-field appearance="fill">
+                    <mat-label>Número da Fatura/Nota</mat-label>
+                    <input matInput formControlName="numeroFatura" type="text" mask="0*" />
+                    <mat-error *ngIf="form.get('numeroFatura')?.hasError('maxlength')">O número não pode exceder 50 caracteres.</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Observações</mat-label>
+                    <textarea matInput formControlName="observacoes"
+                        placeholder="Qualquer informação adicional sobre a despesa..."></textarea>
+                    <mat-error *ngIf="form.get('observacoes')?.hasError('maxlength')">As observações não podem exceder 500 caracteres.</mat-error>
+                </mat-form-field>
+            </div>
+            <p class="section-label"><em>Anexo da Despesa (Opcional)</em></p>
+
+            <div class="full-width">
+                <div class="preview-container">
+                    <div [ngSwitch]="fileType">
+                        <img *ngSwitchCase="'image'" [src]="previewUrl" class="image-preview" alt="Prévia do anexo" />
+                        <div *ngSwitchCase="'other'" class="file-preview">
+                            <mat-icon class="file-icon">description</mat-icon>
+                            <span>{{ selectedFile?.name }}</span>
+                        </div>
+                        <img *ngSwitchDefault src="assets/placeholder-image.jpg" class="image-preview"
+                            alt="Nenhum anexo" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="full-width">
+                <button mat-stroked-button type="button" class="upload-btn" (click)="fileInput.click()">
+                    <mat-icon>upload</mat-icon>
+                    <span *ngIf="!selectedFile">Selecionar Anexo</span>
+                    <span *ngIf="selectedFile">Trocar Anexo</span>
+                </button>
+                <input #fileInput type="file" accept="image/*,application/pdf" (change)="onFileChange($event)" hidden />
+            </div>
+
+            <div class="btns-bottom">
+                <button mat-stroked-button class="btn-cancel" type="button" routerLink="/list-expenses">
+                    <mat-icon>close</mat-icon> Cancelar
+                </button>
+                <button mat-stroked-button class="btn-submit" type="submit" [disabled]="isLoading">
+                    <mat-icon>radio_button_unchecked</mat-icon>
+                    <span *ngIf="!isLoading">Lançar Despesa</span>
+                    <span *ngIf="isLoading">Salvando...</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</main>

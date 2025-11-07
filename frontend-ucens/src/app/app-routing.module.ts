@@ -39,6 +39,25 @@ import { CreateClassComponent } from './pages/system/classes/create-class/create
 import { ViewClassComponent } from './pages/system/classes/view-class/view-class.component';
 import { EditClassComponent } from './pages/system/classes/edit-class/edit-class.component';
 import { AuthGuard } from './guards/auth.guard';
+import { AdminGuard } from './guards/admin.guard';
+import { FinancialDashboardComponent } from './pages/system/financial/financial-dashboard/financial-dashboard.component';
+import { GenerateBoletoComponent } from './pages/system/financial/generate-boleto/generate-boleto.component';
+import { PaymentHistoryComponent } from './pages/system/financial/payment-history/payment-history.component';
+import { BoletoDetailComponent } from './pages/system/financial/boleto-detail/boleto-detail.component';
+import { ListSuppliersComponent } from './pages/system/suppliers/list-suppliers/list-suppliers.component';
+import { CreateSuppliersComponent } from './pages/system/suppliers/create-suppliers/create-suppliers.component';
+import { EditSuppliersComponent } from './pages/system/suppliers/edit-suppliers/edit-suppliers.component';
+import { ViewSuppliersComponent } from './pages/system/suppliers/view-suppliers/view-suppliers.component';
+import { ExpensesDashboardComponent } from './pages/system/expenses/expenses-dashboard/expenses-dashboard.component';
+import { CreateExpenseComponent } from './pages/system/expenses/create-expense/create-expense.component';
+import { ExpenseDetailComponent } from './pages/system/expenses/expense-detail/expense-detail.component';
+import { EditExpenseComponent } from './pages/system/expenses/edit-expense/edit-expense.component';
+import { ReportsPageComponent } from './pages/system/reports/reports-page/reports-page.component';
+import { ListUsersComponent } from './pages/system/users/list-users/list-users.component';
+import { CreateUserComponent } from './pages/system/users/create-user/create-user.component';
+import { ViewUserComponent } from './pages/system/users/view-user/view-user.component';
+import { EditUserComponent } from './pages/system/users/edit-user/edit-user.component';
+import { ManageCarouselComponent } from './pages/system/home/manage-carousel/manage-carousel.component';
 
 const routes: Routes = [
   //Rotas site expositivo
@@ -81,17 +100,47 @@ const routes: Routes = [
   { path: 'edit-activity/:id', component: EditActivityComponent, canActivate: [AuthGuard] },
 
   //Rotas Eventos 
-  { path: 'list-events', component: ListEventsComponent, canActivate: [AuthGuard] }, 
+  { path: 'list-events', component: ListEventsComponent, canActivate: [AuthGuard] },
   { path: 'create-event', component: CreateEventComponent, canActivate: [AuthGuard] },
-  { path: 'view-event/:id', component: ViewEventComponent, canActivate: [AuthGuard] }, 
+  { path: 'view-event/:id', component: ViewEventComponent, canActivate: [AuthGuard] },
   { path: 'edit-event/:id', component: EditEventComponent, canActivate: [AuthGuard] },
   { path: 'event-info/:id', component: EventInfoComponent },
 
   //Rotas Turmas
   { path: 'create-class/:id', component: CreateClassComponent, canActivate: [AuthGuard] },
   { path: 'view-class/:id', component: ViewClassComponent, canActivate: [AuthGuard] },
-  { path: 'edit-class/:id', component: EditClassComponent, canActivate: [AuthGuard] }
+  { path: 'edit-class/:id', component: EditClassComponent, canActivate: [AuthGuard] },
 
+  // Rotas Financeiro
+  { path: 'financial-dashboard', component: FinancialDashboardComponent, canActivate: [AuthGuard] },
+  { path: 'generate-boleto', component: GenerateBoletoComponent, canActivate: [AuthGuard] },
+  { path: 'payment-history/:associadoId', component: PaymentHistoryComponent, canActivate: [AuthGuard] },
+  { path: 'boleto-detail/:boletoId', component: BoletoDetailComponent, canActivate: [AuthGuard] },
+
+  //Rotas fornecedores
+  { path: 'list-suppliers', component: ListSuppliersComponent, canActivate: [AuthGuard] },
+  { path: 'create-suppliers', component: CreateSuppliersComponent, canActivate: [AuthGuard] },
+  { path: 'edit-suppliers/:id', component: EditSuppliersComponent, canActivate: [AuthGuard] },
+  { path: 'view-suppliers/:id', component: ViewSuppliersComponent, canActivate: [AuthGuard] },
+
+  //Rotas Despesas
+    { path: 'list-expenses', component: ExpensesDashboardComponent, canActivate: [AuthGuard] },
+    { path: 'create-expense', component: CreateExpenseComponent, canActivate: [AuthGuard] },
+    { path: 'expense-detail/id', component: ExpenseDetailComponent, canActivate: [AuthGuard] },
+    { path: 'edit-expense/:id', component: EditExpenseComponent, canActivate: [AuthGuard] },
+
+  //Rotas para Users
+  { path: 'list-users', component: ListUsersComponent, canActivate: [AuthGuard, AdminGuard] },
+  { path: 'create-user', component: CreateUserComponent, canActivate: [AuthGuard, AdminGuard] },
+  { path: 'view-user/:id', component: ViewUserComponent, canActivate: [AuthGuard] },
+  { path: 'edit-user/:id', component: EditUserComponent, canActivate: [AuthGuard] },
+  
+  //Rota Carousel
+  { path: 'manage-carousel', component: ManageCarouselComponent, canActivate: [AuthGuard] },
+  
+  //Rotas Relatórios
+  { path: 'reports', component: ReportsPageComponent, canActivate: [AuthGuard] },
+    
 ];
 
 @NgModule({

@@ -30,13 +30,13 @@ export class CreateEventComponent implements OnInit {
     private snackBar: MatSnackBar
   ) {
     this.form = this.fb.group({
-      nome: ['', Validators.required],
+      nome: ['', [Validators.required, Validators.maxLength(150)]],
       dataInicio: ['', Validators.required],
       dataFinal: ['', Validators.required],
       horarioInicio: ['', Validators.required],
       horarioFinal: ['', Validators.required],
-      local: ['', Validators.required],
-      descricao: [''],
+      local: ['', [Validators.required, Validators.maxLength(150)]],
+      descricao: ['', [Validators.maxLength(1000), Validators.required]],
       imagemUrl: ['']
     });
   }
@@ -57,6 +57,8 @@ export class CreateEventComponent implements OnInit {
     const file = event.target.files[0];
     if (file) {
       this.selectedFile = file;
+      // Define o valor do formControl para ter um valor, mesmo que a URL real venha depois
+      this.form.patchValue({ imagemUrl: file.name });
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => this.previewUrl = reader.result;
@@ -82,6 +84,12 @@ export class CreateEventComponent implements OnInit {
         }
       });
     } else {
+      // Se não houver arquivo selecionado, mas o campo for obrigatório, mostra erro
+      if (this.form.get('imagemUrl')?.hasError('required')) {
+         this.snackBar.open('A imagem do evento é obrigatória.', 'Fechar', { duration: 3000 });
+         this.isLoading = false;
+         return;
+      }
       this.cadastrarEvento();
     }
   }

@@ -13,8 +13,8 @@ namespace Api.Controllers
     public class FileController : ControllerBase
     {
         private readonly IWebHostEnvironment _env;
-        // Lista de tipos de upload permitidos para segurança
-        private readonly string[] _allowedUploadTypes = { "activities", "events" };
+        // Adicionado "despesas" à lista de tipos permitidos
+        private readonly string[] _allowedUploadTypes = { "activities", "events", "despesas", "carousel" };
 
         public FileController(IWebHostEnvironment env)
         {
@@ -33,25 +33,38 @@ namespace Api.Controllers
 
             try
             {
-                // Define a pasta de destino com base no tipo (ex: 'images/activities')
-                var uploadsFolderPath = Path.Combine(_env.WebRootPath, "images", type.ToLower());
+                // Define a pasta raiz com base no tipo de upload
+                string rootFolderName;
+                string specificFolderPath;
 
-                if (!Directory.Exists(uploadsFolderPath))
+                if (type.Equals("despesas", StringComparison.OrdinalIgnoreCase))
                 {
-                    Directory.CreateDirectory(uploadsFolderPath);
+                    rootFolderName = "files"; // Pasta para anexos de despesas
+                    specificFolderPath = Path.Combine(_env.WebRootPath, rootFolderName, type.ToLower());
+                }
+                else
+                {
+                    rootFolderName = "images"; // Pasta original para imagens
+                    specificFolderPath = Path.Combine(_env.WebRootPath, rootFolderName, type.ToLower());
+                }
+                
+                if (!Directory.Exists(specificFolderPath))
+                {
+                    Directory.CreateDirectory(specificFolderPath);
                 }
 
                 var uniqueFileName = $"{Guid.NewGuid()}_{file.FileName}";
-                var filePath = Path.Combine(uploadsFolderPath, uniqueFileName);
+                var filePath = Path.Combine(specificFolderPath, uniqueFileName);
 
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     await file.CopyToAsync(stream);
                 }
 
-                var imageUrl = $"{Request.Scheme}://{Request.Host}/images/{type.ToLower()}/{uniqueFileName}";
+                // Gera a URL correta com base na pasta raiz
+                var fileUrl = $"{Request.Scheme}://{Request.Host}/{rootFolderName}/{type.ToLower()}/{uniqueFileName}";
 
-                return Ok(new { url = imageUrl });
+                return Ok(new { url = fileUrl });
             }
             catch (Exception ex)
             {

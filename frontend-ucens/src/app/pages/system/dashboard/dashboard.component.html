@@ -30,10 +30,42 @@
         </mat-card-content>
       </mat-card>
 
-      <mat-card class="dash-card" routerLink="/dashboard/financeiro">
+      <mat-card class="dash-card" routerLink="/financial-dashboard">
         <mat-card-content>
           <mat-icon class="dash-icon">attach_money</mat-icon>
           <div class="dash-label">Financeiro</div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="dash-card" routerLink="/list-suppliers">
+        <mat-card-content>
+          <mat-icon class="dash-icon">local_shipping</mat-icon>
+          <div class="dash-label">Fornecedores</div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="dash-card" routerLink="/list-expenses">
+        <mat-card-content>
+          <mat-icon class="dash-icon">receipt_long</mat-icon>
+          <div class="dash-label">Despesas</div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="dash-card" routerLink="/reports">
+        <mat-card-content>
+          <mat-icon class="dash-icon">assessment</mat-icon>
+          <div class="dash-label">Relatórios</div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="dash-card" routerLink="/list-users" *ngIf="isAdmin"> <mat-card-content>
+          <mat-icon class="dash-icon">manage_accounts</mat-icon> <div class="dash-label">Usuários</div> </mat-card-content>
+      </mat-card>
+
+      <mat-card class="dash-card" routerLink="/manage-carousel" >
+        <mat-card-content>
+          <mat-icon class="dash-icon">collections</mat-icon>
+          <div class="dash-label">Carrossel</div>
         </mat-card-content>
       </mat-card>
     </div>

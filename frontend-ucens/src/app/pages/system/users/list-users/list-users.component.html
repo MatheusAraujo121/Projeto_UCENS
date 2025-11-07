@@ -1,0 +1,70 @@
+<main class="list-page">
+  <button mat-stroked-button color="warn" class="btn-voltar" routerLink="/dashboard">
+    <mat-icon>arrow_back</mat-icon>
+    <span>Voltar</span>
+  </button>
+
+  <div class="toolbar">
+    <h2>Usuários do Sistema</h2>
+    <p>Use as ações para gerenciar os usuários.</p>
+
+    <div class="filters">
+      <mat-form-field appearance="outline" class="flex-grow">
+        <mat-label>Filtrar usuários</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Ex: admin" #input>
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </div>
+
+    <button mat-raised-button color="primary" class="btn-light-blue" routerLink="/create-user">
+      <mat-icon>add</mat-icon>
+      Adicionar Usuário
+    </button>
+  </div>
+
+  <div class="table-container">
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z1 styled-table">
+
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+        <td mat-cell *matCellDef="let user"> {{user.id}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="userName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome (Login) </th>
+        <td mat-cell *matCellDef="let user"> {{user.userName}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
+        <td mat-cell *matCellDef="let user"> {{user.email}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="acoes">
+        <th mat-header-cell *matHeaderCellDef> Ações </th>
+        <td mat-cell *matCellDef="let user">
+          <button mat-icon-button color="primary" matTooltip="Visualizar" [routerLink]="['/view-user', user.id]">
+            <mat-icon>visibility</mat-icon>
+          </button>
+          <button mat-icon-button color="accent" matTooltip="Editar" [routerLink]="['/edit-user', user.id]">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" matTooltip="Excluir" (click)="deleteUser(user.id, user.userName)" [disabled]="isCurrentUser(user.id)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+           Nenhum usuário encontrado para "{{input.value}}".
+        </td>
+      </tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons></mat-paginator>
+  </div>
+</main>

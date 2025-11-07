@@ -1,0 +1,72 @@
+<div class="header">
+  <h2 mat-dialog-title>Detalhes da Despesa #{{ despesa.id }}</h2>
+  <button mat-icon-button class="close-button" (click)="close()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<mat-dialog-content class="mat-typography" *ngIf="despesa">
+  <div class="details-grid">
+    <div class="detail-item">
+      <strong>Descrição:</strong>
+      <span>{{ despesa.descricao }}</span>
+    </div>
+    <div class="detail-item">
+      <strong>Status:</strong>
+      <span class="status-text" [ngClass]="getStatusClass(despesa.status)">{{ formatStatus(despesa.status) }}</span>
+    </div>
+    <div class="detail-item">
+      <strong>Valor:</strong>
+      <span>{{ despesa.valor | currency:'BRL' }}</span>
+    </div>
+    <div class="detail-item">
+      <strong>Vencimento:</strong>
+      <span>{{ despesa.dataVencimento | date:'dd/MM/yyyy' }}</span>
+    </div>
+    <div class="detail-item">
+      <strong>Categoria:</strong>
+      <span>{{ despesa.categoria || 'Não informada' }}</span>
+    </div>
+    <div class="detail-item">
+      <strong>Nº da Fatura:</strong>
+      <span>{{ despesa.numeroFatura || 'Não informado' }}</span>
+    </div>
+
+    <ng-container *ngIf="despesa.status === 'Paga' || despesa.status === 'Pago com atraso'">
+      <div class="detail-item">
+        <strong>Data de Pagamento:</strong>
+        <span>{{ despesa.dataPagamento | date:'dd/MM/yyyy' }}</span>
+      </div>
+      <div class="detail-item">
+        <strong>Forma de Pagamento:</strong>
+        <span>{{ despesa.formaPagamento || 'Não informada' }}</span>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="(despesa.status === 'Pago com atraso' || despesa.status === 'Atrasada') && despesa.multaJuros && despesa.multaJuros > 0">
+      <div class="detail-item">
+        <strong>Multa / Juros:</strong>
+        <span>{{ despesa.multaJuros | currency:'BRL' }}</span>
+      </div>
+    </ng-container>
+
+    <div class="detail-item full-width" *ngIf="despesa.anexoUrl">
+      <strong>Anexo:</strong>
+      <a [href]="despesa.anexoUrl" target="_blank" rel="noopener noreferrer" class="anexo-link">
+        <mat-icon>attach_file</mat-icon>
+        <span>Visualizar comprovante</span>
+      </a>
+    </div>
+
+    <div class="detail-item full-width" *ngIf="despesa.observacoes">
+      <strong>Observações:</strong>
+      <p class="obs-box">{{ despesa.observacoes }}</p>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-stroked-button class="btn-custom btn-delete" (click)="delete()">Excluir</button>
+  <button mat-stroked-button class="btn-custom btn-add" (click)="edit()">Editar</button>
+  <button mat-stroked-button class="btn-custom btn-cancel" (click)="close()">Fechar</button>
+</mat-dialog-actions>

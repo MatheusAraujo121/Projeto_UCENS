@@ -34,13 +34,13 @@ export class EditEventComponent implements OnInit {
   ) {
     this.form = this.fb.group({
       id: [null],
-      nome: ['', Validators.required],
-      local: ['', Validators.required],
+      nome: ['', [Validators.required, Validators.maxLength(150)]],
+      local: ['', [Validators.required, Validators.maxLength(150)]],
       dataInicio: ['', Validators.required],
       horarioInicio: ['', Validators.required],
       dataFinal: ['', Validators.required],
       horarioFinal: ['', Validators.required],
-      descricao: [''],
+      descricao: ['', [Validators.maxLength(1000), Validators.required]],
       imagemUrl: ['']
     });
   }
@@ -88,6 +88,7 @@ export class EditEventComponent implements OnInit {
     const file = event.target.files[0];
     if (file) {
       this.selectedFile = file;
+       this.form.patchValue({ imagemUrl: file.name });
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => this.previewUrl = reader.result;
@@ -95,7 +96,10 @@ export class EditEventComponent implements OnInit {
   }
 
   efetuarAtualizacao(): void {
-    if (this.form.invalid || !this.eventId) return;
+    if (this.form.invalid || !this.eventId) {
+        this.snackBar.open('Por favor, preencha todos os campos obrigatórios.', 'Fechar', { duration: 3000 });
+        return;
+    }
     this.isLoading = true;
 
     if (this.selectedFile) {

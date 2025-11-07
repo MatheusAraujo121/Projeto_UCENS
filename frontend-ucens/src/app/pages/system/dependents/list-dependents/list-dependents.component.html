@@ -17,10 +17,9 @@
                 <mat-label>Filtrar por Parentesco</mat-label>
                 <mat-select [formControl]="filterParentesco">
                     <mat-option value="">Todos</mat-option>
-                    <mat-option value="Cônjuge">Cônjuge</mat-option>
-                    <mat-option value="Filha">Filha</mat-option>
-                    <mat-option value="Filho">Filho</mat-option>
-                    <mat-option value="Outro">Outro</mat-option>
+                    <mat-option *ngFor="let grau of grausParentesco" [value]="grau">
+                        {{ grau }}
+                    </mat-option>
                 </mat-select>
             </mat-form-field>
 

@@ -8,25 +8,39 @@
         <form [formGroup]="loginForm" (ngSubmit)="login()">
             <div class="mb-3">
                 <label for="email" class="form-label visually-hidden">Email</label>
-                <input
-                    type="email"
-                    id="email"
-                    formControlName="email"
-                    class="form-control form-control-lg"
-                    placeholder="Email"
-                    required
-                />
+                <input type="email" id="email" formControlName="email" class="form-control form-control-lg"
+                    placeholder="Email" required />
+                <div *ngIf="loginForm.get('email')?.invalid && (loginForm.get('email')?.dirty || loginForm.get('email')?.touched)"
+                    class="text-danger mt-1">
+                    <small *ngIf="loginForm.get('email')?.hasError('required')">
+                        O campo e-mail é obrigatório.
+                    </small>
+                    <small *ngIf="loginForm.get('email')?.hasError('email')">
+                        Por favor, insira um e-mail válido.
+                    </small>
+                </div>
             </div>
             <div class="mb-3">
                 <label for="senha" class="form-label visually-hidden">Senha</label>
-                <input
-                    type="password"
-                    id="senha"
-                    formControlName="password"
-                    class="form-control form-control-lg"
-                    placeholder="Senha"
-                    required
-                />
+                <input type="password" id="senha" formControlName="password" class="form-control form-control-lg"
+                    placeholder="Senha" required />
+                <div *ngIf="loginForm.get('password')?.invalid && (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)"
+                    class="text-danger mt-1">
+                    <small *ngIf="loginForm.get('password')?.hasError('minlength')">
+                        A senha deve ter no mínimo 8 caracteres.
+                    </small>
+                    <small *ngIf="loginForm.get('password')?.hasError('required')">
+                        O campo senha é obrigatório.
+                    </small>
+                </div>
+            </div>
+
+            <div *ngIf="remainingAttempts !== null && remainingAttempts > 0"
+                class="alert alert-warning text-center p-2 mb-3">
+                Você tem mais <strong>{{ remainingAttempts }}</strong> tentativa(s).
+            </div>
+            <div *ngIf="remainingAttempts === 0" class="alert alert-danger text-center p-2 mb-3">
+                Não há mais tentativas. Tente novamente mais tarde.
             </div>
 
             <button type="submit" class="btn btn-login btn-lg w-100" [disabled]="isLoading">
