@@ -1,11 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using CloudinaryDotNet; // (Ignore o erro vermelho)
-using CloudinaryDotNet.Actions; // (Ignore o erro vermelho)
 using System;
-using System.Linq;
+using System.IO;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Api.Controllers
 {
@@ -13,13 +12,13 @@ namespace Api.Controllers
     [Route("api/[controller]")]
     public class FileController : ControllerBase
     {
-        private readonly Cloudinary _cloudinary;
-        private readonly string[] _allowedUploadTypes = { "activities", "events", "despesas" }; // Carousel é tratado no seu próprio controller
+        private readonly IWebHostEnvironment _env;
+        // Adicionado "despesas" à lista de tipos permitidos
+        private readonly string[] _allowedUploadTypes = { "activities", "events", "despesas", "carousel" };
 
-        // Injete o Cloudinary
-        public FileController(Cloudinary cloudinary)
+        public FileController(IWebHostEnvironment env)
         {
-            _cloudinary = cloudinary;
+            _env = env;
         }
 
         [HttpPost("upload")]
@@ -34,46 +33,42 @@ namespace Api.Controllers
 
             try
             {
-                // 1. Upload direto para o Cloudinary
-                await using var stream = file.OpenReadStream();
-                
-                UploadParams uploadParams;
+                // Define a pasta raiz com base no tipo de upload
+                string rootFolderName;
+                string specificFolderPath;
 
-                // Para "despesas", permita outros tipos de arquivo (Raw)
                 if (type.Equals("despesas", StringComparison.OrdinalIgnoreCase))
                 {
-                    uploadParams = new RawUploadParams()
-                    {
-                        File = new FileDescription(file.FileName, stream),
-                        Folder = type.ToLower()
-                    };
+                    rootFolderName = "files"; // Pasta para anexos de despesas
+                    specificFolderPath = Path.Combine(_env.WebRootPath, rootFolderName, type.ToLower());
                 }
-                else // Para 'activities' e 'events', use ImageUpload
+                else
                 {
-                    uploadParams = new ImageUploadParams()
-                    {
-                        File = new FileDescription(file.FileName, stream),
-                        Folder = type.ToLower() 
-                    };
+                    rootFolderName = "images"; // Pasta original para imagens
+                    specificFolderPath = Path.Combine(_env.WebRootPath, rootFolderName, type.ToLower());
                 }
                 
-                // 2. Faz o upload
-                var uploadResult = await _cloudinary.UploadAsync(uploadParams);
-
-                if (uploadResult.Error != null)
+                if (!Directory.Exists(specificFolderPath))
                 {
-                    return StatusCode(500, new { message = $"Erro no upload: {uploadResult.Error.Message}" });
+                    Directory.CreateDirectory(specificFolderPath);
                 }
 
-                // 3. Pega a URL segura (https)
-                var fileUrl = uploadResult.SecureUrl.AbsoluteUri;
+                var uniqueFileName = $"{Guid.NewGuid()}_{file.FileName}";
+                var filePath = Path.Combine(specificFolderPath, uniqueFileName);
 
-                // 4. Retorna a URL para o frontend
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+
+                // Gera a URL correta com base na pasta raiz
+                var fileUrl = $"{Request.Scheme}://{Request.Host}/{rootFolderName}/{type.ToLower()}/{uniqueFileName}";
+
                 return Ok(new { url = fileUrl });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { message = $"Erro interno do servidor: {ex.Message}" });
+                return StatusCode(500, new { message = $"Erro interno do servidor ao fazer upload: {ex.Message}" });
             }
         }
     }

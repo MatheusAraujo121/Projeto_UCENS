@@ -21,7 +21,6 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Threading.RateLimiting;
 using Npgsql;
-using CloudinaryDotNet;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -77,13 +76,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
 
 // --- FIM DA SOLUÇÃO ---
-Account cloudinaryAccount = new Account(
-    builder.Configuration["CLOUDINARY_CLOUD_NAME"],
-    builder.Configuration["CLOUDINARY_API_KEY"],
-    builder.Configuration["CLOUDINARY_API_SECRET"]
-);
-Cloudinary cloudinary = new Cloudinary(cloudinaryAccount);
-builder.Services.AddSingleton(cloudinary);
+
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAssociadoRepository, AssociadoRepository>();
 builder.Services.AddScoped<IBoletoRepository, BoletoRepository>();
