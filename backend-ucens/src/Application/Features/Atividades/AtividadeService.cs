@@ -4,16 +4,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CloudinaryDotNet; // (Ignore o erro vermelho)
+using CloudinaryDotNet.Actions; // (Ignore o erro vermelho)
+using System.IO; 
 
 namespace Application.Features.Atividades
 {
     public class AtividadeService
     {
         private readonly IRepository<Atividade> _repo;
+        private readonly Cloudinary _cloudinary; // <-- Adicionado
 
-        public AtividadeService(IRepository<Atividade> repo)
+        // Injete o Cloudinary
+        public AtividadeService(IRepository<Atividade> repo, Cloudinary cloudinary)
         {
             _repo = repo;
+            _cloudinary = cloudinary;
         }
 
         public async Task<List<AtividadeDTO>> GetAll()
@@ -36,66 +42,78 @@ namespace Application.Features.Atividades
             return dto;
         }
 
-        public async Task<AtividadeDTO> Update(int id, string webRootPath, AtividadeDTO dto)
+        // --- MÉTODO UPDATE MODIFICADO ---
+        // Remova 'webRootPath'
+        public async Task<AtividadeDTO> Update(int id, AtividadeDTO dto)
         {
             var atividade = await _repo.GetById(id);
             if (atividade == null)
-            {
                 throw new Exception($"Atividade com ID {id} não encontrada.");
-            }
-            if (!string.IsNullOrEmpty(atividade.ImagemUrl))
+            
+            // Se a URL da imagem mudou, delete a antiga do Cloudinary
+            if (!string.IsNullOrEmpty(atividade.ImagemUrl) && atividade.ImagemUrl != dto.ImagemUrl)
             {
                 try
                 {
-                    var fileName = Path.GetFileName(new Uri(atividade.ImagemUrl).AbsolutePath);
-                    var filePath = Path.Combine(webRootPath, "images", "activities", fileName);
-
-                    if (File.Exists(filePath))
+                    var publicId = GetPublicIdFromUrl(atividade.ImagemUrl);
+                    if (!string.IsNullOrEmpty(publicId))
                     {
-                        File.Delete(filePath);
+                        var deleteParams = new DeletionParams(publicId);
+                        await _cloudinary.DestroyAsync(deleteParams);
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Erro ao deletar arquivo de imagem: {ex.Message}");
+                    Console.WriteLine($"Erro ao deletar arquivo antigo do Cloudinary: {ex.Message}");
                 }
             }
 
-
             MapDtoToEntity(dto, atividade);
-
             await _repo.Update(atividade);
             return MapToDto(atividade);
         }
 
-        public async Task Delete(int id, string webRootPath)
+        // --- MÉTODO DELETE MODIFICADO ---
+        // Remova 'webRootPath'
+        public async Task Delete(int id)
         {
             var atividade = await _repo.GetById(id);
-            if (atividade == null)
-            {
-                return;
-            }
+            if (atividade == null) return;
 
+            // Deleta a imagem do Cloudinary
             if (!string.IsNullOrEmpty(atividade.ImagemUrl))
             {
                 try
                 {
-                    var fileName = Path.GetFileName(new Uri(atividade.ImagemUrl).AbsolutePath);
-                    var filePath = Path.Combine(webRootPath, "images", "activities", fileName);
-
-                    if (File.Exists(filePath))
+                    var publicId = GetPublicIdFromUrl(atividade.ImagemUrl);
+                    if (!string.IsNullOrEmpty(publicId))
                     {
-                        File.Delete(filePath);
+                        var deleteParams = new DeletionParams(publicId);
+                        await _cloudinary.DestroyAsync(deleteParams);
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Erro ao deletar arquivo de imagem: {ex.Message}");
+                    Console.WriteLine($"Erro ao deletar arquivo do Cloudinary: {ex.Message}");
                 }
             }
 
             await _repo.Delete(id);
         }
+        
+        // Função para extrair o PublicId da URL
+        private string GetPublicIdFromUrl(string imageUrl)
+        {
+            try
+            {
+                var uri = new Uri(imageUrl);
+                string path = string.Join("/", uri.Segments.SkipWhile(s => !s.StartsWith("v") && !s.Contains("upload")).Skip(1));
+                return Path.ChangeExtension(path, null); // Retorna "activities/nomearquivo"
+            }
+            catch { return null; }
+        }
+
+        // --- Funções de Map (sem mudança) ---
         private static AtividadeDTO MapToDto(Atividade atividade)
         {
             return new AtividadeDTO
