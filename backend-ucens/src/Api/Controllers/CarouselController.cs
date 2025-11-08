@@ -15,18 +15,14 @@ namespace Api.Controllers
         // O Controller agora só conhece o Service
         private readonly CarouselService _service;
 
-        // Injeta o Service, não mais o Repositório ou o Env
         public CarouselController(CarouselService service)
         {
             _service = service;
         }
 
-        // --- GET: Listar todas as imagens ---
         [HttpGet]
-        [AllowAnonymous]
         public async Task<ActionResult<List<CarouselImageDto>>> GetCarouselImages()
         {
-            // Apenas delega
             var dtos = await _service.GetAllAsync();
             return Ok(dtos);
         }

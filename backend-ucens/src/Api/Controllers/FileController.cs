@@ -2,10 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using CloudinaryDotNet; // (Ignore o erro vermelho)
-using CloudinaryDotNet.Actions; // (Ignore o erro vermelho)
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 using System;
-using System.Linq;
 
 namespace Api.Controllers
 {
@@ -14,9 +13,8 @@ namespace Api.Controllers
     public class FileController : ControllerBase
     {
         private readonly Cloudinary _cloudinary;
-        private readonly string[] _allowedUploadTypes = { "activities", "events", "despesas" }; // Carousel é tratado no seu próprio controller
+        private readonly string[] _allowedUploadTypes = { "activities", "events", "despesas" };
 
-        // Injete o Cloudinary
         public FileController(Cloudinary cloudinary)
         {
             _cloudinary = cloudinary;
@@ -34,42 +32,39 @@ namespace Api.Controllers
 
             try
             {
-                // 1. Upload direto para o Cloudinary
                 await using var stream = file.OpenReadStream();
-                
-                UploadParams uploadParams;
 
-                // Para "despesas", permita outros tipos de arquivo (Raw)
+                // Para "despesas" (ex.: PDF, etc) usamos RawUploadParams
                 if (type.Equals("despesas", StringComparison.OrdinalIgnoreCase))
                 {
-                    uploadParams = new RawUploadParams()
+                    var rawParams = new RawUploadParams
                     {
                         File = new FileDescription(file.FileName, stream),
                         Folder = type.ToLower()
                     };
+
+                    var uploadResult = await _cloudinary.UploadAsync(rawParams);
+
+                    if (uploadResult.Error != null)
+                        return StatusCode(500, new { message = $"Erro no upload: {uploadResult.Error.Message}" });
+
+                    return Ok(new { url = uploadResult.SecureUrl?.AbsoluteUri });
                 }
-                else // Para 'activities' e 'events', use ImageUpload
+                else // activities/events -> ImageUploadParams
                 {
-                    uploadParams = new ImageUploadParams()
+                    var imageParams = new ImageUploadParams
                     {
                         File = new FileDescription(file.FileName, stream),
-                        Folder = type.ToLower() 
+                        Folder = type.ToLower()
                     };
+
+                    var uploadResult = await _cloudinary.UploadAsync(imageParams);
+
+                    if (uploadResult.Error != null)
+                        return StatusCode(500, new { message = $"Erro no upload: {uploadResult.Error.Message}" });
+
+                    return Ok(new { url = uploadResult.SecureUrl?.AbsoluteUri });
                 }
-                
-                // 2. Faz o upload
-                var uploadResult = await _cloudinary.UploadAsync(uploadParams);
-
-                if (uploadResult.Error != null)
-                {
-                    return StatusCode(500, new { message = $"Erro no upload: {uploadResult.Error.Message}" });
-                }
-
-                // 3. Pega a URL segura (https)
-                var fileUrl = uploadResult.SecureUrl.AbsoluteUri;
-
-                // 4. Retorna a URL para o frontend
-                return Ok(new { url = fileUrl });
             }
             catch (Exception ex)
             {
