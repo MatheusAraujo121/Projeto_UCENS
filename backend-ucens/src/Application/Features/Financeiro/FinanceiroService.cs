@@ -42,9 +42,18 @@ namespace Application.Features.Financeiro
 
         public async Task<IEnumerable<BoletoDTO>> GetBoletosAsync()
         {
+            // --- INÍCIO DA CORREÇÃO ---
+            // O DateTime.Today é "timestamp with time zone" por padrão (Kind=Local).
+            // Precisamos marcá-lo como "Unspecified" (sem fuso) para ser
+            // compatível com nossas colunas "timestamp without time zone".
+            var hoje = DateTime.Today;
+            var hojeSemFuso = DateTime.SpecifyKind(hoje, DateTimeKind.Unspecified);
+            // --- FIM DA CORREÇÃO ---
+
             // ETAPA 1: Encontrar e atualizar boletos pendentes que já venceram
             var boletosVencidos = await _boletoRepo.GetQueryable()
-                .Where(b => b.Status == BoletoStatus.Pendente && b.DataVencimento.Date < DateTime.Today)
+                // Usa a variável corrigida na consulta:
+                .Where(b => b.Status == BoletoStatus.Pendente && b.DataVencimento.Date < hojeSemFuso)
                 .ToListAsync();
 
             if (boletosVencidos.Any())
