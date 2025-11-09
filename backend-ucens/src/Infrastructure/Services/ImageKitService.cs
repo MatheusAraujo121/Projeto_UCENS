@@ -6,10 +6,10 @@ using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Text.Json; // Usando System.Text.Json (nativo do .NET Core)
+using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Services // Ajuste o namespace se necessário
+namespace Infrastructure.Services
 {
     public class ImageKitService : IImageKitService
     {
@@ -22,7 +22,7 @@ namespace Infrastructure.Services // Ajuste o namespace se necessário
         {
             _httpClient = new HttpClient();
             _privateKey = config["ImageKit:PrivateKey"] ?? throw new ArgumentNullException("ImageKit:PrivateKey não configurada.");
-            
+
             // Configura a autenticação básica (Basic Auth)
             var authValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{_privateKey}:"));
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authValue);
@@ -39,21 +39,26 @@ namespace Infrastructure.Services // Ajuste o namespace se necessário
             var fileContent = new StreamContent(stream);
             fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
 
-            content.Add(fileContent, "file", fileName); // "file" é o nome do campo esperado pela API
+            content.Add(fileContent, "file", fileName);
             content.Add(new StringContent(fileName), "fileName");
             content.Add(new StringContent(folder), "folder");
-            content.Add(new StringContent("true"), "useUniqueFileName"); // Garante que não haja conflitos
+            content.Add(new StringContent("true"), "useUniqueFileName");
 
             var response = await _httpClient.PostAsync(_uploadUrl, content);
-            response.EnsureSuccessStatusCode();
+
+            // Lança uma exceção se o upload falhar
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorBody = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Falha no upload para ImageKit. Status: {response.StatusCode}. Resposta: {errorBody}");
+            }
 
             var json = await response.Content.ReadAsStringAsync();
-            
-            // Parse com System.Text.Json para pegar url e fileId
+
             using var doc = JsonDocument.Parse(json);
             var root = doc.RootElement;
 
-            if (root.TryGetProperty("url", out var urlElement) && 
+            if (root.TryGetProperty("url", out var urlElement) &&
                 root.TryGetProperty("fileId", out var fileIdElement))
             {
                 return (urlElement.GetString()!, fileIdElement.GetString()!);
@@ -70,17 +75,25 @@ namespace Infrastructure.Services // Ajuste o namespace se necessário
             try
             {
                 var response = await _httpClient.DeleteAsync($"{_deleteApiUrl}{fileId}");
-                // Não lança erro se falhar (ex: arquivo já deletado),
-                // mas loga se não for sucesso (exceto 404)
-                if (!response.IsSuccessStatusCode && response.StatusCode != System.Net.HttpStatusCode.NotFound)
+
+                // Se a resposta for Sucesso (200 OK ou 204 No Content), está OK.
+                if (response.IsSuccessStatusCode || response.StatusCode == System.Net.HttpStatusCode.NoContent)
+                    return;
+
+                // Se for 404 (Not Found), o arquivo já foi deletado. Não é um erro.
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
-                    var error = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine($"Erro ao deletar arquivo do ImageKit (FileId: {fileId}): {error}");
+                    Console.WriteLine($"Arquivo {fileId} não encontrado no ImageKit. Já foi deletado.");
+                    return;
                 }
+
+                // Se chegou aqui, é um erro real (401, 403, 500, etc.)
+                var errorBody = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Falha ao deletar arquivo do ImageKit (FileId: {fileId}). Status: {response.StatusCode}. Resposta da API: {errorBody}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Exceção ao deletar arquivo do ImageKit: {ex.Message}");
+                throw new Exception("Exceção no ImageKitService.DeleteAsync.", ex);
             }
         }
     }
