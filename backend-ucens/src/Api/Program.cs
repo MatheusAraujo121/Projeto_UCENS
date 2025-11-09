@@ -93,7 +93,6 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 builder.Services.AddScoped<IImageKitService, ImageKitService>();
 builder.Services.AddScoped<TransacaoService>();
 builder.Services.AddScoped<FornecedorService>();
-builder.Services.AddScoped<FinanceiroService>(); 
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AssociadoService>();
 builder.Services.AddScoped<DependentesService>();
