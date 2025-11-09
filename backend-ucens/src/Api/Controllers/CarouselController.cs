@@ -1,7 +1,6 @@
-// Api/Controllers/CarouselController.cs
 using Application.Features.Carousel;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http; // Precisa disso para o 'files' e 'Request'
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -12,46 +11,47 @@ namespace Api.Controllers
     [Route("api/[controller]")]
     public class CarouselController : ControllerBase
     {
-        // O Controller agora só conhece o Service
-        private readonly CarouselService _service;
+        private readonly CarouselService _carouselService;
 
-        public CarouselController(CarouselService service)
+        public CarouselController(CarouselService carouselService)
         {
-            _service = service;
+            _carouselService = carouselService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<CarouselImageDto>>> GetCarouselImages()
+        public async Task<IActionResult> GetAll()
         {
-            var dtos = await _service.GetAllAsync();
-            return Ok(dtos);
+            var images = await _carouselService.GetAllAsync();
+            return Ok(images);
         }
 
-        // --- POST: Upload de Novas Imagens ---
-        [HttpPost("upload")]  // -> /api/carousel/upload
-        [Authorize]
-        public async Task<ActionResult<List<CarouselImageDto>>> UploadCarouselImages(List<IFormFile> files)
+        [HttpPost]
+        [Authorize] // Apenas usuários autorizados podem fazer upload
+        public async Task<IActionResult> Upload([FromForm] List<IFormFile> files)
         {
+            if (files == null || files.Count == 0)
+            {
+                return BadRequest("Nenhum arquivo foi enviado.");
+            }
+
             try
             {
-                // Delega, passando os 'files' e o objeto 'Request'
-                var savedImages = await _service.UploadImagesAsync(files, Request);
-                return Ok(savedImages);
+                // CORREÇÃO: Removido o argumento 'Request'
+                var newImages = await _carouselService.UploadImagesAsync(files);
+                return Ok(newImages);
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
-                return BadRequest(ex.Message);
+                return StatusCode(500, $"Erro interno: {ex.Message}");
             }
         }
 
-        // --- DELETE: Deletar uma imagem ---
         [HttpDelete("{id}")]
-        [Authorize]
-        public async Task<IActionResult> DeleteCarouselImage(int id)
+        [Authorize] // Apenas usuários autorizados podem deletar
+        public async Task<IActionResult> Delete(int id)
         {
-            // Apenas delega
-            await _service.DeleteAsync(id);
-            return NoContent(); // Sucesso
+            await _carouselService.DeleteAsync(id);
+            return NoContent();
         }
     }
 }

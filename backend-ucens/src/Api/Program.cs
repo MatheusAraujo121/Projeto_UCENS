@@ -8,6 +8,7 @@ using Application.Features.Associados;
 using Application.Common.Interfaces;
 using Infrastructure.Persistence.Repositories;
 using Infrastructure.Cnab;
+using Infrastructure.Services;
 using Domain;
 using Application.Features.Eventos;
 using Application.Features.Atividades;
@@ -21,7 +22,6 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Threading.RateLimiting;
 using Npgsql;
-using CloudinaryDotNet;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -77,13 +77,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
 
 // --- FIM DA SOLUÇÃO ---
-Account cloudinaryAccount = new Account(
-    builder.Configuration["CLOUDINARY_CLOUD_NAME"],
-    builder.Configuration["CLOUDINARY_API_KEY"],
-    builder.Configuration["CLOUDINARY_API_SECRET"]
-);
-Cloudinary cloudinary = new Cloudinary(cloudinaryAccount);
-builder.Services.AddSingleton(cloudinary);
+
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAssociadoRepository, AssociadoRepository>();
 builder.Services.AddScoped<IBoletoRepository, BoletoRepository>();
@@ -96,7 +90,7 @@ builder.Services.AddScoped<ITransacaoRepository, TransacaoRepository>();
 builder.Services.AddScoped<IDependenteRepository, DependenteRepository>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 
-
+builder.Services.AddScoped<IImageKitService, ImageKitService>();
 builder.Services.AddScoped<TransacaoService>();
 builder.Services.AddScoped<FornecedorService>();
 builder.Services.AddScoped<FinanceiroService>(); 

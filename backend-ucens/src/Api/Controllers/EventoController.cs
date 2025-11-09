@@ -3,9 +3,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using System.IO;
-using System;
+using System; // Mantido para 'Exception'
+// Remova os 'using' desnecessários:
+// using Microsoft.AspNetCore.Hosting; 
+// using System.IO;
 
 namespace Api.Controllers
 {
@@ -14,13 +15,12 @@ namespace Api.Controllers
     public class EventoController : ControllerBase
     {
         private readonly EventoService _service;
-        private readonly IWebHostEnvironment _env;
+        // Removido IWebHostEnvironment _env
 
-        // Adicionada a injeção de IWebHostEnvironment
-        public EventoController(EventoService service, IWebHostEnvironment env)
+        // Removida a injeção de IWebHostEnvironment
+        public EventoController(EventoService service)
         {
             _service = service;
-            _env = env;
         }
 
         [HttpGet]
@@ -56,34 +56,16 @@ namespace Api.Controllers
 
             try
             {
-                // 1. Busca o evento atual para obter a URL da imagem antiga.
-                var eventoAtual = await _service.GetById(id);
-                if (eventoAtual == null)
-                {
-                    return NotFound($"Evento com ID {id} não encontrado.");
-                }
-                var oldImageUrl = eventoAtual.ImagemUrl;
-
-                // 2. Atualiza o evento no banco de dados.
+                // CORREÇÃO:
+                // A lógica de deletar o arquivo antigo foi removida.
+                // O _service.Update(id, dto) agora cuida disso internamente
+                // comparando o ImagemFileId antigo com o novo.
                 var updated = await _service.Update(id, dto);
-
-                // 3. Se a URL da imagem mudou e a antiga não era nula, deleta o arquivo antigo.
-                if (!string.IsNullOrEmpty(oldImageUrl) && oldImageUrl != updated.ImagemUrl)
-                {
-                    var fileName = Path.GetFileName(new Uri(oldImageUrl).AbsolutePath);
-                    // O caminho para a pasta de eventos
-                    var filePath = Path.Combine(_env.WebRootPath, "Images", "Events", fileName);
-
-                    if (System.IO.File.Exists(filePath))
-                    {
-                        System.IO.File.Delete(filePath);
-                    }
-                }
-
                 return Ok(updated);
             }
             catch (System.Exception ex)
             {
+                // O service lançará uma exceção se não encontrar o evento
                 return NotFound(new { message = ex.Message });
             }
         }
@@ -92,27 +74,23 @@ namespace Api.Controllers
         [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
-            // 1. Busca o evento para obter a URL da imagem.
-            var evento = await _service.GetById(id);
-            if (evento == null)
+            try
             {
-                return NotFound();
+                // CORREÇÃO:
+                // A lógica de buscar o evento e deletar o arquivo foi removida.
+                // O _service.Delete(id) agora cuida de tudo:
+                // 1. Encontra o evento.
+                // 2. Pega o ImagemFileId.
+                // 3. Deleta o evento do banco.
+                // 4. Deleta a imagem do ImageKit.
+                await _service.Delete(id);
+                return NoContent();
             }
-
-            // 2. Deleta o arquivo de imagem, se existir.
-            if (!string.IsNullOrEmpty(evento.ImagemUrl))
+            catch (Exception ex)
             {
-                var fileName = Path.GetFileName(new Uri(evento.ImagemUrl).AbsolutePath);
-                var filePath = Path.Combine(_env.WebRootPath, "Images", "Events", fileName);
-
-                if (System.IO.File.Exists(filePath))
-                {
-                    System.IO.File.Delete(filePath);
-                }
+                // Adicionado um try-catch para segurança
+                return NotFound(new { message = ex.Message });
             }
-
-            await _service.Delete(id);
-            return NoContent();
         }
     }
 }
