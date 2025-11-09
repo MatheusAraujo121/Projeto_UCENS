@@ -37,6 +37,8 @@ export class EditActivityComponent implements OnInit {
       nome: ['', [Validators.required, Validators.maxLength(100)]],
       descricao: ['', [Validators.maxLength(1000), Validators.required]],
       imagemUrl: [''],
+      // PASSO 1: Adicione o 'imagemFileId' ao formulário
+      imagemFileId: [''], 
       exigePiscina: [false],
       exigeFisico: [false],
       categoria: ['', [Validators.required, Validators.maxLength(50)]],
@@ -62,7 +64,9 @@ export class EditActivityComponent implements OnInit {
     this.isLoading = true;
     this.atividadeService.getById(id).subscribe({
       next: (data: Atividade) => {
-        this.form.patchValue(data);
+        // Agora que o form tem 'imagemFileId', este patchValue
+        // irá preencher Corretamente o 'fileId' original.
+        this.form.patchValue(data); 
         this.previewUrl = data.imagemUrl || null;
         this.isLoading = false;
       },
@@ -80,6 +84,11 @@ export class EditActivityComponent implements OnInit {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => this.previewUrl = reader.result;
+      
+      // Opcional: Se o usuário selecionar um novo arquivo,
+      // é uma boa prática já limpar o 'fileId' antigo,
+      // pois ele será substituído.
+      // this.form.patchValue({ imagemFileId: null });
     }
   }
 
@@ -91,10 +100,16 @@ export class EditActivityComponent implements OnInit {
 
     this.isLoading = true;
 
+    // Caso 1: Usuário selecionou um NOVO arquivo de imagem
     if (this.selectedFile) {
       this.fileUploadService.uploadImage(this.selectedFile, 'activities').subscribe({
         next: (response) => {
-          this.form.patchValue({ imagemUrl: response.url });
+          // PASSO 2: Salve 'url' E 'fileId' da resposta
+          this.form.patchValue({ 
+            imagemUrl: response.url,
+            imagemFileId: response.fileId
+          });
+          // Agora o form.value está com a NOVA imagem
           this.atualizarAtividade();
         },
         error: (err) => {
@@ -103,6 +118,9 @@ export class EditActivityComponent implements OnInit {
         }
       });
     } else {
+      // Caso 2: Usuário NÃO mexeu na imagem
+      // O form.value já contém o 'imagemUrl' e 'imagemFileId' originais
+      // (pois foram carregados no loadActivityData e o form foi corrigido)
       this.atualizarAtividade();
     }
   }
@@ -110,6 +128,9 @@ export class EditActivityComponent implements OnInit {
   private atualizarAtividade(): void {
     if (!this.activityId) return;
 
+    // this.form.value agora envia o 'imagemFileId' correto:
+    // - O 'fileId' NOVO se a imagem foi trocada.
+    // - O 'fileId' ANTIGO se a imagem não foi trocada.
     this.atividadeService.update(this.activityId, this.form.value).subscribe({
       next: () => {
         this.snackBar.open('Atividade atualizada com sucesso!', 'Fechar', { duration: 3000 });

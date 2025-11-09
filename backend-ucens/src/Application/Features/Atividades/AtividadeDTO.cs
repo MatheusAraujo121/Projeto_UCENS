@@ -20,6 +20,8 @@ namespace Application.Features.Atividades
         [StringLength(2048)]
         public string? ImagemUrl { get; set; }
 
+        public string? ImagemFileId { get; set; }
+
         public bool ExigePiscina { get; set; }
         public bool ExigeFisico { get; set; }
 

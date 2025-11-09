@@ -33,6 +33,7 @@ export class CreateActivityComponent implements OnInit {
       nome: ['', [Validators.required, Validators.maxLength(100)]],
       descricao: ['', [Validators.maxLength(1000), Validators.required]],
       imagemUrl: [''],
+      imagemFileId: [''],
       exigePiscina: [false],
       exigeFisico: [false],
       categoria: ['', [Validators.required, Validators.maxLength(50)]],
@@ -69,7 +70,8 @@ export class CreateActivityComponent implements OnInit {
     if (this.selectedFile) {
       this.fileUploadService.uploadImage(this.selectedFile, 'activities').subscribe({
         next: (response) => {
-          this.form.patchValue({ imagemUrl: response.url });
+          this.form.patchValue({ imagemUrl: response.url,
+            imagemFileId: response.fileId });
           this.cadastrarAtividade();
         },
         error: (err) => {
