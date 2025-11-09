@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Domain;
 
 namespace Infrastructure.Persistence
@@ -25,6 +26,35 @@ namespace Infrastructure.Persistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Define o ValueConverter para DateTime
+            var dateTimeConverter = new ValueConverter<DateTime, DateTime>(
+                v => v.ToUniversalTime(), // Converte para UTC ao salvar
+                v => DateTime.SpecifyKind(v, DateTimeKind.Utc) // Marca como UTC ao ler
+            );
+
+            // Define o ValueConverter para DateTime? (Nulável)
+            var nullableDateTimeConverter = new ValueConverter<DateTime?, DateTime?>(
+                v => v.HasValue ? v.Value.ToUniversalTime() : v, // Converte para UTC (se não for nulo)
+                v => v.HasValue ? DateTime.SpecifyKind(v.Value, DateTimeKind.Utc) : v // Marca como UTC (se não for nulo)
+            );
+
+            // Itera por todas as propriedades de todas as entidades do modelo
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                foreach (var property in entityType.GetProperties())
+                {
+                    // Aplica o converter para propriedades DateTime
+                    if (property.ClrType == typeof(DateTime))
+                    {
+                        property.SetValueConverter(dateTimeConverter);
+                    }
+                    // Aplica o converter para propriedades DateTime? (Nulável)
+                    else if (property.ClrType == typeof(DateTime?))
+                    {
+                        property.SetValueConverter(nullableDateTimeConverter);
+                    }
+                }
+            }
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<User>(entity =>
