@@ -8,6 +8,7 @@ using Application.Features.Associados;
 using Application.Common.Interfaces;
 using Infrastructure.Persistence.Repositories;
 using Infrastructure.Cnab;
+using Infrastructure.Services;
 using Domain;
 using Application.Features.Eventos;
 using Application.Features.Atividades;
@@ -89,7 +90,7 @@ builder.Services.AddScoped<ITransacaoRepository, TransacaoRepository>();
 builder.Services.AddScoped<IDependenteRepository, DependenteRepository>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 
-
+builder.Services.AddScoped<IImageKitService, ImageKitService>();
 builder.Services.AddScoped<TransacaoService>();
 builder.Services.AddScoped<FornecedorService>();
 builder.Services.AddScoped<FinanceiroService>(); 

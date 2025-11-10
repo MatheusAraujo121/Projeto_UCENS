@@ -5,15 +5,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+// Os 'using' de System.IO, Path, etc., não são mais necessários aqui
+// pois o IImageKitService cuida de toda a lógica de arquivos.
+
 namespace Application.Features.Atividades
 {
     public class AtividadeService
     {
         private readonly IRepository<Atividade> _repo;
+        private readonly IImageKitService _imageKitService; // <-- Adicionado
 
-        public AtividadeService(IRepository<Atividade> repo)
+        public AtividadeService(IRepository<Atividade> repo, IImageKitService imageKitService) // <-- Injetado
         {
             _repo = repo;
+            _imageKitService = imageKitService;
         }
 
         public async Task<List<AtividadeDTO>> GetAll()
@@ -31,44 +36,43 @@ namespace Application.Features.Atividades
         public async Task<AtividadeDTO> Add(AtividadeDTO dto)
         {
             var atividade = MapToEntity(dto);
+            // O ImagemUrl e ImagemFileId já vêm do DTO,
+            // preenchidos pelo frontend após o upload no FileController.
             await _repo.Add(atividade);
-            dto.Id = atividade.Id;
-            return dto;
+            
+            // Retorna o DTO com o ID gerado
+            return MapToDto(atividade);
         }
 
-        public async Task<AtividadeDTO> Update(int id, string webRootPath, AtividadeDTO dto)
+        // Assinatura do Update mudou (remove webRootPath)
+        public async Task<AtividadeDTO> Update(int id, AtividadeDTO dto)
         {
             var atividade = await _repo.GetById(id);
             if (atividade == null)
             {
                 throw new Exception($"Atividade com ID {id} não encontrada.");
             }
-            if (!string.IsNullOrEmpty(atividade.ImagemUrl))
-            {
-                try
-                {
-                    var fileName = Path.GetFileName(new Uri(atividade.ImagemUrl).AbsolutePath);
-                    var filePath = Path.Combine(webRootPath, "images", "activities", fileName);
+            
+            // Salva o FileId antigo ANTES de mapear os novos dados
+            string? oldFileId = atividade.ImagemFileId; 
 
-                    if (File.Exists(filePath))
-                    {
-                        File.Delete(filePath);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Erro ao deletar arquivo de imagem: {ex.Message}");
-                }
-            }
-
-
+            // Mapeia *todos* os campos do DTO para a entidade existente
             MapDtoToEntity(dto, atividade);
 
             await _repo.Update(atividade);
+
+            // Compara o FileId antigo com o novo (que veio do DTO)
+            // Se mudou (ou foi removido), deleta o arquivo antigo do ImageKit
+            if (!string.IsNullOrEmpty(oldFileId) && oldFileId != atividade.ImagemFileId)
+            {
+                await _imageKitService.DeleteAsync(oldFileId);
+            }
+            
             return MapToDto(atividade);
         }
 
-        public async Task Delete(int id, string webRootPath)
+        // Assinatura do Delete mudou (remove webRootPath)
+        public async Task Delete(int id)
         {
             var atividade = await _repo.GetById(id);
             if (atividade == null)
@@ -76,26 +80,20 @@ namespace Application.Features.Atividades
                 return;
             }
 
-            if (!string.IsNullOrEmpty(atividade.ImagemUrl))
+            // Pega o FileId ANTES de deletar do banco
+            string? fileIdToDelete = atividade.ImagemFileId; 
+
+            await _repo.Delete(id); // Deleta do banco
+
+            // Deleta do ImageKit (APÓS deletar do banco)
+            if (!string.IsNullOrEmpty(fileIdToDelete))
             {
-                try
-                {
-                    var fileName = Path.GetFileName(new Uri(atividade.ImagemUrl).AbsolutePath);
-                    var filePath = Path.Combine(webRootPath, "images", "activities", fileName);
-
-                    if (File.Exists(filePath))
-                    {
-                        File.Delete(filePath);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Erro ao deletar arquivo de imagem: {ex.Message}");
-                }
+                await _imageKitService.DeleteAsync(fileIdToDelete);
             }
-
-            await _repo.Delete(id);
         }
+        
+        // --- MÉTODOS DE MAPEAMENTO ---
+
         private static AtividadeDTO MapToDto(Atividade atividade)
         {
             return new AtividadeDTO
@@ -105,6 +103,7 @@ namespace Application.Features.Atividades
                 Nome = atividade.Nome,
                 Descricao = atividade.Descricao,
                 ImagemUrl = atividade.ImagemUrl,
+                ImagemFileId = atividade.ImagemFileId, // <-- Adicionado
                 ExigePiscina = atividade.ExigePiscina,
                 ExigeFisico = atividade.ExigeFisico,
                 Categoria = atividade.Categoria,
@@ -128,6 +127,7 @@ namespace Application.Features.Atividades
                 Nome = dto.Nome,
                 Descricao = dto.Descricao,
                 ImagemUrl = dto.ImagemUrl,
+                ImagemFileId = dto.ImagemFileId, // <-- Adicionado
                 ExigePiscina = dto.ExigePiscina,
                 ExigeFisico = dto.ExigeFisico,
                 Categoria = dto.Categoria,
@@ -144,10 +144,12 @@ namespace Application.Features.Atividades
 
         private static void MapDtoToEntity(AtividadeDTO dto, Atividade atividade)
         {
+            // Mapeia todos os campos do DTO para a entidade existente
             atividade.Codigo = dto.Codigo;
             atividade.Nome = dto.Nome;
             atividade.Descricao = dto.Descricao;
             atividade.ImagemUrl = dto.ImagemUrl;
+            atividade.ImagemFileId = dto.ImagemFileId; // <-- Adicionado
             atividade.ExigePiscina = dto.ExigePiscina;
             atividade.ExigeFisico = dto.ExigeFisico;
             atividade.Categoria = dto.Categoria;

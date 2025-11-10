@@ -21,5 +21,6 @@ namespace Application.Features.Eventos
 
         [StringLength(2048)] // Adicionado
         public string? ImagemUrl { get; set; }
+        public string? ImagemFileId { get; set; }
     }
 }

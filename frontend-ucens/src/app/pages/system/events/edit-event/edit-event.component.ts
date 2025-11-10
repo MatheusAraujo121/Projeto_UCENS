@@ -20,7 +20,7 @@ export class EditEventComponent implements OnInit {
   selectedFile: File | null = null;
   isLoading = false;
   eventId: number | null = null;
-  
+
   sedes: string[] = ['Sede Social', 'Sede Campestre I', 'Sede Campestre II', 'Parque Kasato Maru'];
   filteredOptions!: Observable<string[]>;
 
@@ -41,7 +41,8 @@ export class EditEventComponent implements OnInit {
       dataFinal: ['', Validators.required],
       horarioFinal: ['', Validators.required],
       descricao: ['', [Validators.maxLength(1000), Validators.required]],
-      imagemUrl: ['']
+      imagemUrl: [''],
+      imagemFileId: ['']
     });
   }
 
@@ -88,7 +89,7 @@ export class EditEventComponent implements OnInit {
     const file = event.target.files[0];
     if (file) {
       this.selectedFile = file;
-       this.form.patchValue({ imagemUrl: file.name });
+      this.form.patchValue({ imagemUrl: file.name });
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => this.previewUrl = reader.result;
@@ -97,15 +98,18 @@ export class EditEventComponent implements OnInit {
 
   efetuarAtualizacao(): void {
     if (this.form.invalid || !this.eventId) {
-        this.snackBar.open('Por favor, preencha todos os campos obrigatórios.', 'Fechar', { duration: 3000 });
-        return;
+      this.snackBar.open('Por favor, preencha todos os campos obrigatórios.', 'Fechar', { duration: 3000 });
+      return;
     }
     this.isLoading = true;
 
     if (this.selectedFile) {
       this.fileUploadService.uploadImage(this.selectedFile, 'events').subscribe({
         next: (response) => {
-          this.form.patchValue({ imagemUrl: response.url });
+          this.form.patchValue({
+            imagemUrl: response.url,
+            imagemFileId: response.fileId
+          });
           this.atualizarEvento();
         },
         error: () => {
@@ -120,7 +124,7 @@ export class EditEventComponent implements OnInit {
 
   private atualizarEvento(): void {
     if (!this.eventId) return;
-    
+
     const formValue = this.form.value;
     const dataInicioCompleta = this.combineDateAndTime(formValue.dataInicio, formValue.horarioInicio);
     const dataFinalCompleta = this.combineDateAndTime(formValue.dataFinal, formValue.horarioFinal);
@@ -153,7 +157,19 @@ export class EditEventComponent implements OnInit {
     const [hours, minutes] = time.split(':').map(Number);
     const newDate = new Date(date);
     newDate.setHours(hours, minutes, 0, 0);
-    
     return newDate;
+  }
+
+  removerImagem(): void {
+    this.selectedFile = null;
+    this.previewUrl = null;
+    this.form.patchValue({
+      imagemUrl: null,
+      imagemFileId: null
+    });
+    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = '';
+    }
   }
 }

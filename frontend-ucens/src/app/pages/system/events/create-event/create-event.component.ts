@@ -37,7 +37,9 @@ export class CreateEventComponent implements OnInit {
       horarioFinal: ['', Validators.required],
       local: ['', [Validators.required, Validators.maxLength(150)]],
       descricao: ['', [Validators.maxLength(1000), Validators.required]],
-      imagemUrl: ['']
+      imagemUrl: [''],
+      // PASSO 1: Adicione o 'imagemFileId' ao formulário
+      imagemFileId: ['']
     });
   }
 
@@ -75,7 +77,11 @@ export class CreateEventComponent implements OnInit {
     if (this.selectedFile) {
       this.fileUploadService.uploadImage(this.selectedFile, 'events').subscribe({
         next: (response) => {
-          this.form.patchValue({ imagemUrl: response.url });
+          // PASSO 2: Salve 'url' E 'fileId'
+          this.form.patchValue({ 
+            imagemUrl: response.url,
+            imagemFileId: response.fileId 
+          });
           this.cadastrarEvento();
         },
         error: (err) => {
@@ -86,10 +92,12 @@ export class CreateEventComponent implements OnInit {
     } else {
       // Se não houver arquivo selecionado, mas o campo for obrigatório, mostra erro
       if (this.form.get('imagemUrl')?.hasError('required')) {
-         this.snackBar.open('A imagem do evento é obrigatória.', 'Fechar', { duration: 3000 });
-         this.isLoading = false;
-         return;
+        this.snackBar.open('A imagem do evento é obrigatória.', 'Fechar', { duration: 3000 });
+        this.isLoading = false;
+        return;
       }
+      // Se a imagem não for obrigatória e nenhuma foi selecionada, 
+      // o 'imagemFileId' já é nulo/vazio, então está correto.
       this.cadastrarEvento();
     }
   }
@@ -101,6 +109,7 @@ export class CreateEventComponent implements OnInit {
 
     const eventoParaSalvar = {
       ...formValue,
+      // 'formValue' agora contém 'imagemFileId'
       inicio: dataInicioCompleta,
       fim: dataFinalCompleta
     };

@@ -15,15 +15,13 @@ namespace Application.Features.Carousel
     public class CarouselService
     {
         private readonly IRepository<CarouselImage> _repo;
-        private readonly IWebHostEnvironment _env;
-
-        // Define o caminho da subpasta, assim como em AtividadeService
-        private const string ImageSubfolder = "images/carousel";
-
-        public CarouselService(IRepository<CarouselImage> repo, IWebHostEnvironment env)
+        private readonly IImageKitService _imageKitService; // <-- Adicionado
+        
+        // Removido IWebHostEnvironment e _env
+        public CarouselService(IRepository<CarouselImage> repo, IImageKitService imageKitService)
         {
             _repo = repo;
-            _env = env;
+            _imageKitService = imageKitService; // <-- Injetado
         }
 
         // --- GET: Listar todas as imagens ---
@@ -39,7 +37,8 @@ namespace Application.Features.Carousel
         }
 
         // --- POST: Upload de Novas Imagens ---
-        public async Task<List<CarouselImageDto>> UploadImagesAsync(List<IFormFile> files, HttpRequest request)
+        // Removido HttpRequest request, pois não é mais necessário
+        public async Task<List<CarouselImageDto>> UploadImagesAsync(List<IFormFile> files)
         {
             if (files == null || files.Count == 0)
                 throw new Exception("Nenhum arquivo foi enviado.");
@@ -54,34 +53,25 @@ namespace Application.Features.Carousel
             {
                 if (file.Length == 0) continue;
 
-                // 1. Salva arquivo no disco
+                // 1. Gera nome e faz upload no ImageKit
                 var uniqueFileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
-                var physicalPath = Path.Combine(uploadsFolderPath, uniqueFileName);
+                var (url, fileId) = await _imageKitService.UploadAsync(file, uniqueFileName, "/carousel");
 
-                await using (var stream = new FileStream(physicalPath, FileMode.Create))
-                {
-                    await file.CopyToAsync(stream);
-                }
-                
-                // --- CORREÇÃO DO BUG ---
-                // O backendHost já contém "http://", então não precisamos do request.Scheme
-                var backendHost = "https://nippon-api.onrender.com"; 
-                
-                // 2. Cria URL pública
-                // Note que o caminho da URL usa / (barra normal), e não o Path.Combine
-                var imageUrl = $"{backendHost}/{ImageSubfolder}/{uniqueFileName}";
-
-                // 3. Cria entidade
-                var newImage = new CarouselImage { ImageUrl = imageUrl };
+                // 2. Cria entidade com Url e FileId
+                var newImage = new CarouselImage 
+                { 
+                    ImageUrl = url,
+                    ImagemFileId = fileId // <-- Salva o FileId no Domínio
+                };
                 
                 await _repo.Add(newImage); 
                 newEntities.Add(newImage); 
             }
 
-            // 4. Salva TUDO no banco
+            // 3. Salva TUDO no banco
             await _repo.SaveChangesAsync();
 
-            // 5. Retorna os DTOs
+            // 4. Retorna os DTOs (sem o fileId)
             return newEntities.Select(img => new CarouselImageDto
             {
                 Id = img.Id,
@@ -98,31 +88,20 @@ namespace Application.Features.Carousel
                 return; 
             }
 
-            // 2. Lógica de deletar o arquivo físico
-            if (!string.IsNullOrEmpty(image.ImageUrl))
-            {
-                try
-                {
-                    // Lógica *exatamente* como AtividadeService (mas sem passar o webRootPath)
-                    var fileName = Path.GetFileName(new Uri(image.ImageUrl).AbsolutePath);
-                    var physicalPath = Path.Combine(_env.WebRootPath, ImageSubfolder, fileName);
+            // Pega o FileId *antes* de deletar do banco
+            string? fileIdToDelete = image.ImagemFileId;
 
-                    if (File.Exists(physicalPath))
-                    {
-                        File.Delete(physicalPath);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Erro ao deletar arquivo físico: {ex.Message}");
-                }
-            }
-
-            // 3. Deleta do banco
+            // 1. Deleta do banco
             await _repo.Delete(id); 
 
-            // 4. Salva a mudança no banco
+            // 2. Salva a mudança no banco
             await _repo.SaveChangesAsync();
+
+            // 3. Deleta do ImageKit (APÓS deletar do banco)
+            if (!string.IsNullOrEmpty(fileIdToDelete))
+            {
+                await _imageKitService.DeleteAsync(fileIdToDelete);
+            }
         }
     }
 }
