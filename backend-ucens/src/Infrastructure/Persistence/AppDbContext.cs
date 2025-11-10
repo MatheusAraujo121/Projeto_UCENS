@@ -26,9 +26,9 @@ namespace Infrastructure.Persistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Define o ValueConverter para DateTime
+            // Define o ValueConverter para DateTime (NÃO-Nulável)
             var dateTimeConverter = new ValueConverter<DateTime, DateTime>(
-                v => v.ToUniversalTime(), // Converte para UTC ao salvar
+                v => v.ToUniversalTime(), // Converte para UTC ao salvar (O CORRETO)
                 v => DateTime.SpecifyKind(v, DateTimeKind.Utc) // Marca como UTC ao ler
             );
 
@@ -43,12 +43,10 @@ namespace Infrastructure.Persistence
             {
                 foreach (var property in entityType.GetProperties())
                 {
-                    // Aplica o converter para propriedades DateTime
                     if (property.ClrType == typeof(DateTime))
                     {
                         property.SetValueConverter(dateTimeConverter);
                     }
-                    // Aplica o converter para propriedades DateTime? (Nulável)
                     else if (property.ClrType == typeof(DateTime?))
                     {
                         property.SetValueConverter(nullableDateTimeConverter);
