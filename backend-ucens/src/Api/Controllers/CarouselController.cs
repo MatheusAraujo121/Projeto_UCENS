@@ -25,7 +25,7 @@ namespace Api.Controllers
             return Ok(images);
         }
 
-        [HttpPost]
+        [HttpPost("upload")]
         [Authorize] // Apenas usuários autorizados podem fazer upload
         public async Task<IActionResult> Upload([FromForm] List<IFormFile> files)
         {
