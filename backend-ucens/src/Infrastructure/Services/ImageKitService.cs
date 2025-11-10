@@ -16,7 +16,7 @@ namespace Infrastructure.Services
         private readonly HttpClient _httpClient;
         private readonly string _privateKey;
         private readonly string _uploadUrl = "https://upload.imagekit.io/api/v1/files/upload";
-        private readonly string _deleteApiUrl = "https://api.imagekit.io/api/v1/files/";
+        private readonly string _deleteApiUrl = "https://api.imagekit.io/v1/files/";
 
         public ImageKitService(IConfiguration config)
         {
