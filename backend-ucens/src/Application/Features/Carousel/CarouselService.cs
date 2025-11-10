@@ -1,6 +1,8 @@
+// Application/Features/Carousel/CarouselService.cs
 using Application.Common.Interfaces;
 using Application.Features.Carousel;
 using Domain;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -40,6 +42,10 @@ namespace Application.Features.Carousel
         {
             if (files == null || files.Count == 0)
                 throw new Exception("Nenhum arquivo foi enviado.");
+
+            // Usa a constante para o caminho, assim como o AtividadeService faria
+            var uploadsFolderPath = Path.Combine(_env.WebRootPath, ImageSubfolder);
+            Directory.CreateDirectory(uploadsFolderPath); // Garante que existe
 
             var newEntities = new List<CarouselImage>();
 
