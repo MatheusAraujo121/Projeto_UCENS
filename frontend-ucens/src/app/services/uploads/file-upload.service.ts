@@ -3,10 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment.prod';
 
-export type UploadType = 'activities' | 'events' | 'despesas';
+// Adicionei 'carousel' ao seu UploadType, pois o FileController permite.
+export type UploadType = 'activities' | 'events' | 'despesas' | 'carousel';
 
 @Injectable({
-  providedIn: 'root'
+ providedIn: 'root'
 })
 export class FileUploadService {
 
@@ -14,11 +15,14 @@ export class FileUploadService {
 
   constructor(private http: HttpClient) { }
 
-  uploadImage(file: File, type: UploadType): Observable<{ url: string }> {
+  // ▼▼▼ CORREÇÃO AQUI ▼▼▼
+  // Altere o tipo de retorno para incluir o 'fileId'
+  uploadImage(file: File, type: UploadType): Observable<{ url: string; fileId: string; }> {
     const formData = new FormData();
     formData.append('file', file, file.name);
     formData.append('type', type); 
 
-    return this.http.post<{ url: string }>(`${this.apiUrl}/upload`, formData);
+    // E altere o tipo de retorno do 'post' aqui também
+    return this.http.post<{ url: string; fileId: string; }>(`${this.apiUrl}/upload`, formData);
   }
 }

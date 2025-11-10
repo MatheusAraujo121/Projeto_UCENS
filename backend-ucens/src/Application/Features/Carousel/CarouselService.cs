@@ -1,31 +1,32 @@
 using Application.Common.Interfaces;
+using Application.Features.Carousel;
 using Domain;
 using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using CloudinaryDotNet; // (Ignore o erro vermelho)
-using CloudinaryDotNet.Actions; // (Ignore o erro vermelho)
-using System;
 
 namespace Application.Features.Carousel
 {
     public class CarouselService
     {
         private readonly IRepository<CarouselImage> _repo;
-        private readonly Cloudinary _cloudinary;
-
-        // Remova IWebHostEnvironment, Injete Cloudinary
-        public CarouselService(IRepository<CarouselImage> repo, Cloudinary cloudinary)
+        private readonly IImageKitService _imageKitService; // <-- Adicionado
+        
+        // Removido IWebHostEnvironment e _env
+        public CarouselService(IRepository<CarouselImage> repo, IImageKitService imageKitService)
         {
             _repo = repo;
-            _cloudinary = cloudinary;
+            _imageKitService = imageKitService; // <-- Injetado
         }
 
+        // --- GET: Listar todas as imagens ---
         public async Task<List<CarouselImageDto>> GetAllAsync()
         {
             var images = await _repo.GetAll(); 
+            
             return images.Select(img => new CarouselImageDto
             {
                 Id = img.Id,
@@ -33,8 +34,9 @@ namespace Application.Features.Carousel
             }).ToList();
         }
 
-        // Este método é chamado pelo CarouselController
-        public async Task<List<CarouselImageDto>> UploadImagesAsync(List<IFormFile> files, HttpRequest request)
+        // --- POST: Upload de Novas Imagens ---
+        // Removido HttpRequest request, pois não é mais necessário
+        public async Task<List<CarouselImageDto>> UploadImagesAsync(List<IFormFile> files)
         {
             if (files == null || files.Count == 0)
                 throw new Exception("Nenhum arquivo foi enviado.");
@@ -45,33 +47,25 @@ namespace Application.Features.Carousel
             {
                 if (file.Length == 0) continue;
 
-                // 1. Upload direto para o Cloudinary
-                await using var stream = file.OpenReadStream();
-                var uploadParams = new ImageUploadParams()
-                {
-                    File = new FileDescription(file.FileName, stream),
-                    Folder = "carousel" // Pasta "carousel" no Cloudinary
+                // 1. Gera nome e faz upload no ImageKit
+                var uniqueFileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+                var (url, fileId) = await _imageKitService.UploadAsync(file, uniqueFileName, "/carousel");
+
+                // 2. Cria entidade com Url e FileId
+                var newImage = new CarouselImage 
+                { 
+                    ImageUrl = url,
+                    ImagemFileId = fileId // <-- Salva o FileId no Domínio
                 };
-
-                var uploadResult = await _cloudinary.UploadAsync(uploadParams);
-
-                if (uploadResult.Error != null)
-                    throw new Exception($"Erro no upload: {uploadResult.Error.Message}");
-                
-                // 2. Pega a URL segura do Cloudinary
-                var imageUrl = uploadResult.SecureUrl.AbsoluteUri;
-
-                // 3. Cria a entidade com a URL do Cloudinary
-                var newImage = new CarouselImage { ImageUrl = imageUrl };
                 
                 await _repo.Add(newImage); 
                 newEntities.Add(newImage); 
             }
 
-            // 4. Salva TUDO no banco (Neon)
+            // 3. Salva TUDO no banco
             await _repo.SaveChangesAsync();
 
-            // 5. Retorna os DTOs
+            // 4. Retorna os DTOs (sem o fileId)
             return newEntities.Select(img => new CarouselImageDto
             {
                 Id = img.Id,
@@ -79,48 +73,28 @@ namespace Application.Features.Carousel
             }).ToList();
         }
 
+        // --- DELETE: Deletar uma imagem ---
         public async Task DeleteAsync(int id)
         {
             var image = await _repo.GetById(id);
-            if (image == null) return;
-
-            // 1. Deleta do Cloudinary
-            if (!string.IsNullOrEmpty(image.ImageUrl))
+            if (image == null)
             {
-                try
-                {
-                    var publicId = GetPublicIdFromUrl(image.ImageUrl);
-                    if (!string.IsNullOrEmpty(publicId))
-                    {
-                        var deleteParams = new DeletionParams(publicId);
-                        await _cloudinary.DestroyAsync(deleteParams);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Erro ao deletar arquivo do Cloudinary: {ex.Message}");
-                }
+                return; 
             }
 
-            // 2. Deleta do banco
+            // Pega o FileId *antes* de deletar do banco
+            string? fileIdToDelete = image.ImagemFileId;
+
+            // 1. Deleta do banco
             await _repo.Delete(id); 
+
+            // 2. Salva a mudança no banco
             await _repo.SaveChangesAsync();
-        }
-        
-        // Função para extrair o PublicId da URL
-        private string GetPublicIdFromUrl(string imageUrl)
-        {
-            try
+
+            // 3. Deleta do ImageKit (APÓS deletar do banco)
+            if (!string.IsNullOrEmpty(fileIdToDelete))
             {
-                var uri = new Uri(imageUrl);
-                // Pega o caminho depois de ".../upload/v12345/"
-                string path = string.Join("/", uri.Segments.SkipWhile(s => !s.StartsWith("v") && !s.Contains("upload")).Skip(1));
-                // Remove a extensão (ex: .jpg)
-                return Path.ChangeExtension(path, null); // Retorna "carousel/nomearquivo"
-            }
-            catch 
-            { 
-                return null; 
+                await _imageKitService.DeleteAsync(fileIdToDelete);
             }
         }
     }

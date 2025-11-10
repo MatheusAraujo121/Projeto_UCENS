@@ -4,22 +4,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CloudinaryDotNet; // (Ignore o erro vermelho)
-using CloudinaryDotNet.Actions; // (Ignore o erro vermelho)
-using System.IO; 
+
+// Os 'using' de System.IO, Path, etc., não são mais necessários aqui
+// pois o IImageKitService cuida de toda a lógica de arquivos.
 
 namespace Application.Features.Atividades
 {
     public class AtividadeService
     {
         private readonly IRepository<Atividade> _repo;
-        private readonly Cloudinary _cloudinary; // <-- Adicionado
+        private readonly IImageKitService _imageKitService; // <-- Adicionado
 
-        // Injete o Cloudinary
-        public AtividadeService(IRepository<Atividade> repo, Cloudinary cloudinary)
+        public AtividadeService(IRepository<Atividade> repo, IImageKitService imageKitService) // <-- Injetado
         {
             _repo = repo;
-            _cloudinary = cloudinary;
+            _imageKitService = imageKitService;
         }
 
         public async Task<List<AtividadeDTO>> GetAll()
@@ -37,83 +36,64 @@ namespace Application.Features.Atividades
         public async Task<AtividadeDTO> Add(AtividadeDTO dto)
         {
             var atividade = MapToEntity(dto);
+            // O ImagemUrl e ImagemFileId já vêm do DTO,
+            // preenchidos pelo frontend após o upload no FileController.
             await _repo.Add(atividade);
-            dto.Id = atividade.Id;
-            return dto;
+            
+            // Retorna o DTO com o ID gerado
+            return MapToDto(atividade);
         }
 
-        // --- MÉTODO UPDATE MODIFICADO ---
-        // Remova 'webRootPath'
+        // Assinatura do Update mudou (remove webRootPath)
         public async Task<AtividadeDTO> Update(int id, AtividadeDTO dto)
         {
             var atividade = await _repo.GetById(id);
             if (atividade == null)
-                throw new Exception($"Atividade com ID {id} não encontrada.");
-            
-            // Se a URL da imagem mudou, delete a antiga do Cloudinary
-            if (!string.IsNullOrEmpty(atividade.ImagemUrl) && atividade.ImagemUrl != dto.ImagemUrl)
             {
-                try
-                {
-                    var publicId = GetPublicIdFromUrl(atividade.ImagemUrl);
-                    if (!string.IsNullOrEmpty(publicId))
-                    {
-                        var deleteParams = new DeletionParams(publicId);
-                        await _cloudinary.DestroyAsync(deleteParams);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Erro ao deletar arquivo antigo do Cloudinary: {ex.Message}");
-                }
+                throw new Exception($"Atividade com ID {id} não encontrada.");
             }
+            
+            // Salva o FileId antigo ANTES de mapear os novos dados
+            string? oldFileId = atividade.ImagemFileId; 
 
+            // Mapeia *todos* os campos do DTO para a entidade existente
             MapDtoToEntity(dto, atividade);
+
             await _repo.Update(atividade);
+
+            // Compara o FileId antigo com o novo (que veio do DTO)
+            // Se mudou (ou foi removido), deleta o arquivo antigo do ImageKit
+            if (!string.IsNullOrEmpty(oldFileId) && oldFileId != atividade.ImagemFileId)
+            {
+                await _imageKitService.DeleteAsync(oldFileId);
+            }
+            
             return MapToDto(atividade);
         }
 
-        // --- MÉTODO DELETE MODIFICADO ---
-        // Remova 'webRootPath'
+        // Assinatura do Delete mudou (remove webRootPath)
         public async Task Delete(int id)
         {
             var atividade = await _repo.GetById(id);
-            if (atividade == null) return;
-
-            // Deleta a imagem do Cloudinary
-            if (!string.IsNullOrEmpty(atividade.ImagemUrl))
+            if (atividade == null)
             {
-                try
-                {
-                    var publicId = GetPublicIdFromUrl(atividade.ImagemUrl);
-                    if (!string.IsNullOrEmpty(publicId))
-                    {
-                        var deleteParams = new DeletionParams(publicId);
-                        await _cloudinary.DestroyAsync(deleteParams);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Erro ao deletar arquivo do Cloudinary: {ex.Message}");
-                }
+                return;
             }
 
-            await _repo.Delete(id);
+            // Pega o FileId ANTES de deletar do banco
+            string? fileIdToDelete = atividade.ImagemFileId; 
+
+            await _repo.Delete(id); // Deleta do banco
+
+            // Deleta do ImageKit (APÓS deletar do banco)
+            if (!string.IsNullOrEmpty(fileIdToDelete))
+            {
+                await _imageKitService.DeleteAsync(fileIdToDelete);
+            }
         }
         
-        // Função para extrair o PublicId da URL
-        private string GetPublicIdFromUrl(string imageUrl)
-        {
-            try
-            {
-                var uri = new Uri(imageUrl);
-                string path = string.Join("/", uri.Segments.SkipWhile(s => !s.StartsWith("v") && !s.Contains("upload")).Skip(1));
-                return Path.ChangeExtension(path, null); // Retorna "activities/nomearquivo"
-            }
-            catch { return null; }
-        }
+        // --- MÉTODOS DE MAPEAMENTO ---
 
-        // --- Funções de Map (sem mudança) ---
         private static AtividadeDTO MapToDto(Atividade atividade)
         {
             return new AtividadeDTO
@@ -123,6 +103,7 @@ namespace Application.Features.Atividades
                 Nome = atividade.Nome,
                 Descricao = atividade.Descricao,
                 ImagemUrl = atividade.ImagemUrl,
+                ImagemFileId = atividade.ImagemFileId, // <-- Adicionado
                 ExigePiscina = atividade.ExigePiscina,
                 ExigeFisico = atividade.ExigeFisico,
                 Categoria = atividade.Categoria,
@@ -146,6 +127,7 @@ namespace Application.Features.Atividades
                 Nome = dto.Nome,
                 Descricao = dto.Descricao,
                 ImagemUrl = dto.ImagemUrl,
+                ImagemFileId = dto.ImagemFileId, // <-- Adicionado
                 ExigePiscina = dto.ExigePiscina,
                 ExigeFisico = dto.ExigeFisico,
                 Categoria = dto.Categoria,
@@ -162,10 +144,12 @@ namespace Application.Features.Atividades
 
         private static void MapDtoToEntity(AtividadeDTO dto, Atividade atividade)
         {
+            // Mapeia todos os campos do DTO para a entidade existente
             atividade.Codigo = dto.Codigo;
             atividade.Nome = dto.Nome;
             atividade.Descricao = dto.Descricao;
             atividade.ImagemUrl = dto.ImagemUrl;
+            atividade.ImagemFileId = dto.ImagemFileId; // <-- Adicionado
             atividade.ExigePiscina = dto.ExigePiscina;
             atividade.ExigeFisico = dto.ExigeFisico;
             atividade.Categoria = dto.Categoria;
