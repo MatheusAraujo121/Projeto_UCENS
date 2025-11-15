@@ -49,7 +49,7 @@ namespace Application.Features.Carousel
 
                 // 1. Gera nome e faz upload no ImageKit
                 var uniqueFileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
-                var (url, fileId) = await _imageKitService.UploadAsync(file, uniqueFileName, "/carousel");
+                var (url, fileId) = await _imageKitService.UploadAsync(file, uniqueFileName, "/carousel"); // teste
 
                 // 2. Cria entidade com Url e FileId
                 var newImage = new CarouselImage 
