@@ -42,30 +42,30 @@ namespace Application.Features.Carousel
                 throw new Exception("Nenhum arquivo foi enviado.");
 
             var newEntities = new List<CarouselImage>();
-
+        
             foreach (var file in files)
             {
                 if (file.Length == 0) continue;
-
+        
                 // 1. Gera nome e faz upload no ImageKit
                 var uniqueFileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
                 var (url, fileId) = await _imageKitService.UploadAsync(file, uniqueFileName, "/carousel"); // teste
 
                 // 2. Cria entidade com Url e FileId
-                var newImage = new CarouselImage 
-                { 
+                var newImage = new CarouselImage
+                {
                     ImageUrl = url,
                     ImagemFileId = fileId // <-- Salva o FileId no Domínio
                 };
-                
-                await _repo.Add(newImage); 
-                newEntities.Add(newImage); 
+        
+                await _repo.Add(newImage);
+                newEntities.Add(newImage);
             }
-
+        
             // 3. Salva TUDO no banco
             await _repo.SaveChangesAsync();
-
-            // 4. Retorna os DTOs (sem o fileId)
+        
+            // 4. Retorna os DTOs
             return newEntities.Select(img => new CarouselImageDto
             {
                 Id = img.Id,
