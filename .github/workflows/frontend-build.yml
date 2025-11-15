@@ -3,18 +3,12 @@ name: Frontend Build
 on:
   push:
     paths:
-      # Dispara o pipeline se houver mudanças na pasta src ou nos arquivos de config
-      - 'src/**'
-      - 'angular.json'
-      - 'package.json'
-      - 'package-lock.json'
+      # Agora sim, monitorando a pasta correta
+      - 'frontend-ucens/**'
   pull_request:
     paths:
-      # Mesma lógica para Pull Requests
-      - 'src/**'
-      - 'angular.json'
-      - 'package.json'
-      - 'package-lock.json'
+      # E aqui também
+      - 'frontend-ucens/**'
 
 jobs:
   build:
@@ -29,9 +23,11 @@ jobs:
         node-version: 20
 
     - name: Install deps
-      # Executa 'npm install' na raiz do projeto, onde 'package.json' está
+      # Executa o npm install DENTRO da pasta correta
       run: npm install --legacy-peer-deps
+      working-directory: frontend-ucens # <-- A MUDANÇA MAIS IMPORTANTE
 
     - name: Build Angular
-      # Executa 'npm run build' na raiz do projeto
+      # Executa o npm build DENTRO da pasta correta
       run: npm run build
+      working-directory: frontend-ucens # <-- A MUDANÇA MAIS IMPORTANTE
