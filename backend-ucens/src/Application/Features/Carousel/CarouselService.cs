@@ -1,8 +1,6 @@
-// Application/Features/Carousel/CarouselService.cs
 using Application.Common.Interfaces;
 using Application.Features.Carousel;
 using Domain;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -42,7 +40,7 @@ namespace Application.Features.Carousel
         {
             if (files == null || files.Count == 0)
                 throw new Exception("Nenhum arquivo foi enviado.");
-        
+
             var newEntities = new List<CarouselImage>();
         
             foreach (var file in files)
@@ -51,8 +49,8 @@ namespace Application.Features.Carousel
         
                 // 1. Gera nome e faz upload no ImageKit
                 var uniqueFileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
-                var (url, fileId) = await _imageKitService.UploadAsync(file, uniqueFileName, "/carousel");
-        
+                var (url, fileId) = await _imageKitService.UploadAsync(file, uniqueFileName, "/carousel"); // teste
+
                 // 2. Cria entidade com Url e FileId
                 var newImage = new CarouselImage
                 {

@@ -20,7 +20,7 @@ namespace Domain
         [StringLength(2048)] // Adicionado
         public string? ImagemUrl { get; set; }
 
-        //Id retornado pelo imagekit
+        //Id retornado imagekit
         public string? ImagemFileId { get; set; }
 
         public bool ExigePiscina { get; set; }
