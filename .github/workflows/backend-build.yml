@@ -1,0 +1,29 @@
+name: Backend Build
+
+on:
+  push:
+    paths:
+      - 'backend-ucens/**'  
+  pull_request:
+    paths:
+      - 'backend-ucens/**'  
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'
+        
+    - name: Restore
+      # Aponta direto para o arquivo de solução
+      run: dotnet restore backend-ucens/Nippon.sln 
+      
+    - name: Build
+      # Aponta direto para o arquivo de solução
+      run: dotnet build backend-ucens/Nippon.sln --configuration Release 
