@@ -11,10 +11,10 @@ Um sistema de gerenciamento completo para a associação Nippon de Sorocaba, des
 </p>
 
 <p align="center">
-<img src="[https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white](https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white)" alt="Angular">
-<img src="[https://img.shields.io/badge/.NET-512BD4?style=for-the-badge&logo=dotnet&logoColor=white](https://img.shields.io/badge/.NET-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)" alt=".NET">
-<img src="[https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white](https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)" alt="GitHub Actions">
-<img src="[https://img.shields.io/badge/Status-Em_Desenvolvimento-blue?style=for-the-badge](https://img.shields.io/badge/Status-Em_Desenvolvimento-blue?style=for-the-badge)" alt="Status">
+  <img src="https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white" alt="Angular">
+  <img src="https://img.shields.io/badge/.NET-512BD4?style=for-the-badge&logo=dotnet&logoColor=white" alt=".NET">
+  <img src="https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white" alt="GitHub Actions">
+  <img src="https://img.shields.io/badge/Status-Em_Desenvolvimento-blue?style=for-the-badge" alt="Status">
 </p>
 
 ---
