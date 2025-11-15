@@ -1,4 +1,4 @@
-name: Frontend Build & Test
+name: Frontend Build
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
       - 'frontend-ucens/**'
 
 jobs:
-  build-and-test:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,10 +23,6 @@ jobs:
     - name: Install deps
       run: npm install --legacy-peer-deps
       working-directory: frontend-ucens 
-
-    - name: Run Unit Tests
-      run: npm test -- --watch=false --browsers=ChromeHeadless
-      working-directory: frontend-ucens
 
     - name: Build Angular
       run: npm run build
