@@ -1,0 +1,37 @@
+name: Frontend Build
+
+on:
+  push:
+    paths:
+      # Dispara o pipeline se houver mudanças na pasta src ou nos arquivos de config
+      - 'src/**'
+      - 'angular.json'
+      - 'package.json'
+      - 'package-lock.json'
+  pull_request:
+    paths:
+      # Mesma lógica para Pull Requests
+      - 'src/**'
+      - 'angular.json'
+      - 'package.json'
+      - 'package-lock.json'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Node 20
+      uses: actions/setup-node@v3
+      with:
+        node-version: 20
+
+    - name: Install deps
+      # Executa 'npm install' na raiz do projeto, onde 'package.json' está
+      run: npm install --legacy-peer-deps
+
+    - name: Build Angular
+      # Executa 'npm run build' na raiz do projeto
+      run: npm run build
