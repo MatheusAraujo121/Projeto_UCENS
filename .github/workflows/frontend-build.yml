@@ -3,11 +3,9 @@ name: Frontend Build
 on:
   push:
     paths:
-      # Agora sim, monitorando a pasta correta
       - 'frontend-ucens/**'
   pull_request:
     paths:
-      # E aqui também
       - 'frontend-ucens/**'
 
 jobs:
@@ -23,11 +21,9 @@ jobs:
         node-version: 20
 
     - name: Install deps
-      # Executa o npm install DENTRO da pasta correta
       run: npm install --legacy-peer-deps
-      working-directory: frontend-ucens # <-- A MUDANÇA MAIS IMPORTANTE
+      working-directory: frontend-ucens 
 
     - name: Build Angular
-      # Executa o npm build DENTRO da pasta correta
       run: npm run build
-      working-directory: frontend-ucens # <-- A MUDANÇA MAIS IMPORTANTE
+      working-directory: frontend-ucens

@@ -9,7 +9,6 @@ import { environment } from 'src/environments/environment.prod';
 })
 export class CarouselService {
   
-  // A URL base da sua API (bate com o [Route("api/[controller]")])
   private apiUrl = `${environment.apiUrl}/api/carousel`; 
 
   constructor(private http: HttpClient) { }
