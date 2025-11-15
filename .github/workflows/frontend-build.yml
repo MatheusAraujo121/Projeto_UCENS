@@ -25,7 +25,7 @@ jobs:
       working-directory: frontend-ucens 
 
     - name: Run Unit Tests
-      run: npm test -- --watch=false --browsers=ChromeHeadsless
+      run: npm test -- --watch=false --browsers=ChromeHeadless
       working-directory: frontend-ucens
 
     - name: Build Angular
