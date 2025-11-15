@@ -3,8 +3,8 @@ export interface LoginResponse {
 }
 
 export interface DecodedToken {
-  id: string; // User ID (de ClaimTypes.NameIdentifier)
-  username: string;   // User Name (de ClaimTypes.Name)
+  id: string; 
+  username: string;   
   sub: string;
   nbf: number;
   exp: number;
