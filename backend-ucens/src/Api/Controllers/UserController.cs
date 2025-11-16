@@ -34,6 +34,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Post([FromBody] UserCreateDTO dto)
         {
             var created = await _service.AddUser(dto);
