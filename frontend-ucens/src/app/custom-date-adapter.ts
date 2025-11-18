@@ -1,0 +1,42 @@
+import { NativeDateAdapter } from '@angular/material/core';
+import { Injectable } from '@angular/core';
+
+@Injectable()
+export class CustomDateAdapter extends NativeDateAdapter {
+  
+  // Garante que o Angular leia a string digitada como DD/MM/YYYY
+  override parse(value: any): Date | null {
+    if ((typeof value === 'string') && (value.indexOf('/') > -1)) {
+      const str = value.split('/');
+      
+      // Converte para números e ajusta o Mês (base 0 no JS)
+      const day = Number(str[0]); 
+      const month = Number(str[1]) - 1; 
+      const year = Number(str[2]);
+
+      if (day && month >= 0 && year) {
+        const date = new Date(year, month, day);
+
+        // Validação básica para evitar datas inválidas (ex: 30/02)
+        if (date.getFullYear() === year && date.getMonth() === month && date.getDate() === day) {
+          return date;
+        }
+      }
+      return null;
+    }
+    
+    // Deixa o adaptador nativo lidar com outros formatos (como strings ISO já recebidas)
+    return super.parse(value);
+  }
+
+  // Garante que a data sempre será exibida como DD/MM/YYYY no input
+  override format(date: Date, displayFormat: Object): string {
+    if (displayFormat === 'input') {
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+    }
+    return super.format(date, displayFormat);
+  }
+}

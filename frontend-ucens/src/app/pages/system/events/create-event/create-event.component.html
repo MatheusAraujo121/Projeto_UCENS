@@ -44,7 +44,7 @@
 
         <mat-form-field appearance="fill">
           <mat-label>Data de Início</mat-label>
-          <input matInput [matDatepicker]="pickerInicio" formControlName="dataInicio">
+          <input matInput [matDatepicker]="pickerInicio" placeholder="DD/MM/AAAA" formControlName="dataInicio">
           <mat-datepicker-toggle matSuffix [for]="pickerInicio"></mat-datepicker-toggle>
           <mat-datepicker #pickerInicio></mat-datepicker>
           <mat-error *ngIf="form.get('dataInicio')?.hasError('required')">A data de início é obrigatória.</mat-error>
@@ -52,7 +52,7 @@
 
         <mat-form-field appearance="fill">
           <mat-label>Data de Término</mat-label>
-          <input matInput [matDatepicker]="pickerFinal" formControlName="dataFinal">
+          <input matInput [matDatepicker]="pickerFinal" placeholder="DD/MM/AAAA" formControlName="dataFinal" >
           <mat-datepicker-toggle matSuffix [for]="pickerFinal"></mat-datepicker-toggle>
           <mat-datepicker #pickerFinal></mat-datepicker>
           <mat-error *ngIf="form.get('dataFinal')?.hasError('required')">A data de término é obrigatória.</mat-error>

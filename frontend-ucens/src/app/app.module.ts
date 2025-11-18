@@ -43,8 +43,9 @@ import { MatDividerModule } from '@angular/material/divider';
 //Config do idioma em portugues para as datas
 import { registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
-import { MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
-import { CUSTOM_DATE_FORMATS } from './utils/custom-date-formats';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { CUSTOM_DATE_FORMATS } from './utils/custom-date-formats'; // O arquivo com o formato 'DD/MM/YYYY'
+import { CustomDateAdapter } from './custom-date-adapter';
 registerLocaleData(localePt);
 
 //Institutional
@@ -257,6 +258,7 @@ import { ManageCarouselComponent } from './pages/system/home/manage-carousel/man
       useClass: AuthInterceptor,
       multi: true
     },
+    { provide: DateAdapter, useClass: CustomDateAdapter }, 
     { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' },
     { provide: MAT_DATE_FORMATS, useValue: CUSTOM_DATE_FORMATS },
     {
