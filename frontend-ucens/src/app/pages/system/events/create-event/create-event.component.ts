@@ -31,8 +31,8 @@ export class CreateEventComponent implements OnInit {
   ) {
     this.form = this.fb.group({
       nome: ['', [Validators.required, Validators.maxLength(150)]],
-      dataInicio: ['', Validators.required],
-      dataFinal: ['', Validators.required],
+      dataInicio: ['', Validators.required, Validators.maxLength(10)],
+      dataFinal: ['', Validators.required, Validators.maxLength(10)],
       horarioInicio: ['', Validators.required],
       horarioFinal: ['', Validators.required],
       local: ['', [Validators.required, Validators.maxLength(150)]],
