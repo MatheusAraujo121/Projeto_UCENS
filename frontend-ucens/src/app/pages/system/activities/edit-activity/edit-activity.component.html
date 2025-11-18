@@ -83,21 +83,24 @@
           </mat-form-field>
           <mat-form-field appearance="fill">
               <mat-label>Idade Mínima</mat-label>
-              <input matInput type="number" formControlName="idadeMinima" />
+              <input matInput type="number" min="0" formControlName="idadeMinima" />
               <mat-error *ngIf="form.get('idadeMinima')?.hasError('required')">A idade mínima é obrigatória.</mat-error>
+              <mat-error *ngIf="form.get('idadeMinima')?.hasError('min')">Não pode ser negativo.</mat-error>
           </mat-form-field>
 
           <mat-form-field appearance="fill">
               <mat-label>Idade Máxima</mat-label>
-              <input matInput type="number" formControlName="idadeMaxima" />
+              <input matInput type="number" min="0" formControlName="idadeMaxima" />
               <mat-error *ngIf="form.get('idadeMaxima')?.hasError('required')">A idade máxima é obrigatória.</mat-error>
-          </mat-form-field>
+              <mat-error *ngIf="form.get('idadeMaxima')?.hasError('min')">Não pode ser negativo.</mat-error>
+            </mat-form-field>
 
           <mat-form-field appearance="fill">
               <mat-label>Limite de Participantes</mat-label>
-              <input matInput type="number" formControlName="limiteParticipantes" />
+              <input matInput type="number" min="0" formControlName="limiteParticipantes" />
               <mat-error *ngIf="form.get('limiteParticipantes')?.hasError('required')">O limite de participantes é obrigatório.</mat-error>
-          </mat-form-field>
+              <mat-error *ngIf="form.get('limiteParticipantes')?.hasError('min')">Não pode ser negativo.</mat-error>
+            </mat-form-field>
 
           <mat-form-field appearance="fill">
               <mat-label>Local</mat-label>

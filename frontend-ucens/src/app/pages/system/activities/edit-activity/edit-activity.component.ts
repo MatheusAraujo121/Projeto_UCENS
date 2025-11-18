@@ -44,9 +44,9 @@ export class EditActivityComponent implements OnInit {
       categoria: ['', [Validators.required, Validators.maxLength(50)]],
       diasDisponiveis: [[], Validators.required],
       horarioSugerido: ['', Validators.required],
-      idadeMinima: [null, Validators.required],
-      idadeMaxima: [null, Validators.required],
-      limiteParticipantes: [null, Validators.required],
+      idadeMinima: [null, Validators.required, Validators.min(0)],
+      idadeMaxima: [null, Validators.required, Validators.min(0)],
+      limiteParticipantes: [null, Validators.required, Validators.min(0)],
       local: [[], Validators.required],
       professorResponsavel: ['', [Validators.maxLength(150), Validators.required]]
     });
