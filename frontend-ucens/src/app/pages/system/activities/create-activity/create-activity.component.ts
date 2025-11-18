@@ -19,7 +19,7 @@ export class CreateActivityComponent implements OnInit {
 
   categorias = ['Esportivo', 'Cultural'];
   diasSemana = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
-  sedes = ['Sede Social', 'Sede Campestre I', 'Sede Campestre II'];
+  sedes = ['Sede Social', 'Sede Campestre I', 'Sede Campestre II', 'Outros'];
 
   constructor(
     private fb: FormBuilder,
@@ -39,9 +39,9 @@ export class CreateActivityComponent implements OnInit {
       categoria: ['', [Validators.required, Validators.maxLength(50)]],
       diasDisponiveis: [[], Validators.required],
       horarioSugerido: ['', Validators.required],
-      idadeMinima: [null, Validators.required],
-      idadeMaxima: [null, Validators.required],
-      limiteParticipantes: [null, Validators.required],
+      idadeMinima: [null, Validators.required, Validators.min(0)],
+      idadeMaxima: [null, Validators.required, Validators.min(0)],
+      limiteParticipantes: [null, Validators.required, Validators.min(0)],
       local: [[], Validators.required],
       professorResponsavel: ['', [Validators.maxLength(150), Validators.required]]
     });
