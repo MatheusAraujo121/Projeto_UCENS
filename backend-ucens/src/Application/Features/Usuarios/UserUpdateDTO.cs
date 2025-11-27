@@ -1,20 +1,19 @@
-using System.ComponentModel.DataAnnotations; // Adicionado
+using System.ComponentModel.DataAnnotations; 
 
 namespace Application.Features.Usuarios
 {
     public class UserUpdateDTO
     {
-        [Required] // Adicionado
-        [StringLength(50)] // Adicionado
+        [Required]
+        [StringLength(50)] 
         public string UserName { get; set; } = string.Empty;
 
-        [Required] // Adicionado
-        [EmailAddress] // Adicionado
-        [StringLength(150)] // Adicionado
+        [Required]
+        [EmailAddress] 
+        [StringLength(150)] 
         public string Email { get; set; } = string.Empty;
         
-        // A senha é opcional, mas se for fornecida, deve ter no mínimo 6 caracteres.
-        [StringLength(255, MinimumLength = 8)] // Adicionado
+        [StringLength(255, MinimumLength = 8)] 
         public string? Senha { get; set; } 
     }
 }

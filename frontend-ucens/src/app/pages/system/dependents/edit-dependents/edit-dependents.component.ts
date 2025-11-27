@@ -5,13 +5,11 @@ import { forkJoin, Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-// Serviços e Interfaces
 import { DependentService } from 'src/app/services/dependents/dependent.service';
 import { AssociateService } from 'src/app/services/associates/associate.service';
 import { Associate } from 'src/app/services/associates/associate.interface';
 import { Dependent } from 'src/app/services/dependents/dependent.interface';
 
-// Validador Customizado
 import { CustomValidators } from 'src/app/validators/custom-validators';
 
 @Component({
@@ -35,7 +33,6 @@ export class EditDependentsComponent implements OnInit {
     private associateService: AssociateService,
     private snackBar: MatSnackBar
   ) {
-    // Inicializa o formulário com a estrutura correta e as validações
     this.form = this.fb.group({
       situacao: ['', [Validators.required, Validators.maxLength(30)]],
       grauParentesco: ['', [Validators.required, Validators.maxLength(50)]],
@@ -69,7 +66,6 @@ export class EditDependentsComponent implements OnInit {
     this.loadDataAndPopulateForm();
   }
 
-  // Validador para garantir que um objeto foi selecionado no autocomplete
   private requireMatch(control: AbstractControl): ValidationErrors | null {
     const selection: any = control.value;
     if (typeof selection === 'string' && selection.trim() !== '') {
@@ -109,7 +105,7 @@ export class EditDependentsComponent implements OnInit {
       sexo: dep.sexo,
       cpf: dep.cpf,
       rg: dep.rg,
-      dataNascimento: new Date(dep.dataNascimento), // Converte para objeto Date
+      dataNascimento: new Date(dep.dataNascimento), 
       localNascimento: dep.localNascimento,
       nacionalidade: dep.nacionalidade,
       estadoCivil: dep.estadoCivil,
@@ -134,7 +130,6 @@ export class EditDependentsComponent implements OnInit {
 
   private formatDate(date: any): string {
     if (!date) return '';
-    // Formata a data para 'YYYY-MM-DD' para o input type="date"
     const d = new Date(date);
     const year = d.getFullYear();
     const month = ('0' + (d.getMonth() + 1)).slice(-2);

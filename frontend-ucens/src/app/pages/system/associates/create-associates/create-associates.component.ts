@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http'; // Importe o HttpClient
+import { HttpClient } from '@angular/common/http'; 
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AssociateService } from 'src/app/services/associates/associate.service';
-import { CustomValidators } from 'src/app/validators/custom-validators'; // Importe os validadores
-
+import { CustomValidators } from 'src/app/validators/custom-validators';
 @Component({
   selector: 'app-create-associates',
   templateUrl: './create-associates.component.html',
@@ -20,7 +19,7 @@ export class CreateAssociatesComponent implements OnInit {
     private associateService: AssociateService,
     private router: Router,
     private snackBar: MatSnackBar,
-    private http: HttpClient // Injete o HttpClient
+    private http: HttpClient 
   ) { }
 
   ngOnInit() {
@@ -51,13 +50,11 @@ export class CreateAssociatesComponent implements OnInit {
     });
   }
 
-  /**
-   * Busca o CEP na API ViaCEP e preenche os campos de endereço.
-   */
+
   buscarCep() {
     const cepControl = this.form.get('cep');
     if (cepControl?.valid && cepControl.value) {
-      const cep = cepControl.value.replace(/\D/g, ''); // Remove caracteres não numéricos
+      const cep = cepControl.value.replace(/\D/g, ''); 
       this.http.get(`https://viacep.com.br/ws/${cep}/json/`).subscribe((dados: any) => {
         if (dados && !dados.erro) {
           this.form.patchValue({

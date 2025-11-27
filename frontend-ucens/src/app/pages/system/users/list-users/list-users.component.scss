@@ -1,4 +1,3 @@
-// Estilos exatamente como os fornecidos no exemplo
 .list-page {
   .toolbar {
     padding: 1rem;
@@ -55,7 +54,6 @@
 
       tr {
         background-color: #fafafa;
-        // cursor: pointer; // Removido pois as ações estão nos botões
       }
 
       tr:hover {
@@ -95,7 +93,6 @@
   margin-left: 1.5%;
 }
 
-// Adicione isso se você não tiver centralizado o texto no global
 .text-center {
   text-align: center;
 }

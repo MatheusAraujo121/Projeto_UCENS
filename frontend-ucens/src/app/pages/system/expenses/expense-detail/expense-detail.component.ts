@@ -18,7 +18,6 @@ export class ExpenseDetailComponent {
 
   formatStatus(status: string): string {
     if (!status) return '';
-    // Formata "Pago com atraso" para "Pago com Atraso"
     return status.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
   }
 

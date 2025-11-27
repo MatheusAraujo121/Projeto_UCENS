@@ -2,7 +2,7 @@ export interface Despesa {
   id: number;
   descricao: string;
   categoria: string;
-  status: string; // "Paga", "Pendente", "Atrasada", "Cancelada"
+  status: string; 
   valor: number;
   dataVencimento: Date;
   dataPagamento?: Date;

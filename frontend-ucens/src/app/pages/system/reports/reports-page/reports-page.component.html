@@ -2,7 +2,6 @@
   <h4 class="fw-bold text-center mb-4">Relatórios Financeiros</h4>
 
   <nz-collapse nzAccordion>
-    <!-- Relatórios Simples -->
     <nz-collapse-panel nzHeader="Relatórios de Associados">
       <div class="d-flex flex-wrap gap-2">
         <button nz-button nzType="primary" (click)="gerarRelatorio('associados')">Associados</button>
@@ -20,7 +19,6 @@
       </div>
     </nz-collapse-panel>
 
-    <!-- Relatórios com Intervalo de Datas -->
     <nz-collapse-panel nzHeader="Relatórios com Período">
       <div class="row mb-3">
         <div class="col-md-4">
@@ -47,7 +45,6 @@
       </div>
     </nz-collapse-panel>
 
-    <!-- Relatórios com Ano -->
     <nz-collapse-panel nzHeader="Relatórios Anuais">
       <div class="row mb-3">
         <div class="col-md-3">
@@ -58,7 +55,6 @@
       <button nz-button nzType="primary" (click)="gerarRelatorioComAno('receitas-mensais')">Receitas Mensais</button>
     </nz-collapse-panel>
 
-    <!-- Relatórios com Data Única -->
     <nz-collapse-panel nzHeader="Relatórios Diários">
       <div class="row mb-3">
         <div class="col-md-3">

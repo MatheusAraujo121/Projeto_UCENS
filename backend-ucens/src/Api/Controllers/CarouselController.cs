@@ -26,7 +26,7 @@ namespace Api.Controllers
         }
 
         [HttpPost("upload")]
-        [Authorize] // Apenas usuários autorizados podem fazer upload
+        [Authorize] 
         public async Task<IActionResult> Upload([FromForm] List<IFormFile> files)
         {
             if (files == null || files.Count == 0)
@@ -36,7 +36,6 @@ namespace Api.Controllers
 
             try
             {
-                // CORREÇÃO: Removido o argumento 'Request'
                 var newImages = await _carouselService.UploadImagesAsync(files);
                 return Ok(newImages);
             }
@@ -47,7 +46,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize] // Apenas usuários autorizados podem deletar
+        [Authorize] 
         public async Task<IActionResult> Delete(int id)
         {
             await _carouselService.DeleteAsync(id);

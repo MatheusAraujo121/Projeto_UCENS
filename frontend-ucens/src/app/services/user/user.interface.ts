@@ -1,17 +1,17 @@
 export interface User {
   id: number;
-  userName: string; // Corresponde ao 'Nome' no UserDTO.cs
+  userName: string; 
   email: string;
 }
 
 export interface UserCreate {
-  userName: string; // Corresponde ao 'Nome' no UserCreateDTO.cs
+  userName: string; 
   email: string;
   senha?: string;
 }
 
 export interface UserUpdate {
-  userName?: string; // Corresponde ao 'Nome' no UserUpdateDTO.cs
+  userName?: string; 
   email?: string;
-  senha?: string; // Opcional
+  senha?: string; 
 }

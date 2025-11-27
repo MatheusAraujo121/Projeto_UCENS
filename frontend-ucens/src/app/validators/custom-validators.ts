@@ -2,9 +2,6 @@ import { AbstractControl, ValidationErrors, ValidatorFn, FormGroup } from '@angu
 
 export class CustomValidators {
 
-  /**
-   * Valida um CPF brasileiro. Só executa se o campo tiver valor.
-   */
   static passwordMatchValidator(controlName: string, matchingControlName: string): ValidatorFn {
     return (formGroup: AbstractControl): ValidationErrors | null => {
       
@@ -36,12 +33,12 @@ export class CustomValidators {
   }
   static cpfValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      // Se o campo estiver vazio, não faz a validação e retorna nulo (sem erro).
+      
       if (!control.value) {
         return null;
       }
 
-      const cpf = control.value.replace(/[^\d]/g, ''); // Remove caracteres não numéricos
+      const cpf = control.value.replace(/[^\d]/g, ''); 
 
       if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) {
         return { cpfInvalido: true };
@@ -73,31 +70,28 @@ export class CustomValidators {
         return { cpfInvalido: true };
       }
 
-      return null; // CPF Válido
+      return null; 
     };
   }
 
-  /**
-   * ADICIONADO: Valida um CNPJ brasileiro.
-   */
   static cnpjValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       if (!control.value) {
-        return null; // Não valida se estiver vazio
+        return null; 
       }
 
-      const cnpj = control.value.replace(/[^\d]/g, ''); // Remove caracteres não numéricos
+      const cnpj = control.value.replace(/[^\d]/g, ''); 
 
       if (cnpj.length !== 14) {
         return { cnpjInvalido: true };
       }
 
-      // Elimina CNPJs inválidos conhecidos (todos os números iguais)
+      
       if (/^(\d)\1{13}$/.test(cnpj)) {
         return { cnpjInvalido: true };
       }
 
-      // Validação do primeiro dígito verificador
+      
       let length = 12;
       let numbers = cnpj.substring(0, length);
       let sum = 0;
@@ -113,7 +107,7 @@ export class CustomValidators {
         return { cnpjInvalido: true };
       }
 
-      // Validação do segundo dígito verificador
+      
       length = 13;
       numbers = cnpj.substring(0, length);
       sum = 0;
@@ -129,18 +123,13 @@ export class CustomValidators {
         return { cnpjInvalido: true };
       }
 
-      return null; // CNPJ Válido
+      return null; 
     };
   }
 
-
-  /**
-  * Valida se a data de nascimento corresponde a uma idade mínima.
-  * @param minAge A idade mínima em anos.
-  */
   static minAgeValidator(minAge: number): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      // Se o campo estiver vazio, não valida (deixa para o Validators.required cuidar disso)
+      
       if (!control.value) {
         return null;
       }

@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { LoginResponse, DecodedToken } from './auth.interface'; // Importa DecodedToken
+import { LoginResponse, DecodedToken } from './auth.interface'; 
 import { Router } from '@angular/router';
 import { tap } from 'rxjs/operators';
-import { jwtDecode } from 'jwt-decode'; // Lembre-se: execute npm install jwt-decode
+import { jwtDecode } from 'jwt-decode';
 import { environment } from 'src/environments/environment.prod';
 
 @Injectable({
@@ -20,7 +20,7 @@ export class AuthService {
       tap(response => {
         if (response && response.token) {
           localStorage.setItem('token', response.token);
-          this.storeUserData(response.token); // Salva os dados do usuário
+          this.storeUserData(response.token);
         }
       })
     );
@@ -55,7 +55,7 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem('token');
-    this.clearUserData(); // Limpa os dados do usuário
+    this.clearUserData(); 
     this.router.navigate(['/login']);
   }
 
@@ -68,7 +68,7 @@ export class AuthService {
     const token = this.getToken();
     if (token) {
       try {
-        this.storeUserData(token); // Tenta recarregar os dados se perdidos
+        this.storeUserData(token); 
         const reloadedUser = localStorage.getItem('currentUser');
         return reloadedUser ? JSON.parse(reloadedUser) : null;
       } catch (e) {
@@ -91,7 +91,7 @@ export class AuthService {
 
   isAdmin(): boolean {
     const userName = this.getUserName();
-    // Compara o nome de usuário (convertido para minúsculas) com 'admin'
+
     return userName ? userName.toLowerCase() === 'admin' : false;
   }
 }

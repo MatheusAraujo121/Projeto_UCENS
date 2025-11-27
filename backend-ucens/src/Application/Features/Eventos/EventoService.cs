@@ -10,9 +10,9 @@ namespace Application.Features.Eventos
     public class EventoService
     {
         private readonly IRepository<Evento> _repo;
-        private readonly IImageKitService _imageKitService; // <-- Adicionado
+        private readonly IImageKitService _imageKitService;
 
-        public EventoService(IRepository<Evento> repo, IImageKitService imageKitService) // <-- Injetado
+        public EventoService(IRepository<Evento> repo, IImageKitService imageKitService) 
         {
             _repo = repo;
             _imageKitService = imageKitService;
@@ -33,7 +33,6 @@ namespace Application.Features.Eventos
         public async Task<EventoDTO> Add(EventoDTO dto)
         {
             var evento = MapToEntity(dto);
-            // O ImagemFileId já vem do DTO
             await _repo.Add(evento);
             dto.Id = evento.Id;
             return dto;
@@ -47,14 +46,12 @@ namespace Application.Features.Eventos
                 throw new System.Exception($"Evento com ID {id} não encontrado.");
             }
 
-            string? oldFileId = evento.ImagemFileId; // Salva o FileId antigo
+            string? oldFileId = evento.ImagemFileId;
 
-            // Mapeia *todos* os campos do DTO, incluindo nova ImagemUrl e ImagemFileId
             MapDtoToEntity(dto, evento);
 
             await _repo.Update(evento);
 
-            // Se o FileId mudou (nova imagem ou removida), delete o antigo
             if (!string.IsNullOrEmpty(oldFileId) && oldFileId != evento.ImagemFileId)
             {
                 await _imageKitService.DeleteAsync(oldFileId);
@@ -71,11 +68,10 @@ namespace Application.Features.Eventos
                 return;
             }
 
-            string? fileIdToDelete = evento.ImagemFileId; // Pega o FileId
+            string? fileIdToDelete = evento.ImagemFileId; 
 
-            await _repo.Delete(id); // Deleta do banco
+            await _repo.Delete(id);
 
-            // Deleta do ImageKit (APÓS deletar do banco)
             if (!string.IsNullOrEmpty(fileIdToDelete))
             {
                 await _imageKitService.DeleteAsync(fileIdToDelete);
@@ -93,7 +89,7 @@ namespace Application.Features.Eventos
                 Inicio = DateTime.SpecifyKind(evento.Inicio, DateTimeKind.Utc),
                 Fim = DateTime.SpecifyKind(evento.Fim, DateTimeKind.Utc),
                 ImagemUrl = evento.ImagemUrl,
-                ImagemFileId = evento.ImagemFileId // <-- Adicionado
+                ImagemFileId = evento.ImagemFileId 
             };
         }
 
@@ -108,11 +104,10 @@ namespace Application.Features.Eventos
                 Inicio = dto.Inicio,
                 Fim = dto.Fim,
                 ImagemUrl = dto.ImagemUrl,
-                ImagemFileId = dto.ImagemFileId // <-- Adicionado
+                ImagemFileId = dto.ImagemFileId 
             };
         }
 
-        // Helper para o Update
         private static void MapDtoToEntity(EventoDTO dto, Evento evento)
         {
             evento.Nome = dto.Nome;
@@ -121,7 +116,7 @@ namespace Application.Features.Eventos
             evento.Inicio = dto.Inicio;
             evento.Fim = dto.Fim;
             evento.ImagemUrl = dto.ImagemUrl;
-            evento.ImagemFileId = dto.ImagemFileId; // <-- Adicionado
+            evento.ImagemFileId = dto.ImagemFileId; 
         }
     }
 }

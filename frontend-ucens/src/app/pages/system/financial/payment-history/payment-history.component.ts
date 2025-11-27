@@ -87,7 +87,7 @@ export class PaymentHistoryComponent implements OnInit, AfterViewInit {
       next: (boletoDetails) => {
         this.dialog.open(BoletoDetailComponent, {
           width: '700px',
-          data: boletoDetails // Passa os dados do boleto para o modal
+          data: boletoDetails 
         });
       },
       error: () => {

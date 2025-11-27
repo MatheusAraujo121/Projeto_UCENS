@@ -1,6 +1,6 @@
 using Domain;
 using System.Threading.Tasks;
-using System.Collections.Generic; // Adicionar
+using System.Collections.Generic; 
 
 namespace Application.Common.Interfaces
 {

@@ -2,7 +2,6 @@
   
   <h2>Gerenciar Carrossel</h2>
 
-  <!-- Seção de Adicionar Novas Imagens -->
   <div class="upload-section">
     <h3>Adicionar Novas Imagens</h3>
     
@@ -12,18 +11,12 @@
       (change)="onFileSelected($event)" 
       accept="image/png, image/jpeg, image/webp"
     >
-    
-    <!-- 
-      ====================================
-      NOVA SEÇÃO DE PREVIEW ADICIONADA AQUI
-      ====================================
-    -->
+
     <div *ngIf="previewUrls.length > 0" class="preview-gallery">
       <div *ngFor="let url of previewUrls" class="preview-image-card">
         <img [src]="url" alt="Preview da imagem selecionada">
       </div>
     </div>
-    <!-- Fim da seção de preview -->
 
 
     <div *ngIf="selectedFiles.length > 0" class="file-info">
@@ -37,14 +30,13 @@
       <span *ngIf="isLoading">Enviando...</span>
     </button>
     
-    <div *ngIf="uploadError" class="text-danger"> <!-- (use .text-danger do bootstrap) -->
+    <div *ngIf="uploadError" class="text-danger"> 
       {{ uploadError }}
     </div>
   </div>
 
   <hr>
 
-  <!-- Seção de Imagens Atuais -->
   <div class="gallery-section">
     <h3>Imagens Atuais</h3>
     
@@ -56,7 +48,6 @@
       Nenhuma imagem no carrossel.
     </div>
 
-    <!-- Galeria de imagens existentes -->
     <div class="image-gallery">
       <div *ngFor="let img of images" class="image-card">
         <img [src]="img.imageUrl" alt="Imagem do Carrossel">

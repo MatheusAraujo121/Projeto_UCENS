@@ -1,10 +1,10 @@
-// src/app/services/financial/boleto.interface.ts
+
 
 export interface Boleto {
   id: number;
-  associadoId: number; // Corresponde a 'AssociadoId' do C#
+  associadoId: number; 
   valor: number;
-  vencimento: Date; // << CORRIGIDO de 'vencimento' para 'dataVencimento'
+  vencimento: Date; 
   status: string;
   dataEmissao: Date;
   nossoNumero: string;

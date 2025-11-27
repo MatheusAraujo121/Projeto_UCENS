@@ -19,7 +19,7 @@ namespace Application.Features.Financeiro
         public DateTime Data { get; set; }
 
         [Required]
-        public string Tipo { get; set; } = string.Empty; // "Entrada" ou "Saida"
+        public string Tipo { get; set; } = string.Empty; 
 
         [StringLength(50)]
         public string? Categoria { get; set; }

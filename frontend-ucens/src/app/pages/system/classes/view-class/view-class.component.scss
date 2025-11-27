@@ -11,7 +11,7 @@
 
 .activity-header {
     text-align: center;
-    margin-bottom: 1.5rem; // Espaço abaixo do título
+    margin-bottom: 1.5rem; 
     border-bottom: 2px solid #ccc;
     padding-bottom: 1rem;
 
@@ -276,7 +276,6 @@ table.mat-table {
         gap: 1rem;
     }
 
-    // Botão Verde para Associado
     .btn-new-associado {
         border: 1.4px dashed #28a745;
         color: #28a745;
@@ -284,7 +283,6 @@ table.mat-table {
         &:hover { background: rgba(40, 167, 69, 0.1); }
     }
 
-    // Botão Azul para Dependente
     .btn-new-dependente {
         border: 1.4px dashed #007bff;
         color: #007bff;

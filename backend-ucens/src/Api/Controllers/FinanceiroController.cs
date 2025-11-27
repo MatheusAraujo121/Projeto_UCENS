@@ -36,7 +36,6 @@ namespace Api.Controllers
             return Ok(historico);
         }
 
-        // ENDPOINT PARA BUSCAR UM BOLETO ESPECÍFICO POR ID
         [HttpGet("boleto/{boletoId}")]
         [Authorize]
         public async Task<IActionResult> GetBoleto(int boletoId)

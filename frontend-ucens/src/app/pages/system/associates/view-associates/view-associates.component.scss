@@ -106,7 +106,6 @@
     }
 }
 
-// ESTILOS ADICIONADOS PARA A TABELA DE HISTÓRICO
 .financial-history-container {
     margin-top: 1rem;
 
@@ -165,7 +164,7 @@
         background-color: #808080;
     }
     mat-paginator {
-        background: transparent; // Fundo transparente para se mesclar com a página
+        background: transparent; 
         display: flex;
         justify-content: flex-end;
         padding: 0.5rem 0;

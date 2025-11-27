@@ -2,14 +2,12 @@
     height: 400px;
 }
 
-/* Adicione isso para o seu loading ficar do tamanho certo */
 .main-swiper-loading {
     height: 400px;
     background-color: #f5f5f5;
     color: #999;
 }
 
-/* A classe .banner genérica continua */
 .banner {
     height: 100%;
     background-repeat: no-repeat;
@@ -18,20 +16,6 @@
     background-position: center;
 }
 
-/* REMOVER. NÃO PRECISAMOS MAIS DISSO.
-.banner-1 {
-    background-image: url('/assets/img/banner-1.jpg');
-}
-
-.banner-2 {
-    background-image: url('/assets/img/banner-2.jpg');
-    max-height: 400px;
-    width: auto;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-*/
 
 .overlay-text {
     background-color: rgba(200, 200, 200, 0.8);
@@ -39,9 +23,6 @@
     border-radius: 8px;
 }
 
-/* ===========================
-   Conheça a Nippon Section
-   =========================== */
 
 .conheca-nippon {
   background-color: #fff;
@@ -77,7 +58,6 @@
     line-height: 1.4;
   }
 
-  /* Carpa de fundo atrás do texto */
   .text-wrap {
     overflow: hidden;
     padding: 2rem;
@@ -97,9 +77,6 @@
   }
 }
 
-/* ==============================
-   Seção Localização
-   ============================== */
 .localizacao {
   background-color: #fff;
 
@@ -125,9 +102,6 @@
   }
 }
 
-/* ==============================
-   Título do Formulário de Contact
-   ============================== */
 .contact-titulo {
   background-color: #fff;
 
@@ -139,9 +113,6 @@
   }
 }
 
-/* ==============================
-   Seção Sedes
-   ============================== */
 .headquarters {
   background-color: #fff;
   color: #333;
@@ -199,9 +170,9 @@
     padding: 10px;
     cursor: pointer;
     border-radius: 50%;
-    box-shadow: 0px 3px 3px 3px rgba(0, 0, 0, 0.2); /* Sombra para dar destaque */
+    box-shadow: 0px 3px 3px 3px rgba(0, 0, 0, 0.2); 
     
-    z-index: 1000; /* Garante que o ícone fique sobre outros elementos */
+    z-index: 1000; 
 }
 
 .wpp .wpp-ico{

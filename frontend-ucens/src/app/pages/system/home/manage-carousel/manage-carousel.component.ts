@@ -12,7 +12,6 @@ export class ManageCarouselComponent implements OnInit {
 images: CarouselImageDto[] = [];
   selectedFiles: File[] = [];
   
-  // NOVO: Array para guardar os previews em base64
   previewUrls: string[] = []; 
   
   isLoading = false;
@@ -38,11 +37,9 @@ images: CarouselImageDto[] = [];
     });
   }
 
-  // ATUALIZADO: Agora também gera os previews
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
 
-    // Limpa seleções e previews antigos
     this.selectedFiles = [];
     this.previewUrls = []; 
     this.uploadError = null;
@@ -50,22 +47,18 @@ images: CarouselImageDto[] = [];
     if (input.files && input.files.length > 0) {
       this.selectedFiles = Array.from(input.files);
 
-      // Loop para gerar os previews
       for (const file of this.selectedFiles) {
         const reader = new FileReader();
         
-        // O 'onload' é disparado quando readAsDataURL() termina
         reader.onload = (e: any) => {
           this.previewUrls.push(e.target.result);
         };
 
-        // Lê o arquivo como um Data URL (base64)
         reader.readAsDataURL(file);
       }
     }
   }
 
-  // ATUALIZADO: Limpa os previews após o envio
   onUpload(): void {
     if (this.selectedFiles.length === 0) return; 
 
@@ -76,9 +69,8 @@ images: CarouselImageDto[] = [];
       next: (uploadedImages) => {
         this.images.push(...uploadedImages);
         
-        // Limpa tudo após o sucesso
         this.selectedFiles = []; 
-        this.previewUrls = []; // Limpa os previews
+        this.previewUrls = []; 
         this.isLoading = false;
       },
       error: (err: HttpErrorResponse) => {

@@ -16,8 +16,6 @@ namespace Infrastructure.Persistence.Repositories
             _context = context;
         }
 
-        // --- MÉTODOS ESPECÍFICOS DESTE REPOSITÓRIO ---
-
         public async Task<Associado?> GetByCPF(string cpf)
         {
             return await _context.Associados

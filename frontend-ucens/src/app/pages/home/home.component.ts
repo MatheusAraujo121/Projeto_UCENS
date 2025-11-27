@@ -1,10 +1,9 @@
-import { Component, OnInit } from '@angular/core'; // Importe OnInit
+import { Component, OnInit } from '@angular/core'; 
 import { SwiperOptions } from 'swiper';
 import SwiperCore, { Autoplay, Navigation, Pagination } from 'swiper';
 
-// --- NOSSAS IMPORTAÇÕES ---
-import { CarouselService } from '../../services/carousel/carousel.service'; // Ajuste o caminho
-import { CarouselImageDto } from '../../services/carousel/carousel.interface'; // Ajuste este caminho!
+import { CarouselService } from '../../services/carousel/carousel.service'; 
+import { CarouselImageDto } from '../../services/carousel/carousel.interface'; 
 
 SwiperCore.use([Autoplay, Navigation, Pagination]);
 
@@ -13,9 +12,8 @@ SwiperCore.use([Autoplay, Navigation, Pagination]);
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit { // Implemente OnInit
+export class HomeComponent implements OnInit { 
   
-  // Configurações do Swiper (sem mudanças)
   config: SwiperOptions = {
     slidesPerView: 1,
     loop: true,
@@ -24,14 +22,11 @@ export class HomeComponent implements OnInit { // Implemente OnInit
     pagination: { clickable: true }
   };
 
-  // --- NOSSAS NOVAS PROPRIEDADES ---
   carouselImages: CarouselImageDto[] = [];
   isLoading = true;
 
-  // 1. Injete o CarouselService
   constructor(private carouselService: CarouselService) { }
 
-  // 2. No ngOnInit, chame o serviço
   ngOnInit(): void {
     this.isLoading = true;
     this.carouselService.getImages().subscribe({
@@ -41,7 +36,7 @@ export class HomeComponent implements OnInit { // Implemente OnInit
       },
       error: (err) => {
         console.error('Erro ao carregar imagens do carrossel', err);
-        this.isLoading = false; // Esconde o loading mesmo se der erro
+        this.isLoading = false; 
       }
     });
   }

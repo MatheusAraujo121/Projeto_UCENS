@@ -15,8 +15,6 @@ namespace Infrastructure.Persistence.Repositories
             _context = context;
         }
 
-        // --- MÉTODOS CORRIGIDOS PARA CUMPRIR AS INTERFACES ---
-
         public async Task<User?> GetByEmail(string email)
         {
             return await _context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Email == email);

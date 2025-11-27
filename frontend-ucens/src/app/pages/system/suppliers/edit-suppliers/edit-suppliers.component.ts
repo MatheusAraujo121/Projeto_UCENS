@@ -3,11 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-// Serviços e Interfaces
 import { Fornecedor } from '../../../../services/suppliers/supplier.interface';
 import { SupplierService } from '../../../../services/suppliers/supplier.service';
 
-// ADICIONADO: Importação do validador (usando caminho relativo corrigido)
 import { CustomValidators } from '../../../../validators/custom-validators';
 
 @Component({
@@ -31,7 +29,6 @@ export class EditSuppliersComponent implements OnInit {
   ngOnInit(): void {
     this.form = this.fb.group({
       nome: ['', [Validators.required, Validators.maxLength(150)]],
-      // ADICIONADO: Campo CNPJ com validadores
       cnpj: ['', [Validators.required, CustomValidators.cnpjValidator()]],
       responsavel: ['', [Validators.maxLength(150)]],
       email: ['', [Validators.required, Validators.email, Validators.maxLength(150)]],
@@ -53,7 +50,6 @@ export class EditSuppliersComponent implements OnInit {
       next: (data) => {
         if (data) {
           this.supplier = data;
-          // O patchValue irá preencher o campo 'cnpj' se ele existir nos dados
           this.form.patchValue(data); 
         }
       },
@@ -72,7 +68,6 @@ export class EditSuppliersComponent implements OnInit {
     }
 
     if (this.id) {
-      // O form.value já inclui o 'cnpj'
       const updatedData = { ...this.form.value, id: this.id };
       this.supplierService.updateSupplier(this.id, updatedData).subscribe({
         next: () => {

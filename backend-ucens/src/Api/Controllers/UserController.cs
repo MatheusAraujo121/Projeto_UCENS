@@ -74,10 +74,8 @@ namespace Api.Controllers
             {
                 if (remainingAttempts.HasValue && remainingAttempts.Value == 0)
                 {
-                    // Retorna 429 Too Many Requests se as tentativas se esgotaram
                     return StatusCode(429, new { message = "Muitas tentativas de login. Tente novamente mais tarde." });
                 }
-                // Retorna 401 Unauthorized com o número de tentativas restantes
                 return Unauthorized(new { 
                     message = "Credenciais inválidas", 
                     remainingAttempts = remainingAttempts 

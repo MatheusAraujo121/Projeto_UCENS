@@ -68,8 +68,7 @@ namespace Api.Controllers
             await _service.Delete(id);
             return NoContent();
         }
-
-        // Endpoints para Despesas
+        
         [HttpPost("{fornecedorId:int}/despesas")]
         [Authorize]
         public async Task<ActionResult<DespesaDTO>> AddDespesa(int fornecedorId, [FromBody] DespesaDTO dto)

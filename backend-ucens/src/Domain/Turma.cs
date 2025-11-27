@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations; // Adicionado
+using System.ComponentModel.DataAnnotations; 
 using System.Text.Json.Serialization;
 
 namespace Domain
@@ -8,13 +8,13 @@ namespace Domain
     {
         public int Id { get; set; }
 
-        [StringLength(100)] // Adicionado
+        [StringLength(100)] 
         public string Nome { get; set; } = string.Empty;
 
-        [StringLength(150)] // Adicionado
+        [StringLength(150)]
         public string? Professor { get; set; }
 
-        [StringLength(100)] // Adicionado
+        [StringLength(100)] 
         public string? DiasHorarios { get; set; } 
         
         public int Vagas { get; set; }

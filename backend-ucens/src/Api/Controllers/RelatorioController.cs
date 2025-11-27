@@ -1,8 +1,8 @@
 using Application.Features.Relatorios;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using System; // Adicionado para DateTime e Exception
-using System.Threading.Tasks; // Adicionado para Task
+using System; 
+using System.Threading.Tasks; 
 
 namespace Api.Controllers
 {
@@ -17,12 +17,10 @@ namespace Api.Controllers
             _relatorioService = relatorioService;
         }
 
-        // --- Endpoints Existentes ---
-
         [HttpGet("associados-dependentes")]
         public async Task<IActionResult> GetAssociadosComDependentes()
         {
-            try // Adicionando try-catch para robustez
+            try 
             {
                 var relatorio = await _relatorioService.GerarRelatorioAssociadosComDependentes();
                 return Ok(relatorio);
@@ -47,9 +45,6 @@ namespace Api.Controllers
             }
         }
 
-        // --- Novos Endpoints ---
-
-        // 1. Adimplentes
         [HttpGet("adimplentes")]
         public async Task<IActionResult> GetRelatorioAdimplentes()
         {
@@ -64,7 +59,6 @@ namespace Api.Controllers
             }
         }
 
-        // 2. Associados (Simples)
         [HttpGet("associados")]
         public async Task<IActionResult> GetRelatorioAssociados()
         {
@@ -79,7 +73,6 @@ namespace Api.Controllers
             }
         }
 
-        // 4. Dependentes
         [HttpGet("dependentes")]
         public async Task<IActionResult> GetRelatorioDependentes()
         {
@@ -94,7 +87,6 @@ namespace Api.Controllers
             }
         }
 
-        // 5. Usuários
         [HttpGet("usuarios")]
         public async Task<IActionResult> GetRelatorioUsuarios()
         {
@@ -109,7 +101,6 @@ namespace Api.Controllers
             }
         }
 
-        // 6. Contas a Receber
         [HttpGet("contas-a-receber")]
         public async Task<IActionResult> GetContasAReceber([FromQuery] DateTime dataInicio, [FromQuery] DateTime dataFim)
         {
@@ -124,7 +115,6 @@ namespace Api.Controllers
             }
         }
 
-        // 7. Contas a Pagar
         [HttpGet("contas-a-pagar")]
         public async Task<IActionResult> GetContasAPagar([FromQuery] DateTime dataInicio, [FromQuery] DateTime dataFim)
         {
@@ -139,7 +129,6 @@ namespace Api.Controllers
             }
         }
 
-        // 8. Contas Pagas
         [HttpGet("contas-pagas")]
         public async Task<IActionResult> GetContasPagas([FromQuery] DateTime dataInicio, [FromQuery] DateTime dataFim)
         {
@@ -154,7 +143,6 @@ namespace Api.Controllers
             }
         }
 
-        // 9. Receitas Arrecadadas
         [HttpGet("receitas-arrecadadas")]
         public async Task<IActionResult> GetReceitasArrecadadas([FromQuery] DateTime dataInicio, [FromQuery] DateTime dataFim)
         {
@@ -169,7 +157,6 @@ namespace Api.Controllers
             }
         }
 
-        // 10. Contas Recebidas
         [HttpGet("contas-recebidas")]
         public async Task<IActionResult> GetContasRecebidas([FromQuery] DateTime dataInicio, [FromQuery] DateTime dataFim)
         {
@@ -184,7 +171,6 @@ namespace Api.Controllers
             }
         }
 
-        // 11. Extrato Financeiro
         [HttpGet("extrato-financeiro")]
         public async Task<IActionResult> GetExtratoFinanceiro([FromQuery] DateTime dataInicio, [FromQuery] DateTime dataFim)
         {
@@ -199,7 +185,6 @@ namespace Api.Controllers
             }
         }
 
-        // 12. Fornecedores
         [HttpGet("fornecedores")]
         public async Task<IActionResult> GetRelatorioFornecedores()
         {
@@ -214,7 +199,6 @@ namespace Api.Controllers
             }
         }
 
-        // 13. Demonstrativo de Arrecadação de Mensalidades
         [HttpGet("arrecadacao-mensalidades")]
         public async Task<IActionResult> GetArrecadacaoMensalidades([FromQuery] DateTime dataInicio, [FromQuery] DateTime dataFim)
         {
@@ -229,7 +213,6 @@ namespace Api.Controllers
             }
         }
 
-        // 14. Movimento Diário
         [HttpGet("movimento-diario")]
         public async Task<IActionResult> GetMovimentoDiario([FromQuery] DateTime data)
         {
@@ -244,7 +227,6 @@ namespace Api.Controllers
             }
         }
 
-        // 15. Despesas por Data de Emissão
         [HttpGet("despesas-por-emissao")]
         public async Task<IActionResult> GetDespesasPorEmissao([FromQuery] DateTime dataInicio, [FromQuery] DateTime dataFim)
         {
@@ -259,7 +241,6 @@ namespace Api.Controllers
             }
         }
 
-        // 16. Receitas Mensais
         [HttpGet("receitas-mensais")]
         public async Task<IActionResult> GetReceitasMensais([FromQuery] int ano)
         {
@@ -274,7 +255,6 @@ namespace Api.Controllers
             }
         }
 
-        // 17. Resumo Financeiro
         [HttpGet("resumo-financeiro")]
         public async Task<IActionResult> GetResumoFinanceiro([FromQuery] DateTime dataInicio, [FromQuery] DateTime dataFim)
         {
@@ -289,7 +269,6 @@ namespace Api.Controllers
             }
         }
 
-        // 18. Relação de Inadimplentes
         [HttpGet("inadimplentes")]
         public async Task<IActionResult> GetRelatorioInadimplentes()
         {
@@ -304,7 +283,6 @@ namespace Api.Controllers
             }
         }
 
-        // 19. Previsão de Receitas e Despesas
         [HttpGet("previsao-financeira")]
         public async Task<IActionResult> GetPrevisaoFinanceira([FromQuery] DateTime dataInicio, [FromQuery] DateTime dataFim)
         {

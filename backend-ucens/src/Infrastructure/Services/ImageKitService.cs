@@ -23,7 +23,6 @@ namespace Infrastructure.Services
             _httpClient = new HttpClient();
             _privateKey = config["ImageKit:PrivateKey"] ?? throw new ArgumentNullException("ImageKit:PrivateKey não configurada.");
 
-            // Configura a autenticação básica (Basic Auth)
             var authValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{_privateKey}:"));
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authValue);
         }
@@ -46,7 +45,6 @@ namespace Infrastructure.Services
 
             var response = await _httpClient.PostAsync(_uploadUrl, content);
 
-            // Lança uma exceção se o upload falhar
             if (!response.IsSuccessStatusCode)
             {
                 var errorBody = await response.Content.ReadAsStringAsync();
@@ -70,24 +68,21 @@ namespace Infrastructure.Services
         public async Task DeleteAsync(string fileId)
         {
             if (string.IsNullOrEmpty(fileId))
-                return; // Nada para deletar
+                return; 
 
             try
             {
                 var response = await _httpClient.DeleteAsync($"{_deleteApiUrl}{fileId}");
 
-                // Se a resposta for Sucesso (200 OK ou 204 No Content), está OK.
                 if (response.IsSuccessStatusCode || response.StatusCode == System.Net.HttpStatusCode.NoContent)
                     return;
 
-                // Se for 404 (Not Found), o arquivo já foi deletado. Não é um erro.
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
                     Console.WriteLine($"Arquivo {fileId} não encontrado no ImageKit. Já foi deletado.");
                     return;
                 }
 
-                // Se chegou aqui, é um erro real (401, 403, 500, etc.)
                 var errorBody = await response.Content.ReadAsStringAsync();
                 throw new Exception($"Falha ao deletar arquivo do ImageKit (FileId: {fileId}). Status: {response.StatusCode}. Resposta da API: {errorBody}");
             }

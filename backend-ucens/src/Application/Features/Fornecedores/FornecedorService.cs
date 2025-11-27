@@ -75,7 +75,6 @@ namespace Application.Features.Fornecedores
             await _repo.Delete(id);
         }
 
-        // Métodos para Despesas
         public async Task<DespesaDTO> AddDespesa(DespesaDTO dto)
         {
             var despesa = MapToEntity(dto);
@@ -132,7 +131,6 @@ namespace Application.Features.Fornecedores
             };
         }
 
-        // Mapeamentos
         private FornecedorDTO MapToDto(Fornecedor f)
         {
             return new FornecedorDTO

@@ -5,7 +5,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 
-// Serviços e Interfaces
 import { Fornecedor, Despesa } from '../../../../services/suppliers/supplier.interface';
 import { SupplierService } from '../../../../services/suppliers/supplier.service';
 
@@ -39,7 +38,6 @@ export class ViewSuppliersComponent implements OnInit, AfterViewInit {
       const idParam = params.get('id');
       if (idParam) {
         const id = +idParam;
-        // Carrega todos os IDs e depois busca o fornecedor atual
         this.loadAllIdsAndSetCurrent(id);
       }
     });
@@ -51,7 +49,6 @@ export class ViewSuppliersComponent implements OnInit, AfterViewInit {
   }
 
   private loadAllIdsAndSetCurrent(currentId: number): void {
-    // Usando o novo método no serviço
     this.supplierService.getSupplierIds().subscribe(ids => {
       this.supplierIds = ids;
       this.currentIndex = this.supplierIds.findIndex(id => id === currentId);
@@ -64,10 +61,8 @@ export class ViewSuppliersComponent implements OnInit, AfterViewInit {
     this.supplierService.getSupplierById(id).subscribe({
       next: (data) => {
         this.supplier = data;
-        // As despesas já vêm com o fornecedor, então só precisamos atribuí-las
-        // O supplier.cnpj já está em 'data' e será usado pelo HTML
         this.despesasDataSource.data = data.despesas || [];
-        this.despesasDataSource.paginator = this.paginator; // Reatribui o paginador
+        this.despesasDataSource.paginator = this.paginator; 
         this.isLoading = false;
       },
       error: (err) => {
@@ -78,7 +73,6 @@ export class ViewSuppliersComponent implements OnInit, AfterViewInit {
     });
   }
 
-  // Funções de formatação de status para a tabela de despesas
   formatStatus(status: string): string {
     if (!status) return 'N/A';
     return status.charAt(0).toUpperCase() + status.slice(1);
@@ -112,9 +106,6 @@ export class ViewSuppliersComponent implements OnInit, AfterViewInit {
 
   excluir() {
     if (this.supplier) {
-      // ATENÇÃO: Substituindo confirm() por uma solução de diálogo (ex: MatDialog)
-      // O 'confirm()' nativo pode não funcionar bem.
-      // Vou manter por enquanto, mas recomendo trocar por um MatDialog.
       if (confirm(`Tem certeza que deseja excluir o fornecedor ${this.supplier.nome}?`)) {
         this.supplierService.deleteSupplier(this.supplier.id).subscribe({
           next: () => {

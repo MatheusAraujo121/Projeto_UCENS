@@ -29,9 +29,6 @@ namespace Application.Features.Financeiro
             };
 
             await _transacaoRepo.Add(transacao);
-            // O SaveChanges é chamado pelo UnitOfWork ou pelo próprio Add/Update dependendo da implementação do IRepository
-            // Se o seu IRepository.Add não salva, você precisaria injetar e usar IUnitOfWork aqui.
-            // Assumindo que Add salva:
             return transacao;
         }
 
@@ -45,10 +42,10 @@ namespace Application.Features.Financeiro
             var transacao = await _transacaoRepo.GetById(id);
             if (transacao == null)
             {
-                return false; // Ou lançar uma exceção
+                return false; 
             }
 
-            await _transacaoRepo.Delete(transacao.Id); // Assumindo que Delete por ID existe e salva
+            await _transacaoRepo.Delete(transacao.Id); 
             return true;
         }
     }

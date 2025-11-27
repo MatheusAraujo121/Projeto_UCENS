@@ -1,28 +1,21 @@
-# Estágio 1: Build
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copia todos os .csproj e restaura as dependências
 COPY src/Api/Api.csproj src/Api/
 COPY src/Application/Application.csproj src/Application/
 COPY src/Domain/Domain.csproj src/Domain/
 COPY src/Infrastructure/Infrastructure.csproj src/Infrastructure/
-# (Adicione outros .csproj se houver)
 
-# Restaura pacotes para o projeto principal (Api)
 RUN dotnet restore src/Api/Api.csproj
 
-# Copia todo o código-fonte
 COPY . .
 WORKDIR "/src/src/Api"
 RUN dotnet publish -c Release -o /app/publish
 
-# Estágio 2: Runtime
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
 COPY --from=build /app/publish .
 
-# Expõe a porta que o Kestrel usa por padrão no Docker
 ENV ASPNETCORE_URLS=http://+:8080
 EXPOSE 8080
 

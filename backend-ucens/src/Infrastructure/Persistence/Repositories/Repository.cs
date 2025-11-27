@@ -14,7 +14,6 @@ namespace Infrastructure.Persistence.Repositories
             _context = context;
         }
 
-        // --- MÉTODOS CORRIGIDOS PARA BATER COM A INTERFACE ---
 
         public async Task<T?> GetById(int id)
         {

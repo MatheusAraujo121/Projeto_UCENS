@@ -26,19 +26,16 @@ namespace Infrastructure.Persistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Define o ValueConverter para DateTime (NÃO-Nulável)
             var dateTimeConverter = new ValueConverter<DateTime, DateTime>(
-                v => v.ToUniversalTime(), // Converte para UTC ao salvar (O CORRETO)
-                v => DateTime.SpecifyKind(v, DateTimeKind.Utc) // Marca como UTC ao ler
+                v => v.ToUniversalTime(),
+                v => DateTime.SpecifyKind(v, DateTimeKind.Utc) 
             );
 
-            // Define o ValueConverter para DateTime? (Nulável)
             var nullableDateTimeConverter = new ValueConverter<DateTime?, DateTime?>(
-                v => v.HasValue ? v.Value.ToUniversalTime() : v, // Converte para UTC (se não for nulo)
-                v => v.HasValue ? DateTime.SpecifyKind(v.Value, DateTimeKind.Utc) : v // Marca como UTC (se não for nulo)
+                v => v.HasValue ? v.Value.ToUniversalTime() : v, 
+                v => v.HasValue ? DateTime.SpecifyKind(v.Value, DateTimeKind.Utc) : v 
             );
 
-            // Itera por todas as propriedades de todas as entidades do modelo
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
                 foreach (var property in entityType.GetProperties())

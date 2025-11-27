@@ -1,5 +1,5 @@
 using System;
-using System.ComponentModel.DataAnnotations; // Adicionado
+using System.ComponentModel.DataAnnotations; 
 
 namespace Application.Features.Fornecedores
 {
@@ -7,31 +7,31 @@ namespace Application.Features.Fornecedores
     {
         public int Id { get; set; }
 
-        [StringLength(150)] // Adicionado
+        [StringLength(150)] 
         public string Descricao { get; set; } = string.Empty;
 
-        [StringLength(50)] // Adicionado
+        [StringLength(50)] 
         public string Categoria { get; set; } = string.Empty;
 
-        [StringLength(30)] // Adicionado
+        [StringLength(30)] 
         public string Status { get; set; } = string.Empty;
 
         public decimal Valor { get; set; }
         public DateTime DataVencimento { get; set; }
         public DateTime? DataPagamento { get; set; }
 
-        [StringLength(50)] // Adicionado
+        [StringLength(50)] 
         public string? FormaPagamento { get; set; }
 
-        [StringLength(50)] // Adicionado
+        [StringLength(50)] 
         public string? NumeroFatura { get; set; }
 
         public decimal? MultaJuros { get; set; }
 
-        [StringLength(500)] // Adicionado
+        [StringLength(500)]
         public string? Observacoes { get; set; }
 
-        [StringLength(2048)] // Adicionado
+        [StringLength(2048)] 
         public string? AnexoUrl { get; set; }
 
         public int FornecedorId { get; set; }

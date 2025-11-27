@@ -18,14 +18,14 @@ namespace Infrastructure.Persistence.Repositories
 
         public async Task<Fornecedor?> GetByIdWithDespesasAsync(int id)
         {
-            return await _context.Fornecedores // Correção aqui
+            return await _context.Fornecedores
                 .Include(f => f.Despesas)
                 .FirstOrDefaultAsync(f => f.Id == id);
         }
 
         public async Task<List<Fornecedor>> GetAllWithDespesasAsync()
         {
-            return await _context.Fornecedores // Correção aqui
+            return await _context.Fornecedores 
                 .Include(f => f.Despesas)
                 .ToListAsync();
         }

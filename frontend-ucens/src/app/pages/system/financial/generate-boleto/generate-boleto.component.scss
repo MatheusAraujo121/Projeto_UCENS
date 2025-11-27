@@ -54,15 +54,14 @@
         grid-column: 1 / -1;
     }
 
-    // *** ESTILO ATUALIZADO AQUI ***
     .search-actions {
         display: flex;
-        flex-direction: column; // Coloca os itens em coluna
-        gap: 1rem; // Espaço entre a barra de pesquisa e o botão
-        align-items: flex-end; // Alinha o botão à direita
+        flex-direction: column;
+        gap: 1rem; 
+        align-items: flex-end; 
 
         .search-field {
-            width: 100%; // Faz a barra de pesquisa ocupar toda a largura
+            width: 100%; 
         }
 
         .btn-select-all {

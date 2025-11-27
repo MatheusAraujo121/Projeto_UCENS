@@ -2,7 +2,6 @@ using Application.Features.Financeiro;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-// REMOVA: using Microsoft.EntityFrameworkCore;
 
 namespace Api.Controllers
 {
@@ -11,10 +10,9 @@ namespace Api.Controllers
     [Authorize]
     public class TransacaoController : ControllerBase
     {
-        // REMOVA: private readonly AppDbContext _context;
-        private readonly TransacaoService _transacaoService; // Injeta o serviço
+        private readonly TransacaoService _transacaoService; 
 
-        public TransacaoController(TransacaoService transacaoService) // Atualiza o construtor
+        public TransacaoController(TransacaoService transacaoService) 
         {
             _transacaoService = transacaoService;
         }
@@ -31,7 +29,7 @@ namespace Api.Controllers
             {
                 return BadRequest(ex.Message);
             }
-            catch (Exception) // Captura outras exceções genéricas
+            catch (Exception) 
             {
                 return StatusCode(500, "Ocorreu um erro interno ao adicionar a transação.");
             }

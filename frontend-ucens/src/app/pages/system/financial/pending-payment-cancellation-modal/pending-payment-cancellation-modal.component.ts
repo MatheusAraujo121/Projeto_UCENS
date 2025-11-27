@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { Boleto } from '../../../../services/financial/boleto.interface'; // Ajuste o caminho se necessário
+import { Boleto } from '../../../../services/financial/boleto.interface'; 
 
 @Component({
   selector: 'app-pending-payment-cancellation-modal',
@@ -15,18 +15,14 @@ export class PendingPaymentCancellationModalComponent {
     private router: Router
   ) {}
 
-  /**
-   * Fecha o modal.
-   */
+ 
   close(): void {
     this.dialogRef.close();
   }
 
-  /**
-   * Navega para a tela de geração de remessa e fecha o modal.
-   */
+
   goToGenerateRemessa(): void {
     this.router.navigate(['/generate-boleto']);
-    this.close(); // Fecha o modal após a navegação
+    this.close(); 
   }
 }
