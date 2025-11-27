@@ -5,13 +5,11 @@ import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-// Serviços e Interfaces
 import { DependentService } from 'src/app/services/dependents/dependent.service';
 import { AssociateService } from 'src/app/services/associates/associate.service';
 import { Associate } from 'src/app/services/associates/associate.interface';
 import { Dependent } from 'src/app/services/dependents/dependent.interface';
 
-// Validador Customizado
 import { CustomValidators } from 'src/app/validators/custom-validators';
 
 @Component({
@@ -25,7 +23,6 @@ export class CreateDependentsComponent implements OnInit {
   associateFilterCtrl = new FormControl<string | Associate>('', [Validators.required, this.requireMatch]);
   filteredAssociates!: Observable<Associate[]>;
 
-  // NOVAS PROPRIEDADES PARA O AUTOCOMPLETE DE PARENTESCO
   grausParentesco: string[] = ['Filho(a)', 'Cônjuge', 'Pai', 'Mãe', 'Enteado(a)', 'Tutelado(a)'];
   filteredGraus!: Observable<string[]>;
 
@@ -61,20 +58,17 @@ export class CreateDependentsComponent implements OnInit {
 
     this.loadAssociates();
 
-    // NOVA LÓGICA: Configura o filtro para o campo de parentesco
     this.filteredGraus = this.form.get('grauParentesco')!.valueChanges.pipe(
       startWith(''),
       map(value => this._filterGraus(value || ''))
     );
   }
 
-  // NOVA FUNÇÃO: Filtra a lista de graus de parentesco
   private _filterGraus(value: string): string[] {
     const filterValue = value.toLowerCase();
     return this.grausParentesco.filter(option => option.toLowerCase().includes(filterValue));
   }
 
-  // Validador customizado para o autocomplete
   private requireMatch(control: AbstractControl): ValidationErrors | null {
     const selection: any = control.value;
     if (typeof selection === 'string' && selection !== '') {

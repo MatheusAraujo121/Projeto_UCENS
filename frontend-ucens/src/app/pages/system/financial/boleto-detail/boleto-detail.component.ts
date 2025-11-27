@@ -9,20 +9,17 @@ import { Boleto } from '../../../../services/financial/boleto.interface';
 })
 export class BoletoDetailComponent {
 
-  // Injeta os dados do boleto que foram passados ao abrir o dialog
   constructor(
     public dialogRef: MatDialogRef<BoletoDetailComponent>,
     @Inject(MAT_DIALOG_DATA) public boleto: Boleto
   ) { }
 
-  // Função para formatar o status com espaços
   formatStatus(status: string): string {
     if (!status) return '';
     const formatted = status.replace(/([A-Z])/g, ' $1').trim();
     return formatted.charAt(0).toUpperCase() + formatted.slice(1);
   }
 
-  // Fecha o dialog
   close(): void {
     this.dialogRef.close();
   }

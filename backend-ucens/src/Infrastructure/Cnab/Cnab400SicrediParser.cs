@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Cnab
 {
-    // A classe agora implementa a interface do projeto Application
     public class Cnab400SicrediParser : ICnab400SicrediParser
     {
         private readonly ILogger<Cnab400SicrediParser> _logger;
@@ -115,7 +114,6 @@ namespace Infrastructure.Cnab
             return resultDto;
         }
 
-        // Métodos privados continuam aqui (ParseHeader, ParseDetail, etc.)...
         #region Private Parsers
         private CnabHeader ParseHeader(string line, int lineNumber)
         {

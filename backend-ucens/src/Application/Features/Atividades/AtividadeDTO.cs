@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations; // Adicionado
+using System.ComponentModel.DataAnnotations; 
 
 namespace Application.Features.Atividades
 {

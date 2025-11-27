@@ -13,7 +13,7 @@ export class SupplierService {
 
   constructor(private http: HttpClient) { }
 
-  // Fornecedor Methods
+  
   getSuppliers(): Observable<Fornecedor[]> {
     return this.http.get<Fornecedor[]>(this.apiUrl);
   }
@@ -39,7 +39,7 @@ export class SupplierService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  // Despesa Methods
+  
   addDespesa(fornecedorId: number, despesa: Omit<Despesa, 'id'>): Observable<Despesa> {
     return this.http.post<Despesa>(`${this.apiUrl}/${fornecedorId}/despesas`, despesa);
   }

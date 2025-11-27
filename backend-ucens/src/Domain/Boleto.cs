@@ -1,5 +1,5 @@
 using System;
-using System.ComponentModel.DataAnnotations; // Adicionado
+using System.ComponentModel.DataAnnotations; 
 
 namespace Domain
 {
@@ -11,13 +11,13 @@ namespace Domain
         public decimal Valor { get; set; }
         public DateTime DataVencimento { get; set; }
         public DateTime DataEmissao { get; set; }
-        public DateTime? DataPagamento { get; set; } // Adicionado
-        public decimal? ValorPago { get; set; }       // Adicionado
+        public DateTime? DataPagamento { get; set; } 
+        public decimal? ValorPago { get; set; }       
 
-        [StringLength(50)] // Adicionado
+        [StringLength(50)] 
         public string NossoNumero { get; set; } = "";
 
-        [StringLength(255)] // Adicionado
+        [StringLength(255)] 
         public string? MotivoCancelamento { get; set; }
 
         public BoletoStatus Status { get; set; }
@@ -34,6 +34,6 @@ namespace Domain
         Vencido,
         Cancelado,
         CancelamentoSolicitado,
-        CancelamentoEnviado // NOVO STATUS ADICIONADO
+        CancelamentoEnviado 
     }
 }

@@ -20,7 +20,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MatListModule } from '@angular/material/list'; // Certifique-se que MatListModule está importado
+import { MatListModule } from '@angular/material/list'; 
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDatepickerModule } from '@angular/material/datepicker'; 
 import { MatNativeDateModule } from '@angular/material/core'; 
@@ -44,7 +44,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
-import { CUSTOM_DATE_FORMATS } from './utils/custom-date-formats'; // O arquivo com o formato 'DD/MM/YYYY'
+import { CUSTOM_DATE_FORMATS } from './utils/custom-date-formats'; 
 import { CustomDateAdapter } from './custom-date-adapter';
 registerLocaleData(localePt);
 
@@ -219,7 +219,7 @@ import { ManageCarouselComponent } from './pages/system/home/manage-carousel/man
     MatDialogModule,
     FullCalendarModule,
     SwiperModule,
-    BrowserAnimationsModule, // <-- AQUI, agora no lugar certo!
+    BrowserAnimationsModule, 
     MatCardModule,
     MatGridListModule,
     MatToolbarModule,

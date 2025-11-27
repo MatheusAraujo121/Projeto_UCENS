@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting; // Removido
+using Microsoft.AspNetCore.Hosting; 
 using Microsoft.AspNetCore.Authorization;
-using Application.Common.Interfaces; // <-- ADICIONE
+using Application.Common.Interfaces; 
 
 namespace Api.Controllers
 {
@@ -13,18 +13,17 @@ namespace Api.Controllers
     [Route("api/[controller]")]
     public class FileController : ControllerBase
     {
-        // Removido IWebHostEnvironment, Adicionado IImageKitService
         private readonly IImageKitService _imageKitService;
         private readonly string[] _allowedUploadTypes = { "activities", "events", "despesas", "carousel" };
 
-        public FileController(IImageKitService imageKitService) // <-- Injetado
+        public FileController(IImageKitService imageKitService)
         {
             _imageKitService = imageKitService;
         }
 
         [HttpPost("upload")]
         [Authorize]
-        [Consumes("multipart/form-data")] // <--- garante ao Swagger que é upload multipart
+        [Consumes("multipart/form-data")] 
         public async Task<IActionResult> UploadImage([FromForm] IFormFile file, [FromForm] string type)
         {
             if (file == null || file.Length == 0)

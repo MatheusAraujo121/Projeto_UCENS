@@ -5,7 +5,6 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-// Serviços e Interfaces locais
 import { Fornecedor } from '../../../../services/suppliers/supplier.interface';
 import { SupplierService } from '../../../../services/suppliers/supplier.service';
 
@@ -15,11 +14,9 @@ import { SupplierService } from '../../../../services/suppliers/supplier.service
   styleUrls: ['./list-suppliers.component.scss']
 })
 export class ListSuppliersComponent implements AfterViewInit, OnInit {
-  // Colunas ajustadas para fornecedor, sem 'acoes'
   displayedColumns = ['nome', 'responsavel', 'email', 'status'];
   dataSource = new MatTableDataSource<Fornecedor>([]);
 
-  // Controles de Filtro idênticos ao exemplo
   filterNome = new FormControl('');
   filterStatus = new FormControl('');
   filterGlobal = new FormControl('');
@@ -37,7 +34,6 @@ export class ListSuppliersComponent implements AfterViewInit, OnInit {
   }
 
   loadData(): void {
-    // Carregamento simplificado, pois não precisa de forkJoin
     this.supplierService.getSuppliers().subscribe({
       next: (suppliers) => {
         this.dataSource.data = suppliers;
@@ -52,21 +48,17 @@ export class ListSuppliersComponent implements AfterViewInit, OnInit {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
 
-    // Predicado de filtro adaptado para as propriedades de Fornecedor
     this.dataSource.filterPredicate = (data, filter) => {
       const search = JSON.parse(filter) as any;
 
-      // Filtro específico para nome/responsável/email
       const matchNome = (
         data.nome.toLowerCase().includes(search.nome) ||
         data.responsavel.toLowerCase().includes(search.nome) ||
         data.email.toLowerCase().includes(search.nome)
       );
 
-      // Filtro específico para status
       const matchStatus = search.status ? (data.ativo ? 'ativo' : 'inativo') === search.status : true;
 
-      // Filtro global
       const matchGlobal = (
         data.nome.toLowerCase().includes(search.global) ||
         data.responsavel.toLowerCase().includes(search.global) ||
@@ -76,7 +68,6 @@ export class ListSuppliersComponent implements AfterViewInit, OnInit {
       return matchNome && matchStatus && matchGlobal;
     };
 
-    // Assina as mudanças nos campos de filtro
     this.filterNome.valueChanges.subscribe(() => this.applyFilter());
     this.filterStatus.valueChanges.subscribe(() => this.applyFilter());
     this.filterGlobal.valueChanges.subscribe(() => this.applyFilter());

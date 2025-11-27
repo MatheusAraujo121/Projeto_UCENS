@@ -1,19 +1,18 @@
-import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core'; // Adiciona OnInit, OnDestroy
+import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core'; 
 import { MatMenuTrigger } from '@angular/material/menu';
 import { AuthService } from 'src/app/services/auth/auth.service';
-import { Router, NavigationEnd } from '@angular/router'; // Adiciona NavigationEnd
-import { Subscription } from 'rxjs'; // Adiciona Subscription
-import { filter } from 'rxjs/operators'; // Adiciona filter
+import { Router, NavigationEnd } from '@angular/router'; 
+import { Subscription } from 'rxjs'; 
+import { filter } from 'rxjs/operators'; 
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit, OnDestroy { // Implementa OnInit, OnDestroy
+export class HeaderComponent implements OnInit, OnDestroy { 
   isNavbarCollapsed = true;
 
-  // Propriedades para dados do usuário
   userName: string | null = null;
   userId: string | null = null;
   isAdmin: boolean = false;
@@ -27,13 +26,11 @@ export class HeaderComponent implements OnInit, OnDestroy { // Implementa OnInit
   @ViewChild('deptosBtn', { read: MatMenuTrigger }) deptosTrig!: MatMenuTrigger;
 
   ngOnInit(): void {
-    // Atualiza as informações do usuário sempre que a navegação for concluída
     this.routerSubscription = this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
       this.updateUserInfo();
     });
-    // Garante que as informações sejam carregadas na inicialização
     this.updateUserInfo();
   }
 
@@ -43,19 +40,15 @@ export class HeaderComponent implements OnInit, OnDestroy { // Implementa OnInit
     }
   }
 
-  /**
-   * Atualiza as informações do usuário logado (nome, id, status de admin)
-   */
   private updateUserInfo(): void {
     if (this.authService.isLoggedIn()) {
       const user = this.authService.getCurrentUser();
       if (user) {
-        this.userName = user.name; // O 'name' aqui é o 'UserName' do token
+        this.userName = user.name; 
         this.userId = user.id;
-        this.isAdmin = this.authService.isAdmin(); // Pergunta ao serviço se é admin
+        this.isAdmin = this.authService.isAdmin(); 
       }
     } else {
-      // Limpa os dados se não estiver logado
       this.userName = null;
       this.userId = null;
       this.isAdmin = false;
@@ -72,13 +65,10 @@ export class HeaderComponent implements OnInit, OnDestroy { // Implementa OnInit
 
   logout() {
     this.authService.logout();
-    this.updateUserInfo(); // Atualiza a UI imediatamente após o logout
+    this.updateUserInfo(); 
     this.closeNavbar();
   }
 
-  /**
-   * Navega para a tela de visualização do perfil do usuário logado.
-   */
   viewProfile(): void {
     if (this.userId) {
       this.router.navigate(['/view-user', this.userId]);

@@ -1,12 +1,10 @@
-// Estilos baseados no view-associates.scss (copiados do view-suppliers)
 .cadastro-page {
   position: relative;
   padding: 2rem;
-  min-height: 100vh; // Garante altura total
-  background-color: #f0f2f5; // Fundo da página
+  min-height: 100vh; 
+  background-color: #f0f2f5; 
 }
 
-// Template de loading/erro
 .loading-template {
   max-width: 900px;
   margin: auto;
@@ -40,7 +38,7 @@
   width: 80%;
   max-width: 800px;
   opacity: 0.15;
-  transform: translate(-85%, -25%); // Posição da carpa
+  transform: translate(-85%, -25%); 
   pointer-events: none;
   z-index: 0;
 }
@@ -55,7 +53,7 @@
   border-radius: 1rem;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 
-  &.visualizar-fornecedor { // Esta classe está sendo reutilizada
+  &.visualizar-fornecedor { 
     .btn-voltar {
       margin-bottom: 1rem;
       border-color: #d32f2f;
@@ -63,7 +61,7 @@
       width: auto; 
     }
 
-    .navegacao { // (Estilo não usado aqui, mas mantido)
+    .navegacao {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -127,7 +125,7 @@
   border: 2px solid #1976d2;
   color: #1976d2;
   background: transparent;
-  width: 48%; // O override abaixo corrige isso
+  width: 48%; 
   display: flex;
   align-items: center;
   justify-content: center;
@@ -138,7 +136,7 @@
   }
 }
 
-.btn-delete { // (Estilo não usado aqui, mas mantido)
+.btn-delete { 
   border: 2px solid #ff0000;
   color: #bc0303;
   background: transparent;
@@ -153,13 +151,10 @@
   }
 }
 
-// --- AJUSTE PARA TELA DE USUÁRIO ---
-// O layout original espera 2 botões (48% cada).
-// Este override ajusta para o caso de 1 botão (Editar).
 .action-buttons {
   .btn-submit {
-    width: 100%; // Faz o botão "Editar" ocupar a largura
-    max-width: 400px; // Limita para não ficar gigante em telas largas
-    margin: 0 auto; // Centraliza o botão
+    width: 100%; 
+    max-width: 400px; 
+    margin: 0 auto; 
   }
 }

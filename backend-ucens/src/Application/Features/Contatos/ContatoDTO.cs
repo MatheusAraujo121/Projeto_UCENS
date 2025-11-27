@@ -1,20 +1,19 @@
-using System.ComponentModel.DataAnnotations; // Adicionado
-
+using System.ComponentModel.DataAnnotations; 
 namespace Application.Features.Contato
 {
     public class ContatoDTO
     {
-        [Required] // Adicionado
-        [StringLength(100)] // Adicionado
+        [Required] 
+        [StringLength(100)] 
         public string Nome { get; set; } = string.Empty;
 
-        [Required] // Adicionado
-        [EmailAddress] // Adicionado para validar o formato do e-mail
-        [StringLength(150)] // Adicionado
+        [Required]
+        [EmailAddress] 
+        [StringLength(150)] 
         public string Email { get; set; } = string.Empty;
 
-        [Required] // Adicionado
-        [StringLength(2000)] // Adicionado (um limite generoso para a mensagem)
+        [Required] 
+        [StringLength(2000)] 
         public string Mensagem { get; set; } = string.Empty;
     }
 }

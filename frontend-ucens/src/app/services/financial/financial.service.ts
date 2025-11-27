@@ -1,8 +1,8 @@
-// src/app/services/financial/financial.service.ts
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Boleto } from './boleto.interface'; // Importe a nova interface
+import { Boleto } from './boleto.interface'; 
 import { environment } from 'src/environments/environment.prod';
 
 @Injectable({
@@ -27,7 +27,7 @@ export class FinancialService {
     return this.http.post(`${this.apiUrl}/solicitar-cancelamento/${id}`, { motivo });
   }
 
-  // NOVO MÉTODO PARA IMPORTAR ARQUIVO DE RETORNO
+  
   importarRetorno(file: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', file, file.name);

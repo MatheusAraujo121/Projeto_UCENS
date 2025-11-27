@@ -14,8 +14,7 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 })
 export class ListUsersComponent implements OnInit, AfterViewInit {
 
-  // Ajusta 'nome' para 'userName' para bater com a interface e o HTML
-  displayedColumns: string[] = ['id', 'userName', 'email', 'acoes']; // <-- MUDANÇA
+  displayedColumns: string[] = ['id', 'userName', 'email', 'acoes']; 
   dataSource: MatTableDataSource<User> = new MatTableDataSource();
   currentUserId: string | null;
 

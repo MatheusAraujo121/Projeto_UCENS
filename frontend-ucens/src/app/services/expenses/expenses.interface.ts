@@ -1,4 +1,4 @@
-// src/app/services/expenses/expenses.interface.ts
+
 
 export interface Despesa {
   id: number;

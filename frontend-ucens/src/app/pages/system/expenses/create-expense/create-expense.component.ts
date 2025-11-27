@@ -74,28 +74,23 @@ export class CreateExpenseComponent implements OnInit {
 
     if (!statusControl || !dataPagamentoControl || !dataVencimentoControl || !multaJurosControl) return;
 
-    // Lógica principal baseada na mudança de STATUS
     statusControl.valueChanges.pipe(distinctUntilChanged()).subscribe(status => {
       this.isPaidOrOverdue = status === 'Paga' || status === 'Pago com atraso';
 
       if (status === 'Paga') {
-        // Se for 'Paga', zera e desabilita os juros
-        multaJurosControl.setValue(0); // A máscara vai formatar para "R$ 0,00"
+        multaJurosControl.setValue(0); 
         multaJurosControl.disable();
       } else {
-        // Habilita para 'Pago com atraso' e outros status
         multaJurosControl.enable();
       }
 
-      // Limpa os campos de pagamento se o status voltar para Pendente ou for Cancelado
       if (!this.isPaidOrOverdue) {
-        dataPagamentoControl.setValue(null, { emitEvent: false }); // emitEvent: false para evitar loop
+        dataPagamentoControl.setValue(null, { emitEvent: false });
         this.form.get('formaPagamento')?.setValue('');
         multaJurosControl.setValue(null);
       }
     });
 
-    // Lógica para auto-ajustar o STATUS com base nas datas
     dataPagamentoControl.valueChanges.subscribe(() => this.checkPaymentStatus());
     dataVencimentoControl.valueChanges.subscribe(() => this.checkPaymentStatus());
   }
@@ -105,7 +100,6 @@ export class CreateExpenseComponent implements OnInit {
     const dataPagamento = this.form.get('dataPagamento')?.value;
     const dataVencimento = this.form.get('dataVencimento')?.value;
 
-    // Só executa se o usuário já tiver intenção de pagar (status Paga ou Pago com atraso)
     if ((statusControl?.value === 'Paga' || statusControl?.value === 'Pago com atraso') && dataPagamento && dataVencimento) {
       const pagamento = new Date(dataPagamento);
       const vencimento = new Date(dataVencimento);
@@ -113,7 +107,6 @@ export class CreateExpenseComponent implements OnInit {
       pagamento.setHours(0, 0, 0, 0);
       vencimento.setHours(0, 0, 0, 0);
 
-      // Define o status correto baseado na comparação
       if (pagamento > vencimento) {
         statusControl?.setValue('Pago com atraso');
       } else {
@@ -122,7 +115,6 @@ export class CreateExpenseComponent implements OnInit {
     }
   }
 
-  // --- Funções de Upload e Autocomplete (sem alteração) ---
   private _filterCategorias(value: string): string[] {
     const filterValue = value.toLowerCase();
     return this.categorias.filter(option => option.toLowerCase().includes(filterValue));
@@ -176,7 +168,6 @@ export class CreateExpenseComponent implements OnInit {
   }
 
   private cadastrarDespesa(): void {
-    // getRawValue() pega até os campos desabilitados (como juros quando é 'Paga')
     const formValue = this.form.getRawValue();
     const selectedSupplier = this.supplierFilterCtrl.value as Fornecedor;
 

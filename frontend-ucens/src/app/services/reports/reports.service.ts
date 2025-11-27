@@ -10,13 +10,13 @@ import { environment } from 'src/environments/environment.prod';
 export class ReportsService {
   private apiUrl = environment.apiUrl;
 
-  // 3. MONTE AS URLS COMPLETAS USANDO A URL BASE
+  
   private relatorioApiUrl = `${this.apiUrl}/api/Relatorio`;
   private transacaoApiUrl = `${this.apiUrl}/api/Transacao`;
 
   constructor(private http: HttpClient) { }
 
-  // --- Relatórios simples (sem datas) ---
+  
   getRelatorioAssociados(): Observable<any> {
     return this.http.get(`${this.relatorioApiUrl}/associados`);
   }
@@ -45,7 +45,7 @@ export class ReportsService {
     return this.http.get(`${this.relatorioApiUrl}/fornecedores`);
   }
 
-  // --- Relatórios com intervalo de datas ---
+  
   getRelatorioFluxoCaixa(dataInicio: Date, dataFim: Date): Observable<RelatorioFinanceiro> {
     return this.getComDatas(`${this.relatorioApiUrl}/fluxo-caixa`, dataInicio, dataFim);
   }
@@ -90,7 +90,7 @@ export class ReportsService {
     return this.getComDatas(`${this.relatorioApiUrl}/previsao-financeira`, dataInicio, dataFim);
   }
 
-  // --- Relatórios com parâmetro único ---
+  
   getRelatorioReceitasMensais(ano: number): Observable<any> {
     const params = new HttpParams().set('ano', ano.toString());
     return this.http.get(`${this.relatorioApiUrl}/receitas-mensais`, { params });
@@ -101,12 +101,12 @@ export class ReportsService {
     return this.http.get(`${this.relatorioApiUrl}/movimento-diario`, { params });
   }
 
-  // --- Transações ---
+  
   addTransacaoManual(transacao: TransacaoManual): Observable<any> {
     return this.http.post(this.transacaoApiUrl, transacao);
   }
 
-  // --- Função utilitária privada ---
+  
   private getComDatas(url: string, dataInicio: Date, dataFim: Date): Observable<any> {
     const params = new HttpParams()
       .set('dataInicio', dataInicio.toISOString())

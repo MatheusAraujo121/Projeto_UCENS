@@ -152,8 +152,6 @@ export class EditExpenseComponent implements OnInit {
         });
     }
   }
-
-  // --- Funções de Lógica e Validação (Reutilizadas do Create) ---
   
   private setupConditionalLogic(): void {
     const statusControl = this.form.get('status');

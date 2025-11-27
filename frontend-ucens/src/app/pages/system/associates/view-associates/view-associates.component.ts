@@ -50,7 +50,6 @@ export class ViewAssociatesComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    // A configuração inicial permanece aqui
     this.boletosDataSource.sort = this.sort;
     this.boletosDataSource.paginator = this.paginator;
   }
@@ -77,13 +76,10 @@ export class ViewAssociatesComponent implements OnInit, AfterViewInit {
     });
   }
 
-  // MÉTODO ATUALIZADO
   private loadBoletos(associadoId: number): void {
     this.financialService.getHistorico(associadoId).subscribe({
       next: (boletos) => {
         this.boletosDataSource.data = boletos;
-        // *** CORREÇÃO APLICADA AQUI ***
-        // Reconectamos o paginador à fonte de dados toda vez que novos dados chegam.
         this.boletosDataSource.paginator = this.paginator;
         this.isLoading = false;
       },

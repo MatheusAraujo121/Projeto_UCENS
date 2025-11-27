@@ -19,18 +19,18 @@ namespace Application.Features.Usuarios
         private readonly IUserRepository _repository;
         private readonly IConfiguration _configuration;
         private readonly PasswordService _passwordService;
-        private readonly IMemoryCache _cache; // <-- Adicione
+        private readonly IMemoryCache _cache; 
         private readonly IHttpContextAccessor _httpContextAccessor;
         private const int MaxLoginAttempts = 5;
         private static readonly TimeSpan LockoutDuration = TimeSpan.FromMinutes(10);
 
-        public UserService(IUserRepository repository, IConfiguration configuration, IMemoryCache cache, // <-- Adicione
+        public UserService(IUserRepository repository, IConfiguration configuration, IMemoryCache cache,
             IHttpContextAccessor httpContextAccessor)
         {
             _repository = repository;
             _configuration = configuration;
             _passwordService = new PasswordService();
-            _cache = cache; // <-- Adicione
+            _cache = cache;
             _httpContextAccessor = httpContextAccessor;
         }
 
@@ -39,7 +39,6 @@ namespace Application.Features.Usuarios
 
         public async Task<User> AddUser(UserCreateDTO dto)
         {
-            // --- VERIFICAÇÃO ADICIONAL DE SEGURANÇA ---
             if (string.IsNullOrWhiteSpace(dto.Senha))
             {
                 throw new ArgumentException("A senha não pode ser vazia.", nameof(dto.Senha));
@@ -82,31 +81,27 @@ namespace Application.Features.Usuarios
             var ipAddress = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
             if (string.IsNullOrEmpty(ipAddress))
             {
-                // Não é possível fazer o login sem um endereço de IP para segurança
                 return (null, null);
             }
 
             var cacheKey = $"login_attempts_{ipAddress}";
 
-            // Verifica se o IP já está bloqueado
             if (_cache.TryGetValue(cacheKey, out int attempts) && attempts >= MaxLoginAttempts)
             {
-                return (null, 0); // Retorna 0 tentativas restantes
+                return (null, 0);
             }
 
             var user = await _repository.GetByEmail(dto.Email);
 
             if (user == null || !_passwordService.VerificarSenha(user, dto.Senha, user.Senha))
             {
-                // Incrementa a tentativa de falha
                 attempts++;
-                _cache.Set(cacheKey, attempts, LockoutDuration); // Armazena no cache com tempo de expiração
+                _cache.Set(cacheKey, attempts, LockoutDuration); 
 
                 var remaining = MaxLoginAttempts - attempts;
                 return (null, remaining < 0 ? 0 : remaining);
             }
 
-            // Se o login for bem-sucedido, remove a chave do cache
             _cache.Remove(cacheKey);
 
             var token = GenerateJwtToken(user);
@@ -117,7 +112,7 @@ namespace Application.Features.Usuarios
         {
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Email), // Email
+                new Claim(JwtRegisteredClaimNames.Sub, user.Email), 
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim("id", user.Id.ToString()),
                 new Claim("username", user.UserName),

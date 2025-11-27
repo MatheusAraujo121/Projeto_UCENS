@@ -1,6 +1,6 @@
 using Application.Features.Atividades;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting; // Remova este 'using' se não for mais usado
+using Microsoft.AspNetCore.Hosting; 
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -12,10 +12,7 @@ namespace Api.Controllers
     public class AtividadeController : ControllerBase
     {
         private readonly AtividadeService _atividadeService;
-        // Remova o _env se não for mais usado para nada
-        // private readonly IWebHostEnvironment _env; 
 
-        // Remova IWebHostEnvironment da injeção
         public AtividadeController(AtividadeService atividadeService)
         {
             _atividadeService = atividadeService;
@@ -63,7 +60,6 @@ namespace Api.Controllers
 
             try
             {
-                // CORREÇÃO: Removido o argumento _env.WebRootPath
                 var atividadeAtualizada = await _atividadeService.Update(id, dto);
                 return Ok(atividadeAtualizada);
             }
@@ -79,9 +75,8 @@ namespace Api.Controllers
         {
             try
             {
-                // CORREÇÃO: Removido o argumento _env.WebRootPath
                 await _atividadeService.Delete(id);
-                return NoContent(); // Sucesso, sem conteúdo para retornar
+                return NoContent(); 
             }
             catch (Exception ex)
             {

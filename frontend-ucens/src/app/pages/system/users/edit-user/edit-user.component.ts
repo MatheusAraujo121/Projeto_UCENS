@@ -10,7 +10,7 @@ import { CustomValidators } from 'src/app/validators/custom-validators';
 @Component({
   selector: 'app-edit-user',
   templateUrl: './edit-user.component.html',
-  styleUrls: ['./edit-user.component.scss'] // Caminho do SCSS
+  styleUrls: ['./edit-user.component.scss']
 })
 export class EditUserComponent implements OnInit {
 
@@ -54,17 +54,14 @@ export class EditUserComponent implements OnInit {
 
   private initForm(): void {
     this.userForm = this.fb.group({
-      // *** CORREÇÃO DE BUG ***
-      // Alterado de 'nome' para 'userName' para bater com o HTML e a lógica
       userName: ['', [Validators.required, Validators.maxLength(100)]], 
       email: ['', [Validators.required, Validators.email, Validators.maxLength(150)]],
-      senha: ['', [Validators.minLength(6)]], // Opcional
+      senha: ['', [Validators.minLength(6)]], 
       confirmarSenha: ['']
     }, {
       validators: CustomValidators.passwordMatchValidator('senha', 'confirmarSenha')
     });
 
-    // Validação condicional
     this.userForm.get('senha')?.valueChanges.subscribe(value => {
       const confirmarSenhaControl = this.userForm.get('confirmarSenha');
       if (value && value.length > 0) {
@@ -93,7 +90,6 @@ export class EditUserComponent implements OnInit {
           duration: 5000,
           panelClass: ['snackbar-error']
         });
-        // Se não carregar, não adianta mostrar a tela de edição
         this.router.navigate(['/dashboard']); 
       }
     );
@@ -110,13 +106,11 @@ export class EditUserComponent implements OnInit {
 
   onSubmit(): void {
     if (this.userForm.invalid) {
-      // Adiciona o snackbar de erro do formulário
       this.snackBar.open('Por favor, preencha todos os campos obrigatórios e corrija os erros.', 'Fechar', { duration: 3000 });
       this.userForm.markAllAsTouched();
       return;
     }
 
-    // Adiciona o isLoading no submit
     this.isLoading = true;
     const formValue = this.userForm.getRawValue(); 
 
@@ -131,7 +125,6 @@ export class EditUserComponent implements OnInit {
 
     this.userService.updateUser(this.userId, userUpdate).subscribe({
       next: () => {
-        // this.isLoading = false; // Não precisa, pois vai navegar ou dar logout
         this.snackBar.open('Perfil atualizado com sucesso!', 'Fechar', {
           duration: 3000,
           panelClass: ['snackbar-success']
@@ -142,13 +135,12 @@ export class EditUserComponent implements OnInit {
             duration: 7000,
             panelClass: ['snackbar-info']
           });
-          this.authService.logout(); // Força o logout
+          this.authService.logout(); 
         } else {
           this.router.navigate(['/view-user', this.userId]);
         }
       },
       error: (error) => {
-        // Reativa o botão em caso de erro
         this.isLoading = false; 
         console.error('Erro ao atualizar usuário:', error);
         const errorMessage = error.error?.message || 'Falha ao atualizar usuário. Verifique se o nome/e-mail já está em uso.';

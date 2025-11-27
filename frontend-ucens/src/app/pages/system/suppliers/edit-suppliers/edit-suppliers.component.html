@@ -5,7 +5,6 @@
 
         <form [formGroup]="form" (ngSubmit)="atualizar()">
 
-            <!-- *** CORREÇÃO: TÍTULO FORA DO GRID *** -->
             <p class="section-label"><em>Dados Básicos</em></p>
             <div class="form-grid">
                 <mat-form-field appearance="fill">
@@ -17,7 +16,6 @@
 
                 <mat-form-field appearance="fill">
                     <mat-label>CNPJ</mat-label>
-                    <!-- *** CORREÇÃO: MÁSCARA DO CNPJ CORRIGIDA DE '.../0001-00' PARA '.../0000-00' *** -->
                     <input matInput formControlName="cnpj" placeholder="00.000.000/0000-00" mask="00.000.000/0000-00" />
                     <mat-error *ngIf="form.get('cnpj')?.hasError('required')">O CNPJ é obrigatório.</mat-error>
                     <mat-error *ngIf="form.get('cnpj')?.hasError('cnpjInvalido')">Este CNPJ é inválido.</mat-error>
@@ -30,12 +28,10 @@
                 </mat-form-field>
             </div>
 
-            <!-- *** CORREÇÃO: TÍTULO FORA DO GRID *** -->
             <p class="section-label"><em>Contato</em></p>
             <div class="form-grid">
                 <mat-form-field appearance="fill">
                     <mat-label>Telefone</mat-label>
-                    <!-- *** MELHORIA: Máscara de telefone que aceita Fixo (8 dígitos) e Celular (9 dígitos) *** -->
                     <input matInput formControlName="telefone" placeholder="(00) 0000-0000"
                            mask="(00) 0000-0000||(00) 00000-0000" />
                     <mat-error *ngIf="form.get('telefone')?.hasError('required')">O telefone é obrigatório.</mat-error>
@@ -50,7 +46,6 @@
                 </mat-form-field>
             </div>
 
-            <!-- *** CORREÇÃO: TÍTULO FORA DO GRID *** -->
             <p class="section-label"><em>Detalhes Financeiros e Status</em></p>
             <div class="form-grid">
                 <mat-form-field appearance="fill">
@@ -67,7 +62,6 @@
                 </mat-form-field>
             </div>
 
-            <!-- *** CORREÇÃO: TÍTULO FORA DO GRID *** -->
             <p class="section-label"><em>Observações</em></p>
             <div class="form-grid">
                 <mat-form-field appearance="fill" class="full-width">

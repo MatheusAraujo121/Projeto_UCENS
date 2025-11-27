@@ -14,7 +14,7 @@ import { CustomValidators } from 'src/app/validators/custom-validators';
 export class CreateUserComponent implements OnInit {
 
   userForm!: FormGroup;
-  isLoading = false; // <-- ADICIONADO
+  isLoading = false;
 
   constructor(
     private fb: FormBuilder,
@@ -25,7 +25,6 @@ export class CreateUserComponent implements OnInit {
 
   ngOnInit(): void {
     this.userForm = this.fb.group({
-      // O backend DTO espera 'Nome'
       userName: ['', [Validators.required, Validators.maxLength(100)]], 
       email: ['', [Validators.required, Validators.email, Validators.maxLength(150)]],
       senha: ['', [Validators.required, Validators.minLength(6)]],
@@ -37,19 +36,17 @@ export class CreateUserComponent implements OnInit {
 
   onSubmit(): void {
     if (this.userForm.invalid) {
-      // ADICIONADO: Aviso de formulário inválido
       this.snackBar.open('Por favor, preencha todos os campos obrigatórios e corrija os erros.', 'Fechar', { duration: 3000 });
       this.userForm.markAllAsTouched();
       return;
     }
 
-    this.isLoading = true; // <-- ADICIONADO
+    this.isLoading = true; 
     const { userName, email, senha } = this.userForm.value;
     const newUser: UserCreate = { userName, email, senha };
 
     this.userService.createUser(newUser).subscribe({
       next: () => {
-        // this.isLoading = false; // Não é necessário, pois estamos navegando
         this.snackBar.open('Usuário criado com sucesso!', 'Fechar', {
           duration: 3000,
           panelClass: ['snackbar-success']
@@ -57,7 +54,7 @@ export class CreateUserComponent implements OnInit {
         this.router.navigate(['/list-users']);
       },
       error: (error) => {
-        this.isLoading = false; // <-- ADICIONADO
+        this.isLoading = false; 
         console.error('Erro ao criar usuário:', error);
         const errorMessage = error.error?.message || 'Falha ao criar usuário. Verifique se o nome/e-mail já está em uso.';
         this.snackBar.open(errorMessage, 'Fechar', {

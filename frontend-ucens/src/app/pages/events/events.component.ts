@@ -56,7 +56,7 @@ export class EventsComponent implements OnInit {
           title: event.nome,
           start: event.inicio,
           end: event.fim,
-          backgroundColor: '#d32f2f', // Cor para eventos no calendário
+          backgroundColor: '#d32f2f', 
           borderColor: '#d32f2f'
         }));
         this.isLoading = false;
@@ -72,7 +72,6 @@ export class EventsComponent implements OnInit {
     const startDate = new Date(event.inicio);
     const endDate = new Date(event.fim);
 
-    // Ajusta para o fuso horário local para evitar problemas de data
     const userTimezoneOffset = startDate.getTimezoneOffset() * 60000;
     const localStartDate = new Date(startDate.getTime() + userTimezoneOffset);
     const localEndDate = new Date(endDate.getTime() + userTimezoneOffset);

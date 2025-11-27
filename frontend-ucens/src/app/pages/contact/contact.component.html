@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contato</title>
     <style>
-        /* Estilos gerais */
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             background-color: #ffffff;
@@ -18,14 +17,12 @@
             min-height: 100vh;
         }
 
-        /* Container principal */
         .contact-section {
             width: 100%;
             max-width: 800px;
             text-align: center;
         }
 
-        /* Título principal "Contato" */
         .contact-title {
             font-size: 2.5em;
             font-weight: bold;
@@ -33,32 +30,28 @@
             margin-bottom: 50px;
         }
 
-        /* Container para os itens de contato (layout flex) */
         .contact-container {
             display: flex;
             justify-content: space-around;
             align-items: center;
-            gap: 40px; /* Espaço entre os itens */
-            flex-wrap: wrap; /* Permite que os itens quebrem para a linha de baixo em telas pequenas */
+            gap: 40px; 
+            flex-wrap: wrap; 
         }
 
-        /* Cada item individual (Telefone e Email) */
         .contact-item {
-            flex-basis: 250px; /* Largura base de cada item */
+            flex-basis: 250px; 
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 15px; /* Espaço entre o ícone, título e texto */
+            gap: 15px; 
         }
         
-        /* Estilo do ícone SVG */
         .contact-icon svg {
             width: 50px;
             height: 50px;
-            fill: #d9534f; /* Cor vermelha dos ícones */
+            fill: #d9534f; 
         }
 
-        /* Título de cada item (ex: "Email") */
         .contact-item h3 {
             font-size: 1.2em;
             font-weight: 600;
@@ -66,20 +59,17 @@
             color: #495057;
         }
 
-        /* Detalhe do contato (número ou email) */
         .contact-detail {
             font-size: 1.1em;
             margin: 0;
         }
 
-        /* Estilo do link para o número e email */
         .contact-detail a {
-            color: #d9534f; /* Cor vermelha do texto */
-            text-decoration: none; /* Remove o sublinhado do link */
+            color: #d9534f; 
+            text-decoration: none; 
             font-weight: 500;
         }
 
-        /* Efeito ao passar o mouse sobre o link */
         .contact-detail a:hover {
             text-decoration: underline;
         }

@@ -80,8 +80,8 @@ export class CreateActivityComponent implements OnInit {
         }
       });
     }else {
-        // Como a imagem é obrigatória, teoricamente não deveria chegar aqui se o form for válido,
-        // mas é uma boa prática ter um fallback.
+        
+        
         this.snackBar.open('Por favor, selecione uma imagem.', 'Fechar', { duration: 3000 });
         this.isLoading = false;
     }

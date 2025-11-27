@@ -1,5 +1,4 @@
-using System.ComponentModel.DataAnnotations; // Adicione este using
-
+using System.ComponentModel.DataAnnotations; 
 namespace Application.Features.Usuarios
 {
     public class UserCreateDTO

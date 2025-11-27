@@ -22,7 +22,6 @@ export interface DespesaComFornecedor extends Despesa {
   styleUrls: ['./expenses-dashboard.component.scss']
 })
 export class ExpensesDashboardComponent implements OnInit, AfterViewInit {
-  // ATUALIZADO: Adicionada a coluna 'fornecedor'
   displayedColumns: string[] = ['id', 'fornecedor', 'categoria', 'valor', 'dataVencimento', 'status'];
   dataSource = new MatTableDataSource<DespesaComFornecedor>([]);
 

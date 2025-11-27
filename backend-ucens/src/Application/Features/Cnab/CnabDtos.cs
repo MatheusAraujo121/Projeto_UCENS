@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations; // Adicionado
+using System.ComponentModel.DataAnnotations; 
 using System.Linq;
 
 namespace Application.Features.Cnab
 {
     public class CnabHeaderDto
     {
-        [StringLength(20)] // Adicionado
+        [StringLength(20)] 
         public string CodigoDoBeneficiario { get; set; } = string.Empty;
         public DateTime DataDeGeracao { get; set; }
     }
@@ -16,16 +16,16 @@ namespace Application.Features.Cnab
     {
         public int LineNumber { get; set; }
 
-        [StringLength(20)] // Adicionado
+        [StringLength(20)] 
         public string NossoNumero { get; set; } = string.Empty;
 
-        [StringLength(25)] // Adicionado
+        [StringLength(25)] 
         public string NumeroDocumento { get; set; } = string.Empty;
 
-        [StringLength(2)] // Adicionado
+        [StringLength(2)] 
         public string CodigoOcorrencia { get; set; } = string.Empty;
 
-        [StringLength(200)] // Adicionado
+        [StringLength(200)]
         public string DescricaoOcorrencia { get; set; } = string.Empty;
 
         public DateTime DataOcorrencia { get; set; }
@@ -34,7 +34,7 @@ namespace Application.Features.Cnab
         public decimal ValorPago { get; set; }
         public decimal ValorJuros { get; set; }
 
-        [StringLength(255)] // Adicionado
+        [StringLength(255)] 
         public string MotivoOcorrencia { get; set; } = string.Empty;
 
         public string GetUniqueKey() => $"{NossoNumero}-{DataOcorrencia:yyyyMMdd}-{ValorPago:F2}";

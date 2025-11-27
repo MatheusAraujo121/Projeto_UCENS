@@ -38,11 +38,9 @@ builder.Services.AddCors(options =>
 
 string BuildConnectionString()
 {
-    // tenta pegar do ambiente (Render)
     var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
     if (!string.IsNullOrWhiteSpace(databaseUrl))
     {
-        // 🔒 Só tenta criar URI se começar com postgres://
         if (databaseUrl.StartsWith("postgres://", StringComparison.OrdinalIgnoreCase))
         {
             var uri = new Uri(databaseUrl);
@@ -60,23 +58,17 @@ string BuildConnectionString()
         }
         else
         {
-            // já está em formato padrão (Host=...;Database=...)
             return databaseUrl;
         }
     }
 
-    // fallback: usa o connection string do appsettings.json local
     return builder.Configuration.GetConnectionString("DefaultConnection") ?? "";
 }
-// Constrói a string de conexão limpa
 var connectionString = BuildConnectionString();
 
-// Usa a string limpa para configurar o AppDbContext
-// (Note que eu corrigi para AppDbContext, que é o nome do seu DbContext)
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
 
-// --- FIM DA SOLUÇÃO ---
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAssociadoRepository, AssociadoRepository>();
@@ -140,13 +132,12 @@ builder.Services.AddRateLimiter(options =>
 {
     options.AddFixedWindowLimiter("login", opt =>
     {
-        opt.PermitLimit = 5; // 5 tentativas permitidas
-        opt.Window = TimeSpan.FromMinutes(10); // Dentro de uma janela de 10 minutos
+        opt.PermitLimit = 5;
+        opt.Window = TimeSpan.FromMinutes(10); 
         opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
-        opt.QueueLimit = 0; // Se o limite for atingido, rejeita imediatamente
+        opt.QueueLimit = 0; 
     });
 
-    // Resposta padrão para quando o limite é atingido
     options.RejectionStatusCode = StatusCodes.Status429TooManyRequests; 
 });
 builder.Services.AddMemoryCache();

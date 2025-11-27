@@ -15,7 +15,7 @@ export class ViewUserComponent implements OnInit {
   user: User | null = null;
   isLoading: boolean = true;
   isAdmin: boolean = false;
-  isOwner: boolean = false; // Flag para verificar se é o dono do perfil
+  isOwner: boolean = false; 
 
   constructor(
     private route: ActivatedRoute,
@@ -38,16 +38,13 @@ export class ViewUserComponent implements OnInit {
     this.isAdmin = this.authService.isAdmin();
     this.isOwner = currentUserId === userIdFromRoute;
 
-    // --- LÓGICA DE PERMISSÃO ---
-    // (Admin pode ver todos, Usuário pode ver apenas a si mesmo)
     if (!this.isAdmin && !this.isOwner) {
       this.handleError('Você não tem permissão para visualizar este perfil.');
       this.isLoading = false;
-      this.user = null; // Garante que o template de erro seja exibido
+      this.user = null; 
       return;
     }
 
-    // Se passou, carrega os dados
     this.loadUserProfile(userIdFromRoute);
   }
 

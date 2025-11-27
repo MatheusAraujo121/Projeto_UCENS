@@ -1,13 +1,5 @@
-<!-- CARROSSEL PRINCIPAL -->
-
-<!-- Adiciona um *ngIf para esperar as imagens carregarem -->
 <swiper *ngIf="!isLoading && carouselImages.length > 0" [config]="config" class="main-swiper">
   
-  <!-- 
-    1. Usamos *ngFor para 'printar' um slide para cada imagem
-    2. Removemos as classes 'banner-1' e 'banner-2'
-    3. Usamos [style.background-image] para definir a imagem dinamicamente
-  -->
   <ng-template *ngFor="let img of carouselImages" swiperSlide>
     <div 
       class="banner d-flex align-items-center justify-content-center"
@@ -15,23 +7,19 @@
     </div>
   </ng-template>
 
-  <!-- Controles do Swiper (sem mudanças) -->
   <div class="swiper-button-prev"></div>
   <div class="swiper-button-next"></div>
   <div class="swiper-pagination"></div>
 </swiper>
 
-<!-- Indicador de Loading (Opcional, mas recomendado) -->
 <div *ngIf="isLoading" class="main-swiper-loading d-flex justify-content-center align-items-center">
   Carregando...
 </div>
 
-<!-- SEÇÃO CONHEÇA A NIPPON -->
 <section class="conheca-nippon py-5">
   <div class="container">
     <h2 class="section-title mb-5">Conheça a Nippon</h2>
     <div class="row align-items-start">
-      <!-- TEXTO COM CARPA AO FUNDO -->
       <div class="col-lg-6 text-wrap position-relative">
         <h3 class="display-title">
           A Nippon é o maior<br>
@@ -59,7 +47,6 @@
         </p>
       </div>
 
-      <!-- IMAGEM E RODAPÉ -->
       <div class="col-lg-6">
         <img src="assets/img/undokai.jpg" alt="Undokai 2025" class="img-fluid rounded">
         <p class="caption mt-2">
@@ -72,14 +59,11 @@
   </div>
 </section>
 
-
-<!-- SEÇÃO DE LOCALIZAÇÃO -->
 <section class="localizacao py-5">
   <div class="container">
     <h2 class="section-title mb-4">Localização</h2>
     <div class="row g-4 justify-content-center">
 
-      <!-- Primeiro cartão -->
       <div class="col-12 col-md-4 text-center">
         <a href="https://www.google.com/maps?q=R.+Manoel+Leite+Magalhães,+55,+Sorocaba+SP" target="_blank"
           class="text-decoration-none text-dark">
@@ -91,7 +75,6 @@
         </a>
       </div>
 
-      <!-- Segundo cartão -->
       <div class="col-12 col-md-4 text-center">
         <a href="https://www.google.com/maps?q=R.+Kiyoshi+Minami,+722,+Sorocaba+SP" target="_blank"
           class="text-decoration-none text-dark">
@@ -103,7 +86,6 @@
         </a>
       </div>
 
-      <!-- Terceiro cartão -->
       <div class="col-12 col-md-4 text-center">
         <a href="https://www.google.com/maps?q=Estrada+da+Cooperativa,+211,+Araçoiaba+da+Serra+SP" target="_blank"
           class="text-decoration-none text-dark">
@@ -120,14 +102,12 @@
   </div>
 </section>
 
-<!-- TÍTULO DO FORMULÁRIO -->
 <section class="contact-titulo py-4">
   <div class="container text-center">
     <h2>Entre em contato conosco</h2>
   </div>
 </section>
 
-<!-- FORMULÁRIO DE CONTATO -->
 <section class="py-5">
   <div class="container">
     <form class="row g-2 justify-content-center">

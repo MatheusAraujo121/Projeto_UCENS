@@ -42,17 +42,10 @@ namespace Application.Features.Financeiro
 
         public async Task<IEnumerable<BoletoDTO>> GetBoletosAsync()
         {
-            // --- INÍCIO DA CORREÇÃO ---
-            // O DateTime.Today é "timestamp with time zone" por padrão (Kind=Local).
-            // Precisamos marcá-lo como "Unspecified" (sem fuso) para ser
-            // compatível com nossas colunas "timestamp without time zone".
             var hoje = DateTime.Today;
             var hojeSemFuso = DateTime.SpecifyKind(hoje, DateTimeKind.Unspecified);
-            // --- FIM DA CORREÇÃO ---
 
-            // ETAPA 1: Encontrar e atualizar boletos pendentes que já venceram
             var boletosVencidos = await _boletoRepo.GetQueryable()
-                // Usa a variável corrigida na consulta:
                 .Where(b => b.Status == BoletoStatus.Pendente && b.DataVencimento.Date < hojeSemFuso)
                 .ToListAsync();
 
@@ -65,7 +58,6 @@ namespace Application.Features.Financeiro
                 }
                 await _boletoRepo.SaveChangesAsync(); 
                 
-                // >>> LÓGICA ADICIONADA: ATUALIZA A SITUAÇÃO DO ASSOCIADO PARA INADIMPLENTE <<<
                 var associadoIdsComBoletosVencidos = boletosVencidos.Select(b => b.AssociadoId).Distinct().ToArray();
                 var associadosParaAtualizar = await _associadoRepo.GetAssociadosByIds(associadoIdsComBoletosVencidos);
 
@@ -80,7 +72,6 @@ namespace Application.Features.Financeiro
                 }
             }
 
-            // ETAPA 2: Retornar a lista completa e agora atualizada para o frontend
             return await _boletoRepo.GetQueryable()
                 .Include(b => b.Associado)
                 .OrderByDescending(b => b.Id)
@@ -158,7 +149,6 @@ namespace Application.Features.Financeiro
         {
             var boleto = await _boletoRepo.GetQueryable().FirstOrDefaultAsync(b => b.Id == boletoId);
 
-            // Correção: Permite cancelamento de boletos Vencidos também
             if (boleto == null || (boleto.Status != BoletoStatus.Pendente && boleto.Status != BoletoStatus.Vencido))
             {
                 _logger.LogWarning("Tentativa de cancelar boleto ID {BoletoId} com status inválido: {Status}", boletoId, boleto?.Status);
@@ -241,7 +231,6 @@ namespace Application.Features.Financeiro
             var ultimoSequencial = await _boletoRepo.GetQueryable()
                                                  .MaxAsync(b => (int?)b.SequencialNossoNumero) ?? 0;
 
-            // 1. PROCESSAR NOVOS BOLETOS PARA REGISTRO
             foreach (var boletoInfo in boletosParaGerar)
             {
                 ultimoSequencial++;
@@ -254,14 +243,12 @@ namespace Application.Features.Financeiro
 
                 var nossoNumeroCompleto = GerarNossoNumero(beneficiario, postoBeneficiario, ultimoSequencial);
 
-                // Linha1 já está corrigida (sem "Descrição")
                 string linha1 = ("Dependente".PadRight(15) + "Descricao".PadRight(15) + "Ref.".PadRight(12) + "Data Venc".PadRight(16) + "Valor").PadRight(80);
                 string referencia = $"01.01-MENSALID {dataVencimento:MM/yyyy}";
                 string vencimento = dataVencimento.ToString("dd/MM/yyyy");
                 string valorFormatado = valorBoleto.ToString("F2", new CultureInfo("pt-BR"));
                 string linha2 = (referencia.PadRight(42) + vencimento.PadRight(16) + valorFormatado).PadRight(80);
                 
-                // ***** CORREÇÃO DE SANITIZAÇÃO APLICADA *****
                 string enderecoCompleto = SanitizeCnabString($"{associado.Endereco}, {associado.Numero}");
 
                 var boleto = new BNet.Boleto(banco)
@@ -269,15 +256,13 @@ namespace Application.Features.Financeiro
                     Pagador = new BNet.Pagador
                     {
                         CPFCNPJ = associado.CPF.Replace(".", "").Replace("-", ""),
-                        // ***** CORREÇÃO DE SANITIZAÇÃO APLICADA *****
                         Nome = SanitizeCnabString(associado.Nome),
                         Endereco = new BNet.Endereco
                         {
-                            // ***** CORREÇÃO DE SANITIZAÇÃO APLICADA *****
                             LogradouroEndereco = enderecoCompleto,
                             Bairro = SanitizeCnabString(associado.Bairro),
                             Cidade = SanitizeCnabString(associado.Cidade),
-                            UF = SanitizeCnabString(associado.UF), // UF geralmente não tem acentos, mas é bom garantir
+                            UF = SanitizeCnabString(associado.UF), 
                             CEP = associado.Cep.Replace("-", "")
                         }
                     },
@@ -315,8 +300,7 @@ namespace Application.Features.Financeiro
                 boletosGeradosInfo.Add(new BoletoGeradoDto
                 {
                     AssociadoId = associado.Id,
-                    // ***** CORREÇÃO DE SANITIZAÇÃO APLICADA *****
-                    NomeAssociado = SanitizeCnabString(associado.Nome), // Limpa o nome que retorna para o front-end também
+                    NomeAssociado = SanitizeCnabString(associado.Nome), 
                     NossoNumero = boleto.NossoNumero,
                     Valor = boleto.ValorTitulo,
                     DataVencimento = boleto.DataVencimento,
@@ -325,16 +309,14 @@ namespace Application.Features.Financeiro
                 });
             }
 
-            // 2. PROCESSAR BOLETOS PARA CANCELAMENTO (BAIXA)
             foreach (var boletoParaCancelar in boletosParaCancelar)
             {
                 var associado = associados[boletoParaCancelar.AssociadoId];
-                // ***** CORREÇÃO DE SANITIZAÇÃO APLICADA *****
                 string enderecoCompleto = SanitizeCnabString($"{associado.Endereco}, {associado.Numero}");
 
                 var boletoCancelamento = new BNet.Boleto(banco)
                 {
-                    CodigoMovimentoRetorno = "02", // Ocorrência "02" significa "Pedido de Baixa"
+                    CodigoMovimentoRetorno = "02", 
                     NossoNumero = boletoParaCancelar.NossoNumero,
                     NumeroDocumento = boletoParaCancelar.SequencialNossoNumero.ToString("D10"),
                     ValorTitulo = boletoParaCancelar.Valor,
@@ -343,11 +325,9 @@ namespace Application.Features.Financeiro
                     Pagador = new BNet.Pagador
                     {
                         CPFCNPJ = associado.CPF.Replace(".", "").Replace("-", ""),
-                        // ***** CORREÇÃO DE SANITIZAÇÃO APLICADA *****
                         Nome = SanitizeCnabString(associado.Nome),
                         Endereco = new BNet.Endereco
                         {
-                            // ***** CORREÇÃO DE SANITIZAÇÃO APLICADA *****
                             LogradouroEndereco = enderecoCompleto,
                             Bairro = SanitizeCnabString(associado.Bairro),
                             Cidade = SanitizeCnabString(associado.Cidade),
@@ -359,7 +339,7 @@ namespace Application.Features.Financeiro
                 boletos.Add(boletoCancelamento);
                 
                 boletoParaCancelar.Status = BoletoStatus.CancelamentoEnviado; 
-                boletoParaCancelar.NumeroArquivoRemessa = novoNumeroRemessa; // Atribui o número da remessa ao boleto
+                boletoParaCancelar.NumeroArquivoRemessa = novoNumeroRemessa; 
                 _logger.LogInformation("Incluindo pedido de baixa para o Boleto ID {BoletoId} e alterando status para CancelamentoEnviado.", boletoParaCancelar.Id);
             }
 
@@ -398,10 +378,6 @@ namespace Application.Features.Financeiro
             }
         }
 
-        // ***** FUNÇÃO DE SANITIZAÇÃO ADICIONADA *****
-        /// <summary>
-        /// Remove acentos, caracteres especiais e converte para maiúsculo para o padrão CNAB.
-        /// </summary>
         private string SanitizeCnabString(string texto)
         {
             if (string.IsNullOrEmpty(texto))
@@ -409,27 +385,21 @@ namespace Application.Features.Financeiro
                 return string.Empty;
             }
 
-            // 1. Converte para MAIÚSCULO
             texto = texto.ToUpper();
 
-            // 2. Normaliza para decompor acentos (ex: "ÇÃO" -> "C" + "A" + "O" + "̃")
             var normalizedString = texto.Normalize(NormalizationForm.FormD);
             var stringBuilder = new StringBuilder();
 
             foreach (var c in normalizedString)
             {
-                // 3. Ignora os acentos (NonSpacingMark)
                 var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
                 if (unicodeCategory != UnicodeCategory.NonSpacingMark)
                 {
-                    // 4. Troca 'Ç' por 'C'
                     if (c == 'Ç')
                     {
                         stringBuilder.Append('C');
                     }
-                    // 5. Mantém apenas caracteres ASCII válidos para CNAB
-                    // (Letras, números, espaço e pontuação básica permitida)
-                    // Verifique o manual do seu banco para a lista exata de caracteres permitidos
+
                     else if ((c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || 
                              c == ' ' || c == '.' || c == ',' || c == '-' || c == '/' || 
                              c == '(' || c == ')' || c == '&' || c == '+')
@@ -438,13 +408,11 @@ namespace Application.Features.Financeiro
                     }
                     else
                     {
-                        // Substitui qualquer outro caractere inválido (ex: @, #, $, %, º, ª) por espaço.
                         stringBuilder.Append(' ');
                     }
                 }
             }
         
-            // Retorna a string limpa, normalizada de volta.
             return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
         }
 
@@ -507,7 +475,7 @@ namespace Application.Features.Financeiro
             var todosOsRetornos = await _cnabRetornoRepository.GetAll();
             
             var boletosPendentes = await _boletoRepo.GetQueryable()
-                .Include(b => b.Associado) // Inclui o associado para a lógica de "Regular"
+                .Include(b => b.Associado)
                 .Where(b => b.Status == BoletoStatus.Pendente || b.Status == BoletoStatus.Vencido)
                 .ToListAsync();
                 
@@ -519,7 +487,7 @@ namespace Application.Features.Financeiro
             {
                 var nossoNumeroCompleto = detalhe.NossoNumero.Trim();
 
-                if (detalhe.CodigoOcorrencia == "06") // "06" = Liquidação Normal
+                if (detalhe.CodigoOcorrencia == "06") 
                 {
                     var boletoParaAtualizar = boletosPendentes.FirstOrDefault(b => b.NossoNumero == nossoNumeroCompleto);
                     if (boletoParaAtualizar != null)
@@ -529,8 +497,6 @@ namespace Application.Features.Financeiro
                         boletoParaAtualizar.ValorPago = detalhe.ValorPago;
                         _logger.LogInformation("Boleto ID {BoletoId} (NossoNumero: {NossoNumero}) marcado para ser atualizado para 'Pago'.", boletoParaAtualizar.Id, nossoNumeroCompleto);
 
-                        // >>> LÓGICA ADICIONADA: VERIFICA SE O ASSOCIADO PODE VOLTAR A SER REGULAR <<<
-                        // Verifica se há OUTROS boletos pendentes ou vencidos para este associado
                         var outrosBoletosPendentes = await _boletoRepo.GetQueryable()
                             .AnyAsync(b => b.AssociadoId == boletoParaAtualizar.AssociadoId && 
                                            b.Id != boletoParaAtualizar.Id && 
@@ -540,7 +506,6 @@ namespace Application.Features.Financeiro
                         {
                             boletoParaAtualizar.Associado.Situacao = "Regular";
                             _logger.LogInformation("Associado ID {AssociadoId} não possui mais pendências. Atualizando para 'Regular'.", boletoParaAtualizar.AssociadoId);
-                            // Não precisa chamar _associadoRepo.Update() se o contexto do _boletoRepo estiver rastreando o associado
                         }
                     }
                     else
@@ -548,7 +513,7 @@ namespace Application.Features.Financeiro
                         _logger.LogWarning("Boleto com NossoNumero {NossoNumero} não encontrado na lista de pendentes/vencidos para pagamento.", nossoNumeroCompleto);
                     }
                 }
-                else if (detalhe.CodigoOcorrencia == "09") // "09" = Baixado automaticamente via arquivo
+                else if (detalhe.CodigoOcorrencia == "09") 
                 {
                     var boletoParaConfirmarCancelamento = boletosAguardandoConfirmacaoCancelamento.FirstOrDefault(b => b.NossoNumero == nossoNumeroCompleto);
                     if (boletoParaConfirmarCancelamento != null)
@@ -578,7 +543,6 @@ namespace Application.Features.Financeiro
                 }
             }
             
-            // Salva todas as alterações (Pagos, Cancelados, Regulares, novos CnabRetorno)
             await _boletoRepo.SaveChangesAsync();
             _logger.LogInformation("Processamento do arquivo de retorno finalizado.");
         }

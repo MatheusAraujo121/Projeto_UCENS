@@ -1,20 +1,20 @@
-using System.ComponentModel.DataAnnotations; // Adicionado
+using System.ComponentModel.DataAnnotations; 
 
 namespace Application.Features.Usuarios
 {
     public class UserDTO
     {
-        [Required] // Adicionado
-        [StringLength(50)] // Adicionado
+        [Required] 
+        [StringLength(50)] 
         public string Nome { get; set; } = string.Empty;
 
-        [Required] // Adicionado
-        [EmailAddress] // Adicionado
-        [StringLength(150)] // Adicionado
+        [Required] 
+        [EmailAddress] 
+        [StringLength(150)] 
         public string Email { get; set; } = string.Empty;
 
-        [Required] // Adicionado
-        [StringLength(255)] // Adicionado
+        [Required] 
+        [StringLength(255)] 
         public string Senha { get; set; } = string.Empty;
     }
 }

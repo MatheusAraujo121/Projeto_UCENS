@@ -29,7 +29,6 @@ export class ListDependentsComponent implements AfterViewInit, OnInit {
   filterParentesco = new FormControl(''); 
   filterGlobal = new FormControl('');
 
-  // Propriedade para armazenar a lista dinâmica de parentescos
   grausParentesco: string[] = [];
 
   @ViewChild(MatSort) sort!: MatSort;
@@ -67,13 +66,10 @@ export class ListDependentsComponent implements AfterViewInit, OnInit {
 
         this.dataSource.data = displayData;
 
-        // >>> LÓGICA DO FILTRO DINÂMICO ADICIONADA AQUI <<<
-        // 1. Extrai todos os valores de 'grauParentesco' da lista de dependentes.
         const todosOsParentescos = dependents
           .map(dep => dep.grauParentesco)
-          .filter((grau): grau is string => !!grau); // 2. Filtra para remover valores nulos ou vazios.
+          .filter((grau): grau is string => !!grau); 
 
-        // 3. Cria um conjunto de valores únicos para eliminar duplicatas e depois ordena em ordem alfabética.
         this.grausParentesco = [...new Set(todosOsParentescos)].sort();
       },
       error: (err) => {

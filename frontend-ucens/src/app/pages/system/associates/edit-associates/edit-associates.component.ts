@@ -67,7 +67,7 @@ export class EditAssociatesComponent implements OnInit {
           this.associado = data;
           this.form.patchValue({
             ...data,
-            // Corrige o formato da data para o DatePicker do Material
+
             dataNascimento: new Date(data.dataNascimento) 
           });
         }

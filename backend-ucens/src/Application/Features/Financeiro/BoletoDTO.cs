@@ -1,5 +1,5 @@
 using System;
-using System.ComponentModel.DataAnnotations; // Adicionado
+using System.ComponentModel.DataAnnotations;
 
 namespace Application.Features.Financeiro
 {
@@ -14,10 +14,10 @@ namespace Application.Features.Financeiro
         public DateTime? DataPagamento { get; set; }
         public decimal? ValorPago { get; set; }
 
-        [StringLength(50)] // Adicionado
+        [StringLength(50)] 
         public string NossoNumero { get; set; } = "";
 
-        [StringLength(255)] // Adicionado
+        [StringLength(255)] 
         public string? MotivoCancelamento { get; set; }
 
         public string Status { get; set; } = string.Empty;
@@ -25,7 +25,7 @@ namespace Application.Features.Financeiro
 
     public class AssociadoBoletoDto
     {
-        [StringLength(150)] // Adicionado
+        [StringLength(150)] 
         public string Nome { get; set; } = string.Empty;
     }
 }

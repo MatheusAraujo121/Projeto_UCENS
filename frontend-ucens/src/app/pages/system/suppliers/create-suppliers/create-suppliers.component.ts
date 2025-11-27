@@ -3,10 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-// Serviços e Interfaces
 import { SupplierService } from '../../../../services/suppliers/supplier.service';
 
-// ADICIONADO: Importe seu validador (ajuste o caminho se necessário)
 import { CustomValidators } from 'src/app/validators/custom-validators';
 
 @Component({
@@ -28,12 +26,11 @@ export class CreateSuppliersComponent implements OnInit {
   ngOnInit() {
     this.form = this.fb.group({
       nome: ['', [Validators.required, Validators.maxLength(150)]],
-      // ADICIONADO: Campo CNPJ com validadores
       cnpj: ['', [Validators.required, CustomValidators.cnpjValidator()]],
       responsavel: ['', [Validators.maxLength(150)]],
       email: ['', [Validators.required, Validators.email, Validators.maxLength(150)]],
       telefone: ['', [Validators.required, Validators.maxLength(20)]],
-      ativo: [true], // Valor padrão para o toggle
+      ativo: [true], 
       limiteCredito: [null],
       observacoes: ['', [Validators.maxLength(500)]]
     });

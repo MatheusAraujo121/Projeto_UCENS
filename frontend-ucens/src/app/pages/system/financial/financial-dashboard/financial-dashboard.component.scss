@@ -1,5 +1,5 @@
 .list-page {
-    padding: 1rem; // Adiciona um preenchimento geral
+    padding: 1rem; 
 
     .toolbar {
         padding: 1.5rem;
@@ -7,7 +7,7 @@
         border: 1px solid #ccc;
         border-radius: 0.5rem;
         border-color: #000;
-        margin-bottom: 1rem; // Espaçamento entre toolbar e o resto
+        margin-bottom: 1rem; 
 
         h2 {
             margin: 0;
@@ -39,7 +39,7 @@
     .table-container {
         background: #fff;
         border-radius: 0.5rem;
-        overflow: hidden; // Mantém as bordas da tabela arredondadas
+        overflow: hidden; 
         border: 1px solid #000;
 
         .styled-table {
@@ -68,9 +68,8 @@
         }
     }
 
-    /* ESTILO DO PAGINADOR FORA DO CONTAINER */
     mat-paginator {
-        background: transparent; // Fundo transparente para se mesclar com a página
+        background: transparent; 
         display: flex;
         justify-content: flex-end;
         padding: 0.5rem 0;
@@ -78,21 +77,19 @@
     }
 }
 
-/* BOTÃO ESTILIZADO IGUAL AO DE 'CADASTRAR ASSOCIADO' */
 .btn-custom-style {
     background-color: #fff;
     margin-left: 16px;
-    color: #28a745; // Cor do texto verde
+    color: #28a745; 
     height: 3.5rem;
-    border: 1px solid #28a745; // Borda verde
+    border: 1px solid #28a745; 
     transition: background-color 0.2s, color 0.2s;
 
     &:hover {
-        background-color: #e9f5ec; // Um verde bem clarinho no hover
+        background-color: #e9f5ec; 
     }
 }
 
-/* Estilos de status (sem alterações) */
 .status {
     padding: 0.4rem 0.8rem;
     border-radius: 15px;

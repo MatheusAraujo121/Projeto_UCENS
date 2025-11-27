@@ -1,129 +1,122 @@
-// Variáveis para breakpoints (ajuste conforme necessário)
 $breakpoint-lg: 992px;
 
 .navbar {
-  // Ajustes básicos para o navbar
-  padding: 0.75rem 1rem; // Ajuste o padding se necessário
+  padding: 0.75rem 1rem; 
 }
 
 .navbar-brand img {
-  height: 40px; // Mantém a altura da logo
+  height: 40px; 
 }
 
 .app-toolbar {
-  background: transparent; // Fundo transparente
+  background: transparent; 
   box-shadow: none;
-  padding: 0; // Remove padding interno do mat-toolbar
+  padding: 0; 
   display: flex;
-  flex-wrap: wrap; // Permite que os itens quebrem a linha em telas menores
-  justify-content: flex-start; // Alinha itens à esquerda por padrão
+  flex-wrap: wrap; 
+  justify-content: flex-start; 
 
-  .nav-item, .menu-button { // Aplica estilos a todos os botões/itens de menu
-    margin: 0 0.5rem; // Espaçamento horizontal menor
-    text-transform: none; // Remove a capitalização padrão do Material
+  .nav-item, .menu-button { 
+    margin: 0 0.5rem; 
+    text-transform: none;
     color: #555;
     font-weight: 500;
     transition: color 0.2s;
 
     &:hover {
-      color: #e60012; // Cor de hover
+      color: #e60012; 
     }
   }
 
   .menu-button {
     display: inline-flex;
     align-items: center;
-    padding: 0.5rem; // Padding para área de clique
+    padding: 0.5rem; 
 
     .menu-icon {
       transition: transform 0.2s, color 0.2s;
     }
 
     &.opened {
-      color: #e60012 !important; // Cor quando o menu está aberto
+      color: #e60012 !important; 
 
       .menu-icon {
         color: #e60012 !important;
-        transform: rotate(180deg) !important; // Gira o ícone
+        transform: rotate(180deg) !important; 
       }
     }
   }
 }
 
 .login-section {
-  // Estilos para a seção de login/configurações
-  margin-left: auto; // Empurra para a direita em telas grandes
-  padding-left: 1rem; // Adiciona um espaço à esquerda
+  margin-left: auto; 
+  padding-left: 1rem; 
 }
 
 .header-divider {
   border: none;
   height: 2px;
   background-color: #000;
-  margin: 0; // Remove margens padrão
+  margin: 0; 
 }
 
-// Estilos específicos para telas menores (quando o menu colapsa)
 @media (max-width: #{$breakpoint-lg - 1px}) {
   .navbar-collapse {
-    width: 100%; // Ocupa toda a largura
-    margin-top: 0.5rem; // Espaço acima do menu colapsado
+    width: 100%; 
+    margin-top: 0.5rem; 
   }
 
   .app-toolbar {
-    flex-direction: column; // Itens ficam em coluna
-    align-items: flex-start; // Alinha itens à esquerda
-    padding: 1rem 0; // Adiciona padding vertical
+    flex-direction: column; 
+    align-items: flex-start; 
+    padding: 1rem 0; 
   }
 
   .nav-item, .menu-button {
-    width: 100%; // Ocupa toda a largura
-    justify-content: flex-start; // Alinha texto à esquerda
-    margin: 0.25rem 0; // Espaçamento vertical
-    padding: 0.75rem 1rem; // Padding interno para melhor toque
-    border-bottom: 1px solid #eee; // Linha divisória
+    width: 100%; 
+    justify-content: flex-start;
+    margin: 0.25rem 0; 
+    padding: 0.75rem 1rem; 
+    border-bottom: 1px solid #eee;
     
     &:last-child {
-        border-bottom: none; // Remove a linha do último item
+        border-bottom: none; 
     }
   }
   
   .menu-button .menu-icon {
-      margin-left: auto; // Empurra o ícone de seta para a direita
+      margin-left: auto; 
   }
 
   .login-section {
     width: 100%;
-    margin-left: 0; // Remove margem automática
-    padding: 1rem; // Adiciona padding
-    border-top: 1px solid #eee; // Linha divisória acima
+    margin-left: 0; 
+    padding: 1rem;
+    border-top: 1px solid #eee; 
     display: flex;
-    justify-content: flex-start; // Alinha o botão de login à esquerda
+    justify-content: flex-start; 
   }
 }
 
-// Garante que o container do Angular Material não interfira
 ::ng-deep .mat-toolbar-single-row {
-  padding: 0 !important; // Remove padding padrão do Angular Material
-  height: auto !important; // Altura automática
+  padding: 0 !important; 
+  height: auto !important; 
 }
 .login-section {
   display: flex;
   align-items: center;
 }
 
-// Estilo para a mensagem de boas-vindas
 .welcome-message {
   font-size: 0.9rem;
   color: rgba(0, 0, 0, 0.75);
-  white-space: nowrap; // Impede que quebre a linha
-  cursor: pointer; // Indica que é clicável
+  white-space: nowrap; 
+  cursor: pointer;
 
   &:hover {
-    color: #0056b3; // Cor primária no hover
+    color: #0056b3; 
   }
 
-  // Em telas pequenas (modo colapsado), a mensagem some
   @media (max-width: 991.98px) {
     display: none;
   }
