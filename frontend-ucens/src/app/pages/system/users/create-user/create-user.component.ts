@@ -15,7 +15,9 @@ export class CreateUserComponent implements OnInit {
 
   userForm!: FormGroup;
   isLoading = false;
-
+  hidePassword = true;        
+  hideConfirmPassword = true;
+  
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
