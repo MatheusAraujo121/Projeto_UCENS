@@ -64,5 +64,40 @@
     width: 80px;
     margin-left: 39%;
   }
+  .input-group {
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+    position: relative;
+
+    .form-control-lg {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      border-right: none; 
+      flex: 1; 
+      width: auto;
+    }
+
+    .btn-eye {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      border: 1px solid #aaa;
+      background-color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 12px;
+      cursor: pointer;
+      color: #777;
+
+      &:hover {
+        background-color: #f8f9fa;
+      }
+
+      .material-icons {
+        font-size: 1.2rem;
+      }
+    }
+  }
 
 }
