@@ -17,7 +17,11 @@ export class LoginComponent {
   loginForm: FormGroup;
   isLoading = false;
   remainingAttempts: number | null = null;
+  showPassword: boolean = false;
 
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
