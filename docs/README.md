@@ -1,7 +1,7 @@
 # Projeto – Portal de Gerenciamento de Recursos UCENS
 
 ## Integrantes do Grupo
-- Matheus de Araújo Emídio – Email: mathujo566@gmail.com
+- Matheus de Araujo Emidio – Email: mathujo566@gmail.com
 - Ian Matheus Moura – Email: ianmatheusmoura@outlook.com
 - Gabriel Sales Dorea – Email: salesdoreagabriel@gmail.com
 - Jade Nogueira Silva – Email: jade.silva@fatec.sp.gov.br
