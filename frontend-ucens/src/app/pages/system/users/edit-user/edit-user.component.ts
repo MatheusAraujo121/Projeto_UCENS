@@ -20,7 +20,9 @@ export class EditUserComponent implements OnInit {
   isAdmin: boolean = false;
   isOwner: boolean = false; 
   originalUserName: string = ''; 
-
+  hidePassword = true;        
+  hideConfirmPassword = true;
+  
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
