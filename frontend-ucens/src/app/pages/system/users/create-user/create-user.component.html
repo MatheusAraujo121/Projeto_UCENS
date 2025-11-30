@@ -37,7 +37,11 @@
       <div class="form-grid">
         <mat-form-field appearance="fill">
           <mat-label>Senha</mat-label>
-          <input matInput formControlName="senha" type="password" required>
+          <input matInput formControlName="senha" [type]="hidePassword ? 'password' : 'text'" required>
+          
+          <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Ocultar senha'" type="button">
+            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
           <mat-error *ngIf="userForm.get('senha')?.hasError('required')">
             Senha é obrigatória
           </mat-error>
@@ -48,7 +52,11 @@
 
         <mat-form-field appearance="fill">
           <mat-label>Confirmar Senha</mat-label>
-          <input matInput formControlName="confirmarSenha" type="password" required>
+          <input matInput formControlName="confirmarSenha" [type]="hideConfirmPassword ? 'password' : 'text'" required>
+          
+          <button mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword" [attr.aria-label]="'Ocultar senha'" type="button">
+            <mat-icon>{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
           <mat-error *ngIf="userForm.get('confirmarSenha')?.hasError('required')">
             Confirmação de senha é obrigatória
           </mat-error>
