@@ -22,13 +22,16 @@
             </div>
             <div class="mb-3">
                 <label for="senha" class="form-label visually-hidden">Senha</label>
-                <input [type]="showPassword ? 'text' : 'password'" id="senha" formControlName="password" class="form-control form-control-lg"
-                    placeholder="Senha" required />
-                <button class="btn btn-outline-secondary" type="button" (click)="togglePassword()">
-                    <span class="material-icons">
-                        {{ showPassword ? 'visibility' : 'visibility_off' }}
-                    </span>
-                </button>
+                <div class="input-group">
+                    <input [type]="showPassword ? 'text' : 'password'" id="senha" formControlName="password" 
+                        class="form-control form-control-lg" placeholder="Senha" required />
+                    
+                    <button type="button" class="btn btn-outline-secondary" (click)="togglePassword()">
+                        <span class="material-icons">
+                            {{ showPassword ? 'visibility' : 'visibility_off' }}
+                        </span>
+                    </button>
+                </div>
                 <div *ngIf="loginForm.get('password')?.invalid && (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)"
                     class="text-danger mt-1">
                     <small *ngIf="loginForm.get('password')?.hasError('minlength')">
