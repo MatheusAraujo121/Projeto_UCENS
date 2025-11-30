@@ -26,7 +26,7 @@
                     <input [type]="showPassword ? 'text' : 'password'" id="senha" formControlName="password" 
                         class="form-control form-control-lg" placeholder="Senha" required />
                     
-                    <button type="button" class="btn btn-outline-secondary" (click)="togglePassword()">
+                    <button type="button" class="btn btn-outline-secondary btn-eye" (click)="togglePassword()">
                         <span class="material-icons">
                             {{ showPassword ? 'visibility' : 'visibility_off' }}
                         </span>
