@@ -90,7 +90,6 @@ ng serve -o
 O site abrirá automaticamente em http://localhost:4200.
 
 ## 🧪 Testes
-* Frameworks utilizados: Jasmine/Karma (Frontend) e Swagger UI (Backend).
 * Como rodar testes (Frontend):
 ```Bash
 npm test
