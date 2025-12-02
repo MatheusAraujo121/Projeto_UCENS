@@ -110,18 +110,21 @@
 
 <section class="py-5">
   <div class="container">
-    <form class="row g-2 justify-content-center">
+    <form class="row g-2 justify-content-center" (ngSubmit)="enviarEmail()" #form="ngForm">
       <div class="col-sm-4">
-        <input type="email" class="form-control" placeholder="Email">
+        <input type="email" class="form-control" placeholder="Email" 
+               [(ngModel)]="contato.email" name="email" required>
       </div>
       <div class="col-sm-4">
-        <input type="text" class="form-control" placeholder="Nome">
+        <input type="text" class="form-control" placeholder="Nome" 
+               [(ngModel)]="contato.nome" name="nome" required>
       </div>
       <div class="col-sm-6">
-        <textarea class="form-control" rows="4" placeholder="Seu texto"></textarea>
+        <textarea class="form-control" rows="4" placeholder="Seu texto" 
+                  [(ngModel)]="contato.mensagem" name="mensagem" required></textarea>
       </div>
       <div class="col-sm-2">
-        <button class="btn btn-dark w-100">enviar</button>
+        <button type="submit" class="btn btn-dark w-100" [disabled]="!form.valid">enviar</button>
       </div>
       
     </form>
